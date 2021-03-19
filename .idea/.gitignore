@@ -2,7 +2,7 @@
 /shelf/
 /workspace.xml
 # Datasource local storage ignored files
-/../../../../:\Java\MedicalEducation\.idea/dataSources/
+/../../../../../:\Java\iSofH\medical-education\.idea/dataSources/
 /dataSources.local.xml
 # Editor-based HTTP Client requests
 /httpRequests/

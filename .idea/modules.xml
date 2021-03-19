@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/MedicalEducation.iml" filepath="$PROJECT_DIR$/.idea/MedicalEducation.iml" />
+      <module fileurl="file://$PROJECT_DIR$/medical-education.iml" filepath="$PROJECT_DIR$/medical-education.iml" />
     </modules>
   </component>
 </project>
