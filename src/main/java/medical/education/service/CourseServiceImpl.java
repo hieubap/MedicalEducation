@@ -49,7 +49,7 @@ public class CourseServiceImpl extends
   protected void specificMapToEntity(CourseDTO dto, CourseEntity entity) {
     super.specificMapToEntity(dto, entity);
     List<SubjectEntity> entities = new ArrayList<>();
-    if (dto.getSubjects() != null) {
+    if (dto.getSubjectIds() != null) {
       for (Long d : dto.getSubjectIds()) {
         if (!subjectRepository.existsById(d)) {
           throw new BaseException(400, "id subject " + d + " is not exist");
