@@ -1,0 +1,18 @@
+package medical.education.dao.repository;
+
+import java.util.Optional;
+import medical.education.dao.model.UserEntity;
+import medical.education.dto.UserDTO;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
+import spring.backend.library.dao.repository.BaseRepository;
+
+@Repository
+public interface UserRepository extends BaseRepository<UserEntity, UserDTO, Long> {
+
+  @Query("select case when count(e) > 0 then true else false end from UserEntity e"
+      + " where e.username = :username and (:id is null or e.id <> :id)")
+  boolean existsByUsername(String username, Long id);
+
+  Optional<UserEntity> findByUsername(String username);
+}
