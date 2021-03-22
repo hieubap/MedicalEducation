@@ -24,4 +24,6 @@ public class CourseDTO extends BaseDTO {
   private List<SubjectDTO> subjects;
 
   private List<Long> subjectIds;
+
+  private Long price;
 }

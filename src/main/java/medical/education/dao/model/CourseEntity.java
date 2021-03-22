@@ -37,6 +37,8 @@ public class CourseEntity extends BaseEntity {
 
   private String details;
 
+  private Long price;
+
   @ManyToMany(fetch = FetchType.LAZY)
   @JoinTable(
       name = "course_subject",

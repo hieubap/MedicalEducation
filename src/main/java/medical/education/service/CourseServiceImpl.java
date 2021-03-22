@@ -34,14 +34,17 @@ public class CourseServiceImpl extends
   @Override
   protected void beforeSave(CourseEntity entity, CourseDTO dto) {
     super.beforeSave(entity, dto);
-    if(dto.getName() == null){
-      throw new BaseException(400,"name not null");
+    if (dto.getName() == null) {
+      throw new BaseException(400, "name is not null");
     }
-    if(dto.getSubjectIds() == null){
-      throw new BaseException(400,"subjectIds not null");
+    if (dto.getSubjectIds() == null) {
+      throw new BaseException(400, "subjectIds is not null");
     }
-    if (dto.getThoiGianHoc() == null){
-      throw new BaseException(400,"thoiGianHoc not null");
+    if (dto.getThoiGianHoc() == null) {
+      throw new BaseException(400, "thoiGianHoc is not null");
+    }
+    if (dto.getPrice() == null) {
+      throw new BaseException(400, "price is not null");
     }
   }
 
@@ -52,7 +55,7 @@ public class CourseServiceImpl extends
     if (dto.getSubjects() != null) {
       for (Long d : dto.getSubjectIds()) {
         if (!subjectRepository.existsById(d)) {
-          throw new BaseException(400,"id subject " + d + " is not exist");
+          throw new BaseException(400, "id subject " + d + " is not exist");
         }
         entities.add(subjectService.findById(d));
       }
