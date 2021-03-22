@@ -1,11 +1,11 @@
-package vn.isofh.medical.education.controller;
+package medical.education.controller;
 
+import medical.education.dto.SubjectDTO;
+import medical.education.service.SubjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import vn.isofh.common.controller.BaseController;
-import vn.isofh.medical.education.dto.SubjectDTO;
-import vn.isofh.medical.education.service.SubjectService;
+import spring.backend.library.controller.BaseController;
 
 @RestController
 @RequestMapping("/subjects")
@@ -15,7 +15,7 @@ public class SubjectController extends BaseController<SubjectDTO, SubjectService
   private SubjectService service;
 
   @Override
-  protected SubjectService getService() {
+  public SubjectService getService() {
     return service;
   }
 }

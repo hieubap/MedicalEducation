@@ -1,11 +1,10 @@
-package vn.isofh.medical.education.dto;
+package medical.education.dto;
 
-import javax.persistence.Column;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import vn.isofh.common.dto.BaseDTO;
+import spring.backend.library.dto.BaseDTO;
 
 @Getter
 @Setter

@@ -1,13 +1,11 @@
-package vn.isofh.medical.education.dto;
+package medical.education.dto;
 
-import java.util.Collection;
 import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import vn.isofh.common.dto.BaseDTO;
-import vn.isofh.medical.education.dao.model.SubjectEntity;
+import spring.backend.library.dto.BaseDTO;
 
 @Getter
 @Setter
@@ -25,4 +23,5 @@ public class CourseDTO extends BaseDTO {
 
   private List<SubjectDTO> subjects;
 
+  private List<Long> subjectIds;
 }

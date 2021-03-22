@@ -1,4 +1,4 @@
-package vn.isofh.medical.education.dao.model;
+package medical.education.dao.model;
 
 import java.util.List;
 import javax.persistence.Column;
@@ -12,7 +12,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.Where;
-import vn.isofh.common.dao.model.BaseEntity;
+import spring.backend.library.dao.model.BaseEntity;
 
 @Entity
 @Table(name = "subject")
