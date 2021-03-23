@@ -54,7 +54,7 @@ public class UserServiceImpl extends
 
    String role = userEntity.getRoleEntity().getValue();
     if(role != null){
-      roles.add(role);
+      roles.add("ROLE_" + role);
     }
 
     JwtTokenProperties jwts = JwtTokenProperties.builder()
