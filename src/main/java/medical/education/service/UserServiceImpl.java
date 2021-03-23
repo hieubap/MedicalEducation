@@ -1,6 +1,9 @@
 package medical.education.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import medical.education.dao.model.RoleEntity;
 import medical.education.dao.model.UserEntity;
 import medical.education.dao.repository.UserRepository;
 import medical.education.dto.LoginDTO;
@@ -21,6 +24,8 @@ public class UserServiceImpl extends
   @Autowired
   private UserRepository repository;
 
+  @Autowired
+  private RoleService roleService;
 
   @Autowired
   private JwtProvider jwtProvider;
@@ -44,10 +49,19 @@ public class UserServiceImpl extends
     if (!DigestUtil.sha256Hex(dto.getPassword()).equals(userEntity.getPassword())) {
       throw new BaseException(400, "password.invalid");
     }
+
+    List<String> roles = new ArrayList<>();
+
+   String role = userEntity.getRoleEntity().getValue();
+    if(role != null){
+      roles.add(role);
+    }
+
     JwtTokenProperties jwts = JwtTokenProperties.builder()
         .id(userEntity.getId())
         .username(userEntity.getUsername())
         .fullName(userEntity.getFullName())
+        .privileges(roles)
         .build();
     return jwtProvider.generateToken(jwts);
   }
@@ -61,5 +75,16 @@ public class UserServiceImpl extends
     entity.setPassword(DigestUtil.sha256Hex(dto.getPassword()));
   }
 
+  @Override
+  protected void specificMapToEntity(UserDTO dto, UserEntity entity) {
+    super.specificMapToEntity(dto, entity);
+    RoleEntity roleEntity = roleService.findRoleEntityById(dto.getRoleId());
+    entity.setRoleEntity(roleEntity);
+  }
 
+  @Override
+  protected void specificMapToDTO(UserEntity entity, UserDTO dto) {
+    super.specificMapToDTO(entity, dto);
+    dto.setRoleDTO(roleService.findDTO(entity.getRoleEntity().getId()));
+  }
 }

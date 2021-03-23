@@ -1,13 +1,17 @@
 package medical.education.dao.model;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import medical.education.dto.RoleDTO;
 import org.hibernate.annotations.Where;
 import spring.backend.library.dao.model.BaseEntity;
 
@@ -32,8 +36,6 @@ public class UserEntity extends BaseEntity {
 
   private String value;
 
-  private Long role;
-
   private Long age;
 
   private Long gender;
@@ -43,5 +45,9 @@ public class UserEntity extends BaseEntity {
   private String email;
 
   private String phoneNumber;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "role_id")
+  private RoleEntity roleEntity;
 
 }

@@ -3,6 +3,8 @@ package medical.education.dao.repository;
 import java.util.Optional;
 import medical.education.dao.model.UserEntity;
 import medical.education.dto.UserDTO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import spring.backend.library.dao.repository.BaseRepository;
@@ -15,4 +17,5 @@ public interface UserRepository extends BaseRepository<UserEntity, UserDTO, Long
   boolean existsByUsername(String username, Long id);
 
   Optional<UserEntity> findByUsername(String username);
+
 }
