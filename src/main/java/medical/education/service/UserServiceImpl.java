@@ -78,13 +78,20 @@ public class UserServiceImpl extends
   @Override
   protected void specificMapToEntity(UserDTO dto, UserEntity entity) {
     super.specificMapToEntity(dto, entity);
-    RoleEntity roleEntity = roleService.findRoleEntityById(dto.getRoleId());
-    entity.setRoleEntity(roleEntity);
+    if (dto.getRoleId() != null) {
+      RoleEntity roleEntity = roleService.findRoleEntityById(dto.getRoleId());
+
+      if (roleEntity != null) {
+        entity.setRoleEntity(roleEntity);
+      }
+    }
   }
 
   @Override
   protected void specificMapToDTO(UserEntity entity, UserDTO dto) {
     super.specificMapToDTO(entity, dto);
-    dto.setRoleDTO(roleService.findDTO(entity.getRoleEntity().getId()));
+    if (entity.getRoleEntity() != null) {
+      dto.setRoleDTO(roleService.findDTO(entity.getRoleEntity().getId()));
+    }
   }
 }
