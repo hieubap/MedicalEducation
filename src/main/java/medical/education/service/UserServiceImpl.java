@@ -51,8 +51,12 @@ public class UserServiceImpl extends
     }
 
     List<String> roles = new ArrayList<>();
+    String role = null;
 
-   String role = userEntity.getRoleEntity().getValue();
+    if(userEntity.getRoleEntity() != null) {
+       role = userEntity.getRoleEntity().getValue();
+    }
+
     if(role != null){
       roles.add("ROLE_" + role);
     }
