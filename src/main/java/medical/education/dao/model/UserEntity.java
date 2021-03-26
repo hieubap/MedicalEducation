@@ -11,7 +11,6 @@ import javax.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import medical.education.dto.RoleDTO;
 import org.hibernate.annotations.Where;
 import spring.backend.library.dao.model.BaseEntity;
 
