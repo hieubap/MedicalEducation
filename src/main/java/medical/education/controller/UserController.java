@@ -27,4 +27,9 @@ public class UserController extends BaseController<UserDTO, UserService> {
   public ResponseEntity login(@RequestBody LoginDTO dto) {
     return response(service.validateLogin(dto));
   }
+
+  @PostMapping("/register")
+  public ResponseEntity register(@RequestBody UserDTO userDTO){
+    return response(getService().register(userDTO));
+  }
 }

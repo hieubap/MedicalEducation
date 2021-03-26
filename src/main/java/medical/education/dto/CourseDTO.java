@@ -25,5 +25,7 @@ public class CourseDTO extends BaseDTO {
 
   private List<Long> subjectIds;
 
+  private List<UserDTO> registers;
+
   private Long price;
 }

@@ -1,9 +1,7 @@
 package medical.education.service;
 
 import com.google.common.base.Strings;
-import java.time.LocalDate;
 import medical.education.dao.model.NotificationEntity;
-import medical.education.dao.repository.BillRepository;
 import medical.education.dao.repository.NotificationRepository;
 import medical.education.dto.NotificationDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +15,6 @@ public class NotificationServiceImpl extends
     AbstractBaseService<NotificationEntity, NotificationDTO, NotificationRepository> implements NotificationService {
   @Autowired
   private NotificationRepository notificationRepository;
-
-  @Autowired
-  private BillRepository billRepository;
 
   @Override
   protected NotificationRepository getRepository() {

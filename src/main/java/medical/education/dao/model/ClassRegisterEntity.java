@@ -1,5 +1,6 @@
 package medical.education.dao.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -19,24 +20,23 @@ import spring.backend.library.dao.model.BaseEntity;
 @NoArgsConstructor
 @Where(clause = "deleted = 0")
 @Entity
-@Table(name = "subject_register")
-public class SubjectRegisterEntity extends BaseEntity {
+@Table(name = "class_register")
+public class ClassRegisterEntity extends BaseEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  /**
-   * 1: chờ xếp lớp
-   * 2: đã xác nhận
-   * 3: hủy
-   */
-  private Short status;
+  @Column(name = "class_id")
+  private Long classId;
 
-  @OneToOne
-  @JoinColumn(name = "course_id")
-  private CourseEntity course;
+  @Column(name = "student_id")
+  private Long studentId;
 
   @ManyToOne
-  @JoinColumn(name = "buyer_id")
-  private UserEntity buyer;
+  @JoinColumn(name = "class_id",updatable = false,insertable = false)
+  private ClassEntity classInfo;
+
+  @OneToOne
+  @JoinColumn(name = "student_id",insertable = false,updatable = false)
+  private UserEntity student;
 }

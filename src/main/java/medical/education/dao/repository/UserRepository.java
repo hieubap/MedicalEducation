@@ -13,8 +13,8 @@ import spring.backend.library.dao.repository.BaseRepository;
 public interface UserRepository extends BaseRepository<UserEntity, UserDTO, Long> {
 
   @Query("select case when count(e) > 0 then true else false end from UserEntity e"
-      + " where e.username = :username and (:id is null or e.id <> :id)")
-  boolean existsByUsername(String username, Long id);
+      + " where e.username = :username")
+  boolean existsByUsername(String username);
 
   Optional<UserEntity> findByUsername(String username);
 

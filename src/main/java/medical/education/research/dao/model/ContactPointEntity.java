@@ -23,19 +23,22 @@ public class ContactPointEntity {
 
   /**
    * phone | fax | email | pager | url | sms | other
+   * system
    */
-  private Short system;
-
-  private String value;
+  private Short systemType;
 
   /**
    * home | work | temp | old | mobile - purpose of this contact point
+   * use
    */
-  private Short use;
+  private Short useType;
 
-  private Short rank;
+  /**
+   * rank
+   */
+  private Short ranking;
 
-  private ZonedDateTime start;
+  private ZonedDateTime startTime;
 
-  private ZonedDateTime end;
+  private ZonedDateTime endTime;
 }

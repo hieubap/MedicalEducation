@@ -1,6 +1,6 @@
 package medical.education.dao.model;
 
-import java.util.Collection;
+import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -23,7 +23,6 @@ import spring.backend.library.dao.model.BaseEntity;
 @Setter
 @NoArgsConstructor
 public class CourseEntity extends BaseEntity {
-
   @Id
   @GeneratedValue(generator = "course_generator")
   @SequenceGenerator(name = "course_generator", sequenceName = "course_sq", initialValue = 1)
@@ -44,6 +43,13 @@ public class CourseEntity extends BaseEntity {
       name = "course_subject",
       joinColumns = @JoinColumn(name = "course_id", referencedColumnName = "id"),
       inverseJoinColumns = @JoinColumn(name = "subject_id", referencedColumnName = "id"))
-  private Collection<SubjectEntity> subjects;
+  private List<SubjectEntity> subjects;
+
+  @ManyToMany
+  @JoinTable(
+      name = "course_register",
+      joinColumns = @JoinColumn(name = "course_id", referencedColumnName = "id"),
+      inverseJoinColumns = @JoinColumn(name = "student_id", referencedColumnName = "id"))
+  private List<UserEntity> registers;
 
 }

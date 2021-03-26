@@ -1,4 +1,8 @@
 package medical.education.service;
+import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
+import medical.education.enums.Gender;
+import java.time.LocalDateTime;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import spring.backend.library.config.filter.JwtProvider;
 import spring.backend.library.config.filter.JwtProvider.JwtTokenProperties;
+import spring.backend.library.dto.ResponseEntity;
 import spring.backend.library.exception.BaseException;
 import spring.backend.library.service.AbstractBaseService;
 import spring.backend.library.utils.DigestUtil;
@@ -73,8 +78,11 @@ public class UserServiceImpl extends
   @Override
   protected void beforeSave(UserEntity entity, UserDTO dto) {
     super.beforeSave(entity, dto);
-    if (repository.existsByUsername(dto.getUsername(), dto.getId())) {
-      throw new BaseException(400, "username.is.exists");
+    if (dto.getUsername() == null || repository.existsByUsername(dto.getUsername())) {
+      throw new BaseException(400, "username is exists or null");
+    }
+    if (Strings.isNullOrEmpty(dto.getPassword())) {
+      throw new BaseException(400, "password is empty or null");
     }
     entity.setPassword(DigestUtil.sha256Hex(dto.getPassword()));
   }
@@ -97,5 +105,13 @@ public class UserServiceImpl extends
     if (entity.getRoleEntity() != null) {
       dto.setRoleDTO(roleService.findDTO(entity.getRoleEntity().getId()));
     }
+  }
+
+  @Override
+  public ResponseEntity register(UserDTO userDTO) {
+
+    save(userDTO);
+
+    return new ResponseEntity(userDTO);
   }
 }
