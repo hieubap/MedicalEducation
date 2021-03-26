@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import medical.education.enums.Gender;
 import spring.backend.library.dto.BaseDTO;
 
 @Getter
@@ -23,7 +24,7 @@ public class UserDTO extends BaseDTO {
 
   private Long age;
 
-  private Long gender;
+  private Gender gender;
 
   private String address;
 

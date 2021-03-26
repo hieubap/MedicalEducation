@@ -20,6 +20,6 @@ public class RoleServiceImpl extends AbstractBaseService<RoleEntity, RoleDTO, Ro
 
   @Override
   public RoleEntity findRoleEntityById(Long id) {
-    return roleRepository.findById(id).get();
+    return roleRepository.findById(id).orElse(null);
   }
 }
