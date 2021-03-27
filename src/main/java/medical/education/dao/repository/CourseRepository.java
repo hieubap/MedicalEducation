@@ -12,4 +12,6 @@ public interface CourseRepository extends BaseRepository<CourseEntity, CourseDTO
   @Query("select e from CourseEntity e "
       + " where (e.name like :#{#dto.name} or :#{#dto.name} is null) ")
   Page<CourseEntity> search(CourseDTO dto, Pageable pageable);
+
+  boolean existsByCode(String code);
 }

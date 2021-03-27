@@ -10,6 +10,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import lombok.Getter;
@@ -21,7 +22,7 @@ import org.hibernate.annotations.Where;
 import spring.backend.library.dao.model.BaseEntity;
 
 @Entity
-@Table(name = "user")
+@Table(name = "users")
 @Where(clause = "deleted=0")
 @Getter
 @Setter
@@ -62,5 +63,8 @@ public class UserEntity extends BaseEntity {
       joinColumns = @JoinColumn(name = "student_id", referencedColumnName = "id"),
       inverseJoinColumns = @JoinColumn(name = "course_id", referencedColumnName = "id"))
   private List<CourseEntity> courses;
+
+  @OneToMany(mappedBy = "student")
+  private List<StudyProcessEntity> listStudyProcess;
 
 }

@@ -30,7 +30,7 @@ public class CourseEntity extends BaseEntity {
 
   private String name;
 
-  private String value;
+  private String code;
 
   private String thoiGianHoc;
 

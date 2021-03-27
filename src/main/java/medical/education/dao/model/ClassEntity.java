@@ -10,7 +10,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import lombok.Getter;
@@ -43,9 +42,9 @@ public class ClassEntity extends BaseEntity {
   @JoinColumn(name = "subject_id",updatable = false,insertable = false)
   private SubjectEntity subject;
 
-  private LocalDateTime start;
+  private LocalDateTime startTime;
 
-  private LocalDateTime end;
+  private LocalDateTime endTime;
 
   /**
    * số lượng đăng ký

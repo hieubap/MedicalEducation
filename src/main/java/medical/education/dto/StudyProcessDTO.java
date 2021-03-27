@@ -10,12 +10,21 @@ import spring.backend.library.dto.BaseDTO;
 @Setter
 @NoArgsConstructor
 @ToString(callSuper = true)
-public class CourseRegisterDTO extends BaseDTO {
+public class StudyProcessDTO extends BaseDTO {
   private Long studentId;
 
-  private Long courseId;
+  /**
+   * lớp học
+   */
+  private Long classId;
 
-  private String code;
+  private Short status;
 
-  private UserDTO student;
+  private String muster;
+
+  private Double midPoint;
+
+  private Double endPoint;
+
+  private Double total;
 }

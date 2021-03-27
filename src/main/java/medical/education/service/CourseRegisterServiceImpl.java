@@ -33,7 +33,7 @@ public class CourseRegisterServiceImpl extends
     super.beforeSave(entity, dto);
     if (dto.getStudentId() == null || !studentRepository.existsById(dto.getStudentId()))
       throw new BaseException(400,"studentId is null or not exist");
-    if (dto.getCourseId() == null || !courseRepository.existsById(dto.getCourseId()))
-      throw new BaseException(400,"courseId is null or not exist");
+    if (dto.getCode() == null || !courseRepository.existsByCode(dto.getCode()))
+      throw new BaseException(400,"code is null or not exist");
   }
 }

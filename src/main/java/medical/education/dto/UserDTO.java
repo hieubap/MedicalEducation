@@ -1,5 +1,6 @@
 package medical.education.dto;
 
+import java.util.List;
 import javax.persistence.Id;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -36,5 +37,6 @@ public class UserDTO extends BaseDTO {
 
   private RoleDTO roleDTO;
 
+  private List<StudyProcessDTO> listStudyProcess;
 
 }
