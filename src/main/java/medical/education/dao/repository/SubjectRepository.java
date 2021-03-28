@@ -12,6 +12,6 @@ public interface SubjectRepository extends BaseRepository<SubjectEntity, Subject
   @Query("select e from SubjectEntity e "
       + " where (e.name like :#{#dto.name} or :#{#dto.name} is null) "
       + " and (e.type = :#{#dto.type} or :#{#dto.type} is null)"
-      + " and (e.value = :#{#dto.value} or :#{#dto.value} is null)")
+      + " and (e.code = :#{#dto.code} or :#{#dto.code} is null)")
   Page<SubjectEntity> search(SubjectDTO dto, Pageable pageable);
 }

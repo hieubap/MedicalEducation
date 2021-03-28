@@ -2,7 +2,6 @@ package medical.education.service;
 
 import java.util.Map;
 import medical.education.dao.model.ClassEntity;
-import medical.education.dao.model.StudyProcessEntity;
 import medical.education.dao.repository.ClassRepository;
 import medical.education.dao.repository.SubjectRepository;
 import medical.education.dto.ClassDTO;
@@ -47,6 +46,9 @@ implements ClassService {
       throw new BaseException(400,"id is not exist");
 
     ClassEntity classEntity = classRepository.findById(id).get();
+    if (classEntity.getStatus() == (short) 3 )
+      throw new BaseException(400,"class has approval");
+
     classEntity.setStatus((short) 3);
 
     studyProcessService.generateLearningRoute(id);

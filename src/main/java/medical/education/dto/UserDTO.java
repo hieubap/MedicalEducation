@@ -23,9 +23,11 @@ public class UserDTO extends BaseDTO {
 
   private String value;
 
+  private Short status;
+
   private Long age;
 
-  private Gender gender;
+  private Short gender;
 
   private String address;
 
@@ -33,7 +35,7 @@ public class UserDTO extends BaseDTO {
 
   private String phoneNumber;
 
-  private Long roleId;
+  private Short role;
 
   private RoleDTO roleDTO;
 

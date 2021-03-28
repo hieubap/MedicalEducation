@@ -90,8 +90,8 @@ public class UserServiceImpl extends
   @Override
   protected void specificMapToEntity(UserDTO dto, UserEntity entity) {
     super.specificMapToEntity(dto, entity);
-    if (dto.getRoleId() != null) {
-      RoleEntity roleEntity = roleService.findRoleEntityById(dto.getRoleId());
+    if (dto.getRole() != null) {
+      RoleEntity roleEntity = roleService.findRoleEntityById(Long.valueOf(dto.getRole().toString()));
 
       if (roleEntity != null) {
         entity.setRoleEntity(roleEntity);

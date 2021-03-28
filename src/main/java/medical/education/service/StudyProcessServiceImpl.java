@@ -31,6 +31,9 @@ public class StudyProcessServiceImpl extends
   @Autowired
   private ClassRepository classRepository;
 
+  @Autowired
+  private SubjectServiceImpl subjectService;
+
   @Override
   protected StudyProcessRepository getRepository() {
     return studyProcessRepository;
@@ -58,5 +61,11 @@ public class StudyProcessServiceImpl extends
     }
 
     getRepository().saveAll(listStudent);
+  }
+
+  @Override
+  protected void specificMapToDTO(StudyProcessEntity entity, StudyProcessDTO dto) {
+    super.specificMapToDTO(entity, dto);
+    dto.setSubject(subjectService.mapToDTO(entity.getClazz().getSubject()));
   }
 }

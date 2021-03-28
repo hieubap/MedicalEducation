@@ -18,4 +18,8 @@ public class CourseRegisterDTO extends BaseDTO {
   private String code;
 
   private UserDTO student;
+
+  private CourseDTO course;
+
+  private Short status;
 }

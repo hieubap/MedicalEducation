@@ -11,6 +11,7 @@ import javax.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Where;
 import spring.backend.library.dao.model.BaseEntity;
 
 @Getter
@@ -18,6 +19,7 @@ import spring.backend.library.dao.model.BaseEntity;
 @NoArgsConstructor
 @Entity
 @Table(name = "learning")
+@Where(clause = "deleted=0")
 public class StudyProcessEntity extends BaseEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

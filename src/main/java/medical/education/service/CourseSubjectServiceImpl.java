@@ -35,6 +35,13 @@ public class CourseSubjectServiceImpl extends
       throw new BaseException(400,"subjectId is null or not exist");
     if (dto.getCourseId() == null || !courseRepository.existsById(dto.getCourseId()))
       throw new BaseException(400,"courseId is null or not exist");
+    if (courseSubjectRepository.exist(dto.getCourseId(),dto.getSubjectId()))
+      throw new BaseException(400,"subject is exist on course");
+  }
 
+  @Override
+  protected void afterSave(CourseSubjectEntity entity, CourseSubjectDTO dto) {
+    super.afterSave(entity, dto);
+    entity.setSubject(subjectRepository.findById(entity.getSubjectId()).get());
   }
 }

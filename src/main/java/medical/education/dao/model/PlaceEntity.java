@@ -1,12 +1,9 @@
 package medical.education.dao.model;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,20 +15,12 @@ import spring.backend.library.dao.model.BaseEntity;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "course_subject")
-@Where(clause = "deleted=0")
-public class CourseSubjectEntity extends BaseEntity {
+@Table(name = "place")
+@Where(clause = "deleted = 0")
+public class PlaceEntity extends BaseEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(name = "course_id")
-  private Long courseId;
-
-  @Column(name = "subject_id")
-  private Long subjectId;
-
-  @OneToOne
-  @JoinColumn(name = "subject_id",insertable = false,updatable = false)
-  private SubjectEntity subject;
+  private String address;
 }

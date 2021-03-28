@@ -12,7 +12,7 @@ import spring.backend.library.dto.BaseDTO;
 @ToString(callSuper = true)
 public class SubjectDTO extends BaseDTO {
 
-  private String value;
+  private String code;
 
   private String name;
 

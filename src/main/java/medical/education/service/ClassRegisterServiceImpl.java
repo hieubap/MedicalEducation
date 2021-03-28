@@ -37,4 +37,10 @@ implements ClassRegisterService{
       throw new BaseException(400,"studentId is null or not exist");
 
   }
+
+  @Override
+  protected void specificMapToDTO(ClassRegisterEntity entity, ClassRegisterDTO dto) {
+    super.specificMapToDTO(entity, dto);
+    dto.setSubjectName(entity.getClassInfo().getSubject().getName());
+  }
 }

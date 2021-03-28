@@ -13,6 +13,7 @@ import spring.backend.library.dto.BaseDTO;
 public class StudyProcessDTO extends BaseDTO {
   private Long studentId;
 
+  private SubjectDTO subject;
   /**
    * lớp học
    */

@@ -31,7 +31,7 @@ public class SubjectEntity extends BaseEntity {
   private Long id;
 
   @Column(nullable = false)
-  private String value;
+  private String code;
 
   @Column(nullable = false)
   private String name;

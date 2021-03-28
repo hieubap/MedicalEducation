@@ -44,14 +44,26 @@ public class UserEntity extends BaseEntity {
 
   private Long age;
 
-  @Convert(converter = GenderConverter.class)
-  private Gender gender;
+  private Short gender;
 
   private String address;
 
   private String email;
 
   private String phoneNumber;
+
+  /**
+   * 0: hoạt động
+   * 1: khóa
+   */
+  private Short status;
+
+  /**
+   * 1: admin
+   * 2: teacher
+   * 3: student
+   */
+  private Short role;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "role_id")
