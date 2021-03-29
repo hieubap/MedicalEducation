@@ -14,8 +14,5 @@ public interface CourseSubjectRepository extends BaseRepository<CourseSubjectEnt
   boolean exist(Long courseId,Long subjectId);
 
   @Transactional
-  @Modifying
-  @Query(value = "update CourseSubjectEntity e set e.deleted = 1 "
-      + " where e.courseId = :#{#courseId} and e.subjectId = :#{#subjectId} ")
   void deleteByCourseIdAndSubjectId(Long courseId,Long subjectId);
 }
