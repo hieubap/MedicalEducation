@@ -4,5 +4,5 @@ import medical.education.dto.CourseSubjectDTO;
 import spring.backend.library.service.BaseService;
 
 public interface CourseSubjectService extends BaseService<CourseSubjectDTO> {
-
+  void delete(Long courseId,Long subjectId);
 }

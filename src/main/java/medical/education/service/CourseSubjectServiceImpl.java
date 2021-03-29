@@ -44,4 +44,9 @@ public class CourseSubjectServiceImpl extends
     super.afterSave(entity, dto);
     entity.setSubject(subjectRepository.findById(entity.getSubjectId()).get());
   }
+
+  @Override
+  public void delete(Long courseId, Long subjectId) {
+    getRepository().deleteByCourseIdAndSubjectId(courseId,subjectId);
+  }
 }

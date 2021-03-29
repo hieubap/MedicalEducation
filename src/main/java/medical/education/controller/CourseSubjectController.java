@@ -4,9 +4,11 @@ import medical.education.dto.CourseSubjectDTO;
 import medical.education.service.CourseSubjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import spring.backend.library.controller.BaseController;
+import spring.backend.library.dto.ResponseEntity;
 
 @CrossOrigin
 @RestController
@@ -20,4 +22,9 @@ public class CourseSubjectController extends BaseController<CourseSubjectDTO, Co
     return courseSubjectService;
   }
 
+  @DeleteMapping
+  public ResponseEntity delete(Long courseId,Long subjectId){
+    courseSubjectService.delete(courseId,subjectId);
+    return response(null);
+  }
 }
