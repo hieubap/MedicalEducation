@@ -47,6 +47,9 @@ public class CourseSubjectServiceImpl extends
 
   @Override
   public void delete(Long courseId, Long subjectId) {
+    if (!courseSubjectRepository.exist(courseId,subjectId))
+      throw new BaseException(400,"subject not on course");
+
     getRepository().deleteByCourseIdAndSubjectId(courseId,subjectId);
   }
 }
