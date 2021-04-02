@@ -10,8 +10,11 @@ import medical.education.dto.SubjectDTO;
 public interface SubjectRepository extends BaseRepository<SubjectEntity, SubjectDTO, Long> {
   @Override
   @Query("select e from SubjectEntity e "
-      + " where (e.name like :#{#dto.name} or :#{#dto.name} is null) "
+      + " where (lower(e.name) like :#{#dto.name} or :#{#dto.name} is null) "
       + " and (e.type = :#{#dto.type} or :#{#dto.type} is null)"
       + " and (e.code = :#{#dto.code} or :#{#dto.code} is null)")
   Page<SubjectEntity> search(SubjectDTO dto, Pageable pageable);
+
+  @Query(" select count(e) from SubjectEntity e where e.deleted = 0 ")
+  Integer countAll();
 }

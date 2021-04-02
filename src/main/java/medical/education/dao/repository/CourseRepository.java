@@ -10,7 +10,7 @@ import medical.education.dto.CourseDTO;
 public interface CourseRepository extends BaseRepository<CourseEntity, CourseDTO,Long> {
   @Override
   @Query("select e from CourseEntity e "
-      + " where (e.name like :#{#dto.name} or :#{#dto.name} is null) "
+      + " where (lower(e.name) like :#{#dto.name} or :#{#dto.name} is null) "
       + " and (e.id = :#{#dto.id} or :#{#dto.id} is null) ")
   Page<CourseEntity> search(CourseDTO dto, Pageable pageable);
 

@@ -21,11 +21,11 @@ public class CourseDTO extends BaseDTO {
 
   private String details;
 
-  private List<SubjectDTO> subjects;
+  private List<SubjectDTO> listSubject;
 
   private List<Long> subjectIds;
 
-  private List<UserDTO> registers;
+  private List<UserDTO> listRegisters;
 
   private Long price;
 }

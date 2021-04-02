@@ -99,13 +99,13 @@ public class UserServiceImpl extends
     }
   }
 
-  @Override
-  protected void specificMapToDTO(UserEntity entity, UserDTO dto) {
-    super.specificMapToDTO(entity, dto);
-    if (entity.getRoleEntity() != null) {
-      dto.setRoleDTO(roleService.findDTO(entity.getRoleEntity().getId()));
-    }
-  }
+//  @Override
+//  protected void specificMapToDTO(UserEntity entity, UserDTO dto) {
+//    super.specificMapToDTO(entity, dto);
+//    if (entity.getRoleEntity() != null) {
+//      dto.setRoleDTO(roleService.findById(entity.getRoleEntity().getId()));
+//    }
+//  }
 
   @Override
   public ResponseEntity register(UserDTO userDTO) {
@@ -113,5 +113,15 @@ public class UserServiceImpl extends
     save(userDTO);
 
     return new ResponseEntity(userDTO);
+  }
+
+  @Override
+  public UserDTO getCurrentUser() {
+    return repository.findById(Long.valueOf("1")).map(this::mapToDTO).get();
+  }
+
+  @Override
+  public Long getCurrentUserId() {
+    return Long.valueOf("1");
   }
 }

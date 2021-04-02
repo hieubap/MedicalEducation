@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -37,6 +38,11 @@ public class ClassEntity extends BaseEntity {
    */
   private Short status;
 
+  /**
+   * mã lớp
+   */
+  private String code;
+
   @Column(name = "subject_id")
   private Long subjectId;
 
@@ -59,7 +65,7 @@ public class ClassEntity extends BaseEntity {
    */
   private Long numberRegister;
 
-  @ManyToMany
+  @ManyToMany(fetch = FetchType.LAZY)
   @JoinTable(
       name = "class_register",
       joinColumns = @JoinColumn(name = "class_id", referencedColumnName = "id"),

@@ -45,7 +45,7 @@ public class CourseEntity extends BaseEntity {
       inverseJoinColumns = @JoinColumn(name = "subject_id", referencedColumnName = "id"))
   private List<SubjectEntity> subjects;
 
-  @ManyToMany
+  @ManyToMany(fetch = FetchType.LAZY)
   @JoinTable(
       name = "course_register",
       joinColumns = @JoinColumn(name = "course_id", referencedColumnName = "id"),

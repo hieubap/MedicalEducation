@@ -9,6 +9,8 @@ import medical.education.dao.repository.SubjectRepository;
 import medical.education.dto.CourseDTO;
 import medical.education.dto.SubjectDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import spring.backend.library.exception.BaseException;
 import spring.backend.library.service.AbstractBaseService;
@@ -47,27 +49,35 @@ public class CourseServiceImpl extends
 
   @Override
   protected void specificMapToEntity(CourseDTO dto, CourseEntity entity) {
-    super.specificMapToEntity(dto, entity);
-    List<SubjectEntity> entities = new ArrayList<>();
-    if (dto.getSubjectIds() != null) {
-      for (Long d : dto.getSubjectIds()) {
-        if (!subjectRepository.existsById(d)) {
-          throw new BaseException(400, "id subject " + d + " is not exist");
-        }
-        entities.add(subjectService.findById(d));
-      }
-    }
-    entity.setSubjects(entities);
+//    super.specificMapToEntity(dto, entity);
+//    List<SubjectEntity> entities = new ArrayList<>();
+//    if (dto.getSubjectIds() != null) {
+//      for (Long d : dto.getSubjectIds()) {
+//        if (!subjectRepository.existsById(d)) {
+//          throw new BaseException(400, "id subject " + d + " is not exist");
+//        }
+//        entities.add(subjectService.findById(d));
+//      }
+//    }
+//    entity.setSubjects(entities);
   }
 
   @Override
   protected void specificMapToDTO(CourseEntity entity, CourseDTO dto) {
     super.specificMapToDTO(entity, dto);
-    List<SubjectDTO> dtos = new ArrayList<>();
-    for (SubjectEntity e : entity.getSubjects()) {
-      dtos.add(subjectService.findDTO(e.getId()));
+    if (entity.getMapAllProperties()){
+      List<SubjectDTO> dtos = new ArrayList<>();
+      for (SubjectEntity e : entity.getSubjects()) {
+        dtos.add(subjectService.findById(e.getId()));
+      }
+      dto.setListSubject(dtos);
     }
+  }
 
-    dto.setSubjects(dtos);
+  @Override
+  public Page<CourseDTO> search(CourseDTO dto, Pageable pageable) {
+    if (dto.getName() != null)
+      dto.setName("%"+dto.getName().trim().replaceAll(" ","%") + "%");
+    return super.search(dto, pageable);
   }
 }

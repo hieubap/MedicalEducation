@@ -16,11 +16,16 @@ import lombok.Setter;
 @ToString(callSuper = true)
 public class ClassDTO extends BaseDTO {
   private Long subjectId;
-  private List<UserDTO> register;
+  private Long courseId;
+  private Long teacherId;
+
+  private List<UserDTO> listRegister;
   private CourseDTO course;
   private SubjectDTO subject;
+  private String code;
   private Short status;
-  private LocalDateTime startTime;
-  private LocalDateTime endTime;
+  private String time;
+//  private LocalDateTime startTime;
+//  private LocalDateTime endTime;
   private Long numberRegister;
 }

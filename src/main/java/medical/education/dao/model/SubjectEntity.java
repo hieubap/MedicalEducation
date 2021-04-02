@@ -36,6 +36,11 @@ public class SubjectEntity extends BaseEntity {
   @Column(nullable = false)
   private String name;
 
+  /**
+   * tên tắt
+   */
+  private String shortName;
+
 //  @Column(columnDefinition = "VARCHAR(60) CHECK (status in ('LT + BT','TH'))", nullable = false)
   private String type;
 

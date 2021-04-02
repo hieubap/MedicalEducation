@@ -1,12 +1,10 @@
 package medical.education.dto;
 
-import lombok.ToString;
-import medical.education.research.dto.StudentDTO;
-import spring.backend.library.dto.BaseDTO;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
+import spring.backend.library.dto.BaseDTO;
 
 @Getter
 @Setter
@@ -18,6 +16,8 @@ public class ClassRegisterDTO extends BaseDTO {
   private UserDTO student;
   private String className;
   private String subjectName;
+  private String subjectCode;
   private String courseName;
   private PlaceDTO place;
+  private String codeClass;
 }

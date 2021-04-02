@@ -9,4 +9,6 @@ import spring.backend.library.service.BaseService;
 public interface UserService extends BaseService<UserDTO> {
     Map<String,Object> validateLogin(LoginDTO dto);
     ResponseEntity register(UserDTO userDTO);
+    UserDTO getCurrentUser();
+    Long getCurrentUserId();
 }
