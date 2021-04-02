@@ -46,6 +46,13 @@ public class ClassEntity extends BaseEntity {
   @Column(name = "subject_id")
   private Long subjectId;
 
+  @Column(name = "teacher_id")
+  private Long teacherId;
+
+  @OneToOne
+  @JoinColumn(name = "teacher_id",insertable = false,updatable = false)
+  private UserEntity teacher;
+
   @OneToOne
   @JoinColumn(name = "subject_id",updatable = false,insertable = false)
   private SubjectEntity subject;
