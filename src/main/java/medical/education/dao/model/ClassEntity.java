@@ -32,7 +32,7 @@ public class ClassEntity extends BaseEntity {
 
   /**
    * 1: chờ đăng kí lớp
-   * 2: đã đăng kí lớp
+   * 2: đã đủ số lượng
    * 3: xác nhận
    * 4: hủy lớp
    */
@@ -46,8 +46,14 @@ public class ClassEntity extends BaseEntity {
   @Column(name = "subject_id")
   private Long subjectId;
 
+//  @Column(name = "course_id")
+//  private Long courseId;
+
   @Column(name = "teacher_id")
   private Long teacherId;
+
+  @Column(name = "place_id")
+  private Long placeId;
 
   @OneToOne
   @JoinColumn(name = "teacher_id",insertable = false,updatable = false)
@@ -56,6 +62,16 @@ public class ClassEntity extends BaseEntity {
   @OneToOne
   @JoinColumn(name = "subject_id",updatable = false,insertable = false)
   private SubjectEntity subject;
+
+//  @OneToOne
+//  @JoinColumn(name = "course_id",updatable = false,insertable = false)
+//  private CourseEntity course;
+
+  @OneToOne
+  @JoinColumn(name = "place_id",insertable = false,updatable = false)
+  private PlaceEntity place;
+
+  private String time;
 
   private LocalDateTime startTime;
 
@@ -70,7 +86,7 @@ public class ClassEntity extends BaseEntity {
   /**
    * số lượng đăng ký
    */
-  private Long numberRegister;
+  private Long limitRegister;
 
   @ManyToMany(fetch = FetchType.LAZY)
   @JoinTable(

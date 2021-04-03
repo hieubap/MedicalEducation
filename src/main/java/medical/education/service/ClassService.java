@@ -6,4 +6,5 @@ import spring.backend.library.service.BaseService;
 
 public interface ClassService extends BaseService<ClassDTO> {
   ResponseEntity approval(Long id);
+  ResponseEntity cancel(Long id);
 }

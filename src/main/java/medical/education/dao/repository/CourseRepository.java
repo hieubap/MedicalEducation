@@ -15,4 +15,6 @@ public interface CourseRepository extends BaseRepository<CourseEntity, CourseDTO
   Page<CourseEntity> search(CourseDTO dto, Pageable pageable);
 
   boolean existsByCode(String code);
+
+  CourseEntity findByCode(String code);
 }

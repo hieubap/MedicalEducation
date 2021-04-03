@@ -40,10 +40,9 @@ public class ClassRegisterEntity extends BaseEntity {
   @JoinColumn(name = "student_id",insertable = false,updatable = false)
   private UserEntity student;
 
-  @Column(name = "place_id")
-  private Long placeId;
-
-  @OneToOne
-  @JoinColumn(name = "place_id",insertable = false,updatable = false)
-  private PlaceEntity place;
+  /**
+   * 0: thành công
+   * 1: lớp bị hủy
+   */
+  private Short status;
 }

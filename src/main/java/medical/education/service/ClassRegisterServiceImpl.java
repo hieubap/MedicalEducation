@@ -42,25 +42,14 @@ public class ClassRegisterServiceImpl extends
       throw new BaseException(400, "codeClass is null or not exist");
     }
     entity.setClassId(classRepository.findByCode(dto.getCodeClass()).getId());
-  }
-
-  @Override
-  public void mapToEntity(ClassRegisterDTO dto, ClassRegisterEntity entity) {
-    super.mapToEntity(dto, entity);
-    entity.setStudentId(userService.getCurrentUserId());
+    entity.setStatus((short) 0);
   }
 
   @Override
   protected void afterSave(ClassRegisterEntity entity, ClassRegisterDTO dto) {
     super.afterSave(entity, dto);
+    entity.setStudentId(userService.getCurrentUserId());
     entity.setClassInfo(classRepository.findByCode(dto.getCodeClass()));
-  }
-
-  @Override
-  protected void specificMapToDTO(ClassRegisterEntity entity, ClassRegisterDTO dto) {
-    super.specificMapToDTO(entity, dto);
-    dto.setSubjectName(entity.getClassInfo().getSubject().getName());
-    dto.setSubjectCode(entity.getClassInfo().getSubject().getCode());
     dto.setStudent(userService.getCurrentUser());
   }
 

@@ -14,10 +14,8 @@ public class ClassRegisterDTO extends BaseDTO {
   private Long studentId;
   private Long classId;
   private UserDTO student;
-  private String className;
-  private String subjectName;
-  private String subjectCode;
   private String courseName;
-  private PlaceDTO place;
+  private ClassDTO classInfo;
   private String codeClass;
+  private Short status;
 }
