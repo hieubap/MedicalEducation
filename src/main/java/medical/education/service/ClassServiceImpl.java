@@ -6,8 +6,10 @@ import java.util.List;
 import java.util.Map;
 import medical.education.dao.model.ClassEntity;
 import medical.education.dao.model.ClassRegisterEntity;
+import medical.education.dao.model.NotificationEntity;
 import medical.education.dao.repository.ClassRegisterRepository;
 import medical.education.dao.repository.ClassRepository;
+import medical.education.dao.repository.NotificationRepository;
 import medical.education.dao.repository.PlaceRepository;
 import medical.education.dao.repository.SubjectRepository;
 import medical.education.dao.repository.UserRepository;
@@ -44,6 +46,9 @@ public class ClassServiceImpl extends AbstractBaseService<ClassEntity, ClassDTO,
   @Autowired
   private ClassRegisterRepository classRegisterRepository;
 
+  @Autowired
+  private NotificationRepository notificationRepository;
+
   @Override
   protected ClassRepository getRepository() {
     return classRepository;
@@ -76,8 +81,8 @@ public class ClassServiceImpl extends AbstractBaseService<ClassEntity, ClassDTO,
       newCode = newCode + "_" + i;
       entity.setCode(newCode);
     }
-    if (entity.getStatus() == null){
-      entity.setStatus((short)5);
+    if (entity.getStatus() == null) {
+      entity.setStatus((short) 5);
     }
   }
 
@@ -121,14 +126,20 @@ public class ClassServiceImpl extends AbstractBaseService<ClassEntity, ClassDTO,
   @Override
   public ResponseEntity cancel(Long id) {
     ClassEntity entity = classRepository.findById(id).get();
-    entity.setStatus((short)2);
-
+    entity.setStatus((short) 2);
+    List<NotificationEntity> notificationEntities = new ArrayList<>();
     List<ClassRegisterEntity> list = classRegisterRepository.findByClassId(id);
-    for (ClassRegisterEntity e : list){
-      e.setStatus((short)1 );
+    for (ClassRegisterEntity e : list) {
+      e.setStatus((short) 1);
+      NotificationEntity notificationEntity = new NotificationEntity();
+      notificationEntity.setContent("class" + entity.getId().toString() + "cancel");
+      notificationEntity.setOwnerId(e.getStudentId());
+      notificationEntities.add(notificationEntity);
     }
+
+    notificationRepository.saveAll(notificationEntities);
     classRegisterRepository.saveAll(list);
 
-    return new ResponseEntity(200,"cancel class '"+entity.getCode()+"' successful");
+    return new ResponseEntity(200, "cancel class '" + entity.getCode() + "' successful");
   }
 }

@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import spring.backend.library.controller.BaseController;
 import spring.backend.library.dto.ResponseEntity;
@@ -15,6 +16,7 @@ import spring.backend.library.dto.ResponseEntity;
 @RestController
 @RequestMapping("/class")
 public class ClassController extends BaseController<ClassDTO, ClassService> {
+
   @Autowired
   private ClassService classService;
 
@@ -24,7 +26,12 @@ public class ClassController extends BaseController<ClassDTO, ClassService> {
   }
 
   @PutMapping("/approval/{id}")
-  public ResponseEntity approval(@PathVariable Long id){
+  public ResponseEntity approval(@PathVariable Long id) {
     return response(classService.approval(id));
+  }
+
+  @PutMapping("/cancel")
+  public ResponseEntity cancel(@RequestParam Long id) {
+    return response(classService.cancel(id));
   }
 }
