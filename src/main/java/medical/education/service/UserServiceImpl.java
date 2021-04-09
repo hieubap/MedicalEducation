@@ -13,6 +13,8 @@ import medical.education.dao.repository.UserRepository;
 import medical.education.dto.LoginDTO;
 import medical.education.dto.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -24,7 +26,7 @@ import spring.backend.library.service.AbstractBaseService;
 import spring.backend.library.utils.DigestUtil;
 
 @Service
-@PreAuthorize("hasAnyRole('TEARCHER', 'ADMIN', 'USER')")
+
 public class UserServiceImpl extends
     AbstractBaseService<UserEntity, UserDTO, UserRepository> implements UserService {
 
@@ -126,4 +128,13 @@ public class UserServiceImpl extends
   public Long getCurrentUserId() {
     return Long.valueOf("1");
   }
+
+  @Override
+  @PreAuthorize("hasAnyRole('TEARCHER', 'ADMIN', 'USER')")
+  public Page<UserDTO> search(UserDTO dto, Pageable pageable) {
+    return super.search(dto, pageable);
+  }
+
+
+
 }
