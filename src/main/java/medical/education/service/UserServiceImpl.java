@@ -13,6 +13,7 @@ import medical.education.dao.repository.UserRepository;
 import medical.education.dto.LoginDTO;
 import medical.education.dto.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import spring.backend.library.config.filter.JwtProvider;
@@ -23,6 +24,7 @@ import spring.backend.library.service.AbstractBaseService;
 import spring.backend.library.utils.DigestUtil;
 
 @Service
+@PreAuthorize("hasAnyRole('TEARCHER', 'ADMIN', 'USER')")
 public class UserServiceImpl extends
     AbstractBaseService<UserEntity, UserDTO, UserRepository> implements UserService {
 

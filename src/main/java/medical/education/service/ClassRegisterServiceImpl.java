@@ -9,11 +9,13 @@ import medical.education.dao.repository.UserRepository;
 import medical.education.dto.ClassRegisterDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import spring.backend.library.exception.BaseException;
 import spring.backend.library.service.AbstractBaseService;
 
 @Service
+@PreAuthorize("hasAnyRole('TEARCHER', 'ADMIN', 'USER')")
 public class ClassRegisterServiceImpl extends
     AbstractBaseService<ClassRegisterEntity, ClassRegisterDTO, ClassRegisterRepository>
     implements ClassRegisterService {
@@ -53,11 +55,11 @@ public class ClassRegisterServiceImpl extends
     dto.setStudent(userService.getCurrentUser());
   }
 
-//  @Scheduled(cron = "0,20,40 * * * * *")
-  public void schedule(){
+  //  @Scheduled(cron = "0,20,40 * * * * *")
+  public void schedule() {
     List<ClassEntity> list = (List<ClassEntity>) classRepository.findAll();
-    for (ClassEntity e : list){
-      e.setCode(String.format("LOP_%04d",e.getId()));
+    for (ClassEntity e : list) {
+      e.setCode(String.format("LOP_%04d", e.getId()));
     }
     classRepository.saveAll(list);
   }

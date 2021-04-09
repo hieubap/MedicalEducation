@@ -11,11 +11,13 @@ import medical.education.dto.SubjectDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import spring.backend.library.exception.BaseException;
 import spring.backend.library.service.AbstractBaseService;
 
 @Service
+@PreAuthorize("hasAnyRole('ADMIN')")
 public class CourseServiceImpl extends
     AbstractBaseService<CourseEntity, CourseDTO, CourseRepository> implements CourseService {
 

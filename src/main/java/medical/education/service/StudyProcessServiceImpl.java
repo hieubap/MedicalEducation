@@ -14,11 +14,13 @@ import medical.education.dao.repository.StudyProcessRepository;
 import medical.education.dao.repository.UserRepository;
 import medical.education.dto.StudyProcessDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import spring.backend.library.exception.BaseException;
 import spring.backend.library.service.AbstractBaseService;
 
 @Service
+@PreAuthorize("hasAnyRole('TEARCHER', 'ADMIN')")
 public class StudyProcessServiceImpl extends
     AbstractBaseService<StudyProcessEntity, StudyProcessDTO, StudyProcessRepository>
     implements StudyProcessService {

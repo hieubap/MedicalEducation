@@ -6,11 +6,13 @@ import medical.education.dao.repository.CourseSubjectRepository;
 import medical.education.dao.repository.SubjectRepository;
 import medical.education.dto.CourseSubjectDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import spring.backend.library.exception.BaseException;
 import spring.backend.library.service.AbstractBaseService;
 
 @Service
+@PreAuthorize("hasAnyRole('ADMIN')")
 public class CourseSubjectServiceImpl extends
     AbstractBaseService<CourseSubjectEntity, CourseSubjectDTO, CourseSubjectRepository> implements
     CourseSubjectService {

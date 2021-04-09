@@ -6,11 +6,13 @@ import medical.education.dao.repository.NotificationRepository;
 import medical.education.dto.NotificationDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import spring.backend.library.exception.BaseException;
 import spring.backend.library.service.AbstractBaseService;
 
 @Service
+@PreAuthorize("hasAnyRole('ADMIN')")
 public class NotificationServiceImpl extends
     AbstractBaseService<NotificationEntity, NotificationDTO, NotificationRepository> implements NotificationService {
   @Autowired

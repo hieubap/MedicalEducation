@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 import spring.backend.library.controller.BaseController;
 import spring.backend.library.dto.ResponseEntity;
 
-@CrossOrigin
 @RestController
 @RequestMapping("/class")
 public class ClassController extends BaseController<ClassDTO, ClassService> {

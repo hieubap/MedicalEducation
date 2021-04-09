@@ -5,11 +5,13 @@ import medical.education.dao.model.PlaceEntity;
 import medical.education.dao.repository.PlaceRepository;
 import medical.education.dto.PlaceDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import spring.backend.library.exception.BaseException;
 import spring.backend.library.service.AbstractBaseService;
 
 @Service
+@PreAuthorize("hasAnyRole('ADMIN')")
 public class PlaceServiceImpl extends AbstractBaseService<PlaceEntity, PlaceDTO, PlaceRepository>
 implements PlaceService{
   @Autowired
