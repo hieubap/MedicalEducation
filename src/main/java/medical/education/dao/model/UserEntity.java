@@ -1,6 +1,7 @@
 package medical.education.dao.model;
 
 import java.util.List;
+import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -65,8 +66,11 @@ public class UserEntity extends BaseEntity {
    */
   private Short role;
 
+  @Column(name = "role_id")
+  private Long roleId;
+
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "role_id")
+  @JoinColumn(name = "role_id",updatable = false,insertable = false)
   private RoleEntity roleEntity;
 
   @ManyToMany(fetch = FetchType.LAZY)
