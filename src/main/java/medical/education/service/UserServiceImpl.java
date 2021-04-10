@@ -63,7 +63,7 @@ public class UserServiceImpl extends
     String role = null;
 
     if(userEntity.getRoleEntity() != null) {
-       role = userEntity.getRoleEntity().getValue();
+       role = userEntity.getRoleEntity().getName();
     }
 
     if(role != null){
