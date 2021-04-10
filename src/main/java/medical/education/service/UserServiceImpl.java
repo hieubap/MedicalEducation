@@ -1,4 +1,5 @@
 package medical.education.service;
+
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import medical.education.enums.Gender;
@@ -26,7 +27,6 @@ import spring.backend.library.service.AbstractBaseService;
 import spring.backend.library.utils.DigestUtil;
 
 @Service
-
 public class UserServiceImpl extends
     AbstractBaseService<UserEntity, UserDTO, UserRepository> implements UserService {
 
@@ -60,13 +60,13 @@ public class UserServiceImpl extends
     }
 
     List<String> roles = new ArrayList<>();
-    String role = null;
 
-    if(userEntity.getRoleEntity() != null) {
-       role = userEntity.getRoleEntity().getValue();
+    String role = "";
+    if (userEntity.getRoleId() != null) {
+      role = roleService.findRoleEntityById(userEntity.getRoleId()).getValue();
     }
 
-    if(role != null){
+    if (role != null) {
       roles.add("ROLE_" + role);
     }
 
@@ -95,7 +95,8 @@ public class UserServiceImpl extends
   protected void specificMapToEntity(UserDTO dto, UserEntity entity) {
     super.specificMapToEntity(dto, entity);
     if (dto.getRole() != null) {
-      RoleEntity roleEntity = roleService.findRoleEntityById(Long.valueOf(dto.getRole().toString()));
+      RoleEntity roleEntity = roleService
+          .findRoleEntityById(Long.valueOf(dto.getRole().toString()));
 
       if (roleEntity != null) {
         entity.setRoleEntity(roleEntity);
@@ -134,7 +135,6 @@ public class UserServiceImpl extends
   public Page<UserDTO> search(UserDTO dto, Pageable pageable) {
     return super.search(dto, pageable);
   }
-
 
 
 }
