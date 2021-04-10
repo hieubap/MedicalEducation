@@ -14,7 +14,6 @@ import spring.backend.library.exception.BaseException;
 import spring.backend.library.service.AbstractBaseService;
 
 @Service
-@PreAuthorize("hasAnyRole('ADMIN')")
 public class SubjectServiceImpl extends
     AbstractBaseService<SubjectEntity, SubjectDTO, SubjectRepository> implements SubjectService {
 
@@ -27,6 +26,7 @@ public class SubjectServiceImpl extends
   }
 
   @Override
+  @PreAuthorize("hasAnyRole('ADMIN')")
   protected void beforeSave(SubjectEntity entity, SubjectDTO dto) {
     super.beforeSave(entity, dto);
     if (Strings.isNullOrEmpty(dto.getName())) {
