@@ -41,9 +41,9 @@ public class CourseServiceImpl extends
     if (dto.getName() == null) {
       throw new BaseException(400, "name is not null");
     }
-    if (dto.getThoiGianHoc() == null) {
-      throw new BaseException(400, "thoiGianHoc is not null");
-    }
+//    if (dto.getThoiGianHoc() == null) {
+//      throw new BaseException(400, "thoiGianHoc is not null");
+//    }
     if (dto.getPrice() == null) {
       throw new BaseException(400, "price is not null");
     }
