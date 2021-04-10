@@ -1,10 +1,6 @@
 package medical.education.service;
 
 import com.google.common.base.Strings;
-import com.google.common.collect.Lists;
-import medical.education.enums.Gender;
-import java.time.LocalDateTime;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -17,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import spring.backend.library.config.filter.JwtProvider;
 import spring.backend.library.config.filter.JwtProvider.JwtTokenProperties;
@@ -75,6 +70,7 @@ public class UserServiceImpl extends
         .username(userEntity.getUsername())
         .fullName(userEntity.getFullName())
         .privileges(roles)
+        .role(role)
         .build();
     return jwtProvider.generateToken(jwts);
   }
@@ -114,7 +110,8 @@ public class UserServiceImpl extends
 
   @Override
   public ResponseEntity register(UserDTO userDTO) {
-
+    userDTO.setRole((short) 3);
+    userDTO.setStatus((short) 0);
     save(userDTO);
 
     return new ResponseEntity(userDTO);
@@ -131,10 +128,8 @@ public class UserServiceImpl extends
   }
 
   @Override
-  @PreAuthorize("hasAnyRole('TEARCHER', 'ADMIN', 'USER')")
+  @PreAuthorize("hasAnyRole('ADMIN')")
   public Page<UserDTO> search(UserDTO dto, Pageable pageable) {
     return super.search(dto, pageable);
   }
-
-
 }
