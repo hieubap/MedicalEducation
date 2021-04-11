@@ -15,6 +15,7 @@ import medical.education.dao.repository.SubjectRepository;
 import medical.education.dao.repository.UserRepository;
 import medical.education.dto.ClassDTO;
 import medical.education.dto.CourseDTO;
+import medical.education.enums.ClassStatusEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -84,13 +85,8 @@ public class ClassServiceImpl extends AbstractBaseService<ClassEntity, ClassDTO,
       entity.setCode(newCode);
     }
     if (entity.getStatus() == null) {
-      entity.setStatus((short) 5);
+      entity.setStatus(ClassStatusEnum.CHO_DANG_KY_LOP);
     }
-  }
-
-  @Override
-  public ClassDTO save(Long id, Map<String, Object> map) {
-    return super.save(id, map);
   }
 
   @Override
@@ -114,11 +110,11 @@ public class ClassServiceImpl extends AbstractBaseService<ClassEntity, ClassDTO,
     }
 
     ClassEntity classEntity = classRepository.findById(id).get();
-    if (classEntity.getStatus() == (short) 3) {
+    if (classEntity.getStatus() == ClassStatusEnum.XAC_NHAN) {
       throw new BaseException(400, "class has approval");
     }
 
-    classEntity.setStatus((short) 3);
+    classEntity.setStatus(ClassStatusEnum.XAC_NHAN);
 
     studyProcessService.generateLearningRoute(id);
 
@@ -128,7 +124,7 @@ public class ClassServiceImpl extends AbstractBaseService<ClassEntity, ClassDTO,
   @Override
   public ResponseEntity cancel(Long id) {
     ClassEntity entity = classRepository.findById(id).get();
-    entity.setStatus((short) 2);
+    entity.setStatus(ClassStatusEnum.HUY_LOP);
     List<NotificationEntity> notificationEntities = new ArrayList<>();
     List<ClassRegisterEntity> list = classRegisterRepository.findByClassId(id);
     for (ClassRegisterEntity e : list) {

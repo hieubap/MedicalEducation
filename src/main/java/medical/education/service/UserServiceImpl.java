@@ -1,5 +1,6 @@
 package medical.education.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Strings;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,9 +14,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import spring.backend.library.config.filter.JwtProvider;
 import spring.backend.library.config.filter.JwtProvider.JwtTokenProperties;
+import spring.backend.library.config.userdetail.UserDetail;
 import spring.backend.library.dto.ResponseEntity;
 import spring.backend.library.exception.BaseException;
 import spring.backend.library.service.AbstractBaseService;
@@ -70,7 +75,6 @@ public class UserServiceImpl extends
         .username(userEntity.getUsername())
         .fullName(userEntity.getFullName())
         .privileges(roles)
-        .role(role)
         .build();
     return jwtProvider.generateToken(jwts);
   }
@@ -119,7 +123,13 @@ public class UserServiceImpl extends
 
   @Override
   public UserDTO getCurrentUser() {
-    return repository.findById(Long.valueOf("1")).map(this::mapToDTO).get();
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    if (authentication == null || !authentication.isAuthenticated()
+        || authentication instanceof AnonymousAuthenticationToken) {
+      return null;
+    }
+    UserDetail userDetail = (UserDetail) authentication.getPrincipal();
+    return mapToDTO(repository.findById(userDetail.getId()).get());
   }
 
   @Override

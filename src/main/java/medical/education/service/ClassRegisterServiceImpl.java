@@ -8,7 +8,6 @@ import medical.education.dao.repository.ClassRepository;
 import medical.education.dao.repository.UserRepository;
 import medical.education.dto.ClassRegisterDTO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import spring.backend.library.exception.BaseException;
@@ -25,9 +24,6 @@ public class ClassRegisterServiceImpl extends
 
   @Autowired
   private ClassRepository classRepository;
-
-  @Autowired
-  private UserRepository userRepository;
 
   @Autowired
   private UserService userService;
