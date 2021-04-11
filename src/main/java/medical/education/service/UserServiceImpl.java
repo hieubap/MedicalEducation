@@ -1,5 +1,6 @@
 package medical.education.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Strings;
 import io.jsonwebtoken.Jwts;
 import java.util.ArrayList;
@@ -17,11 +18,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import spring.backend.library.config.filter.JwtProvider;
 import spring.backend.library.config.filter.JwtProvider.JwtTokenProperties;
+import spring.backend.library.config.userdetail.UserDetail;
 import spring.backend.library.dto.ResponseEntity;
 import spring.backend.library.exception.BaseException;
 import spring.backend.library.service.AbstractBaseService;
@@ -76,7 +81,6 @@ public class UserServiceImpl extends
         .username(userEntity.getUsername())
         .fullName(userEntity.getFullName())
         .privileges(roles)
-        .role(role)
         .build();
     return jwtProvider.generateToken(jwts);
   }
@@ -144,7 +148,16 @@ public class UserServiceImpl extends
 
   @Override
   public UserDTO getCurrentUser() {
-    return repository.findById(getCurrentUserId()).map(this::mapToDTO).get();
+//<<<<<<< HEAD
+//    return repository.findById(getCurrentUserId()).map(this::mapToDTO).get();
+//=======
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    if (authentication == null || !authentication.isAuthenticated()
+        || authentication instanceof AnonymousAuthenticationToken) {
+      return null;
+    }
+    UserDetail userDetail = (UserDetail) authentication.getPrincipal();
+    return mapToDTO(repository.findById(userDetail.getId()).get());
   }
 
   @Value("${application.security.config.tokenPrefix}")
