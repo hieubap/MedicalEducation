@@ -1,19 +1,25 @@
 package medical.education.service;
 
 import com.google.common.base.Strings;
+import io.jsonwebtoken.Jwts;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import javax.crypto.SecretKey;
+import javax.servlet.http.HttpServletRequest;
 import medical.education.dao.model.RoleEntity;
 import medical.education.dao.model.UserEntity;
 import medical.education.dao.repository.UserRepository;
 import medical.education.dto.LoginDTO;
 import medical.education.dto.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import spring.backend.library.config.filter.JwtProvider;
 import spring.backend.library.config.filter.JwtProvider.JwtTokenProperties;
 import spring.backend.library.dto.ResponseEntity;
@@ -78,7 +84,9 @@ public class UserServiceImpl extends
   @Override
   protected void beforeSave(UserEntity entity, UserDTO dto) {
     super.beforeSave(entity, dto);
-    if (dto.getUsername() == null || repository.existsByUsername(dto.getUsername())) {
+    if ((dto.getUsername() == null || repository.existsByUsername(dto.getUsername()))
+    && dto.getPasswordChange() == null)
+    {
       throw new BaseException(400, "username is exists or null");
     }
     if (Strings.isNullOrEmpty(dto.getPassword())) {
@@ -100,6 +108,8 @@ public class UserServiceImpl extends
     }
   }
 
+
+
 //  @Override
 //  protected void specificMapToDTO(UserEntity entity, UserDTO dto) {
 //    super.specificMapToDTO(entity, dto);
@@ -107,6 +117,21 @@ public class UserServiceImpl extends
 //      dto.setRoleDTO(roleService.findById(entity.getRoleEntity().getId()));
 //    }
 //  }
+
+
+  @Override
+  public ResponseEntity changePassword(UserDTO userDTO) {
+    UserDTO user = getCurrentUser();
+    if(!DigestUtil.sha256Hex(userDTO.getPassword()).equals(user.getPassword()))
+      throw new BaseException(400,"password not correct");
+
+    user.setPassword(userDTO.getPasswordChange());
+    user.setPasswordChange("=))");
+
+    save(getCurrentUserId(), user);
+
+    return new ResponseEntity(user);
+  }
 
   @Override
   public ResponseEntity register(UserDTO userDTO) {
@@ -119,12 +144,24 @@ public class UserServiceImpl extends
 
   @Override
   public UserDTO getCurrentUser() {
-    return repository.findById(Long.valueOf("1")).map(this::mapToDTO).get();
+    return repository.findById(getCurrentUserId()).map(this::mapToDTO).get();
   }
+
+  @Value("${application.security.config.tokenPrefix}")
+  private String preFix;
+
+  @Autowired
+  private SecretKey secretKey;
 
   @Override
   public Long getCurrentUserId() {
-    return Long.valueOf("1");
+    HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+    String token = request.getHeader("Authorization").replace(preFix, "");
+
+    Long userId = Long.valueOf(Jwts.parser()
+        .setSigningKey(secretKey)
+        .parseClaimsJws(token).getBody().get("userId").toString());
+    return userId;
   }
 
   @Override

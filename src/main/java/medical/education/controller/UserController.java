@@ -6,6 +6,7 @@ import medical.education.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -34,4 +35,10 @@ public class UserController extends BaseController<UserDTO, UserService> {
   public ResponseEntity register(@RequestBody UserDTO userDTO){
     return response(getService().register(userDTO));
   }
+
+  @PutMapping("/change-password")
+  public ResponseEntity changePassword(@RequestBody UserDTO userDTO){
+    return response(getService().changePassword(userDTO));
+  }
+
 }
