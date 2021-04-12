@@ -12,6 +12,7 @@ import javax.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import medical.education.enums.ClassRegisterEnum;
 import org.hibernate.annotations.Where;
 import spring.backend.library.dao.model.BaseEntity;
 
@@ -44,5 +45,5 @@ public class ClassRegisterEntity extends BaseEntity {
    * 0: thành công
    * 1: lớp bị hủy
    */
-  private Short status;
+  private ClassRegisterEnum status;
 }

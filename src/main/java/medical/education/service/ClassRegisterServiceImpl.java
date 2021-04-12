@@ -7,6 +7,7 @@ import medical.education.dao.repository.ClassRegisterRepository;
 import medical.education.dao.repository.ClassRepository;
 import medical.education.dao.repository.UserRepository;
 import medical.education.dto.ClassRegisterDTO;
+import medical.education.enums.ClassRegisterEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -44,15 +45,15 @@ public class ClassRegisterServiceImpl extends
     if (dto.getCodeClass() == null || !classRepository.existsByCode(dto.getCodeClass())) {
       throw new BaseException(400, "codeClass is null or not exist");
     }
-    if(getRepository().existsByClassIdAndStudentId(classId,studentId)){
+    if (getRepository().existsByClassIdAndStudentId(classId, studentId)) {
       throw new BaseException(400, Message.getMessage("ClassId.Has.Registered"));
     }
-    if(classRepository.findByCode(dto.getCodeClass()).getLimitRegister() <=
-        classRegisterRepository.countByClassId(classId)){
+    if (classRepository.findByCode(dto.getCodeClass()).getLimitRegister() <=
+        classRegisterRepository.countByClassId(classId)) {
       throw new BaseException(400, Message.getMessage("Class.Is.Full"));
     }
     entity.setClassId(classId);
-    entity.setStatus((short) 0);
+    entity.setStatus(ClassRegisterEnum.THANH_CONG);
   }
 
   @Override

@@ -15,6 +15,7 @@ import medical.education.dao.repository.SubjectRepository;
 import medical.education.dao.repository.UserRepository;
 import medical.education.dto.ClassDTO;
 import medical.education.dto.CourseDTO;
+import medical.education.enums.ClassRegisterEnum;
 import medical.education.enums.ClassStatusEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -81,7 +82,7 @@ public class ClassServiceImpl extends AbstractBaseService<ClassEntity, ClassDTO,
     if (Strings.isNullOrEmpty(entity.getCode())) {
       String newCode = subjectRepository.findById(entity.getSubjectId()).get().getShortName();
       Long i = classRepository.count();
-      newCode = "CLASS_" + newCode + "_" + String.format("%04d",i);
+      newCode = "CLASS_" + newCode + "_" + String.format("%04d", i);
       entity.setCode(newCode);
     }
     if (entity.getStatus() == null) {
@@ -128,7 +129,7 @@ public class ClassServiceImpl extends AbstractBaseService<ClassEntity, ClassDTO,
     List<NotificationEntity> notificationEntities = new ArrayList<>();
     List<ClassRegisterEntity> list = classRegisterRepository.findByClassId(id);
     for (ClassRegisterEntity e : list) {
-      e.setStatus((short) 1);
+      e.setStatus(ClassRegisterEnum.LOP_BI_HUY);
       NotificationEntity notificationEntity = new NotificationEntity();
       notificationEntity.setContent("class" + entity.getId().toString() + "cancel");
       notificationEntity.setOwnerId(e.getStudentId());

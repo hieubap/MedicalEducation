@@ -1,6 +1,8 @@
 package medical.education.enums;
 
-public enum GenderEnum {
+import spring.backend.library.enums.IEnum;
+
+public enum GenderEnum implements IEnum {
 
   NAM((short) 0), NU((short) 1);
 

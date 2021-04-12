@@ -5,6 +5,6 @@ import javax.persistence.Converter;
 import spring.backend.library.enums.EnumConverter;
 
 @Converter(autoApply = true)
-public class ClassStatusEnumConverter extends EnumConverter<ClassStatusEnum> {
+public class ClassRegisterEnumConverter extends EnumConverter<ClassRegisterEnum> {
 
 }

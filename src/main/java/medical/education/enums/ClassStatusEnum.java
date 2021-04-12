@@ -1,6 +1,8 @@
 package medical.education.enums;
 
-public enum ClassStatusEnum {
+import spring.backend.library.enums.IEnum;
+
+public enum ClassStatusEnum implements IEnum {
 
   CHO_DANG_KY_LOP((short) 1),
   DA_DU_SO_LUONG((short) 2),
