@@ -140,4 +140,15 @@ public class ClassServiceImpl extends AbstractBaseService<ClassEntity, ClassDTO,
 
     return new ResponseEntity(200, "cancel class '" + entity.getCode() + "' successful");
   }
+
+//  @Scheduled(cron = "20,40,0 * * * * *")
+//  public void schedule(){
+//    List<ClassEntity> list = (List<ClassEntity>) classRepository.findAll();
+//    for (ClassEntity e : list){
+//      String s = String.format("LOP_%04d",e.getId());
+//      e.setCode(s);
+//    }
+//
+//    classRepository.saveAll(list);
+//  }
 }

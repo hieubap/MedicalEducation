@@ -20,4 +20,6 @@ public interface ClassRegisterRepository extends
   Long countByClassId(Long id);
 
   List<ClassRegisterEntity> findByClassId(Long id);
+
+  boolean existsByClassIdAndStudentId(Long classId,Long studentId);
 }
