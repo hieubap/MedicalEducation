@@ -45,7 +45,7 @@ public class UserEntity extends BaseEntity {
 
   private Long age;
 
-  private Short gender;
+  private Gender gender;
 
   private String address;
 
