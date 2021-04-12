@@ -1,12 +1,11 @@
 package medical.education.dto;
 
 import java.util.List;
-import javax.persistence.Id;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import medical.education.enums.Gender;
+import medical.education.enums.GenderEnum;
 import spring.backend.library.dto.BaseDTO;
 
 @Getter
@@ -29,7 +28,7 @@ public class UserDTO extends BaseDTO {
 
   private Long age;
 
-  private Gender gender;
+  private GenderEnum gender;
 
   private String address;
 

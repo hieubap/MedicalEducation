@@ -2,7 +2,6 @@ package medical.education.dao.model;
 
 import java.util.List;
 import javax.persistence.Column;
-import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -17,8 +16,7 @@ import javax.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import medical.education.enums.Gender;
-import medical.education.enums.GenderConverter;
+import medical.education.enums.GenderEnum;
 import org.hibernate.annotations.Where;
 import spring.backend.library.dao.model.BaseEntity;
 
@@ -45,7 +43,7 @@ public class UserEntity extends BaseEntity {
 
   private Long age;
 
-  private Gender gender;
+  private GenderEnum gender;
 
   private String address;
 

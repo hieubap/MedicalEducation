@@ -1,8 +1,4 @@
 package medical.education.service;
-import medical.education.dao.model.RoleEntity;
-import com.google.common.collect.Lists;
-import medical.education.enums.Gender;
-import java.time.LocalDateTime;
 
 import java.util.ArrayList;
 import java.util.List;

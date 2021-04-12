@@ -5,10 +5,10 @@ import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 
 @Converter(autoApply = true)
-public class GenderConverter implements AttributeConverter<Gender, Short> {
+public class GenderEnumConverter implements AttributeConverter<GenderEnum, Short> {
 
   @Override
-  public Short convertToDatabaseColumn(Gender gender) {
+  public Short convertToDatabaseColumn(GenderEnum gender) {
     if (gender != null) {
       return gender.getValue();
     }
@@ -16,9 +16,9 @@ public class GenderConverter implements AttributeConverter<Gender, Short> {
   }
 
   @Override
-  public Gender convertToEntityAttribute(Short aShort) {
+  public GenderEnum convertToEntityAttribute(Short aShort) {
     if (aShort != null) {
-      Gender gender = Arrays.stream(Gender.values()).filter(e -> e.getValue() == aShort).findFirst()
+      GenderEnum gender = Arrays.stream(GenderEnum.values()).filter(e -> e.getValue() == aShort).findFirst()
           .get();
       return gender;
     }
