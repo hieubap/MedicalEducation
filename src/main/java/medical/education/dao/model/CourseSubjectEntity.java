@@ -1,5 +1,6 @@
 package medical.education.dao.model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -21,6 +22,7 @@ import spring.backend.library.dao.model.BaseEntity;
 @Table(name = "course_subject")
 @Where(clause = "deleted=0")
 public class CourseSubjectEntity extends BaseEntity {
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
@@ -31,7 +33,7 @@ public class CourseSubjectEntity extends BaseEntity {
   @Column(name = "subject_id")
   private Long subjectId;
 
-  @OneToOne
-  @JoinColumn(name = "subject_id",insertable = false,updatable = false)
+  @OneToOne(cascade = CascadeType.ALL)
+  @JoinColumn(name = "subject_id", insertable = false, updatable = false)
   private SubjectEntity subject;
 }
