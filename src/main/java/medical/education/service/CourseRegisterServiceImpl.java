@@ -21,7 +21,7 @@ import spring.backend.library.msg.Message;
 import spring.backend.library.service.AbstractBaseService;
 
 @Service
-@PreAuthorize("hasAnyRole('TEARCHER', 'ADMIN', 'USER')")
+@PreAuthorize("hasAnyRole('TEARCHER', 'ADMIN', 'STUDENT')")
 public class CourseRegisterServiceImpl extends
     AbstractBaseService<CourseRegisterEntity, CourseRegisterDTO, CourseRegisterRepository>
     implements CourseRegisterService {

@@ -19,7 +19,6 @@ import org.springframework.stereotype.Service;
 import spring.backend.library.exception.BaseException;
 
 @Service
-@PreAuthorize("hasAnyRole('ADMIN')")
 public class ImageServiceImpl implements ImageService{
   @Value("${image.upload-dir}")
   private String imagePath;
