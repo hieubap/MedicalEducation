@@ -80,6 +80,7 @@ public class UserServiceImpl extends
         .id(userEntity.getId())
         .username(userEntity.getUsername())
         .fullName(userEntity.getFullName())
+        .role(roles.get(0))
         .privileges(roles)
         .build();
     return jwtProvider.generateToken(jwts);
