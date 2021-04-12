@@ -9,11 +9,15 @@ import medical.education.dao.repository.CourseRegisterRepository;
 import medical.education.dao.repository.CourseRepository;
 import medical.education.dao.repository.UserRepository;
 import medical.education.dto.CourseRegisterDTO;
+import medical.education.enums.CourseRegisterEnum;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import spring.backend.library.exception.BaseException;
+import spring.backend.library.msg.Message;
 import spring.backend.library.service.AbstractBaseService;
 
 @Service
@@ -44,9 +48,15 @@ public class CourseRegisterServiceImpl extends
     super.beforeSave(entity, dto);
     entity.setStudentId(userService.getCurrentUserId());
     if (dto.getCode() == null || !courseRepository.existsByCode(dto.getCode())) {
-      throw new BaseException(400, "code is null or not exist");
+      throw new BaseException(400, Message.getMessage("Null.Or.Not.Exist",new Object[]{"code"}));
+    }
+    CourseEntity courseEntity = courseRepository.findByCode(dto.getCode());
+    CourseRegisterEntity e = courseRegisterRepository.findByCourseId(courseEntity.getId());
+    if ( e != null && !e.getStatus().equals(CourseRegisterEnum.DONE.getValue())) {
+      throw new BaseException(400, Message.getMessage("Has.Register.Course",new Object[]{e.getCourse().getName()}));
     }
     entity.setCourseId(courseRepository.findByCode(dto.getCode()).getId());
+    entity.setStatus(CourseRegisterEnum.WAIT_APPROVE.getValue());
   }
 
   @Override
@@ -55,6 +65,12 @@ public class CourseRegisterServiceImpl extends
     entity.setCourse(courseRepository.findById(entity.getCourseId()).get());
     entity.setStudent(userRepository.findById(entity.getStudentId()).get());
 
+  }
+
+  @Override
+  public Page<CourseRegisterDTO> search(CourseRegisterDTO dto, Pageable pageable) {
+    dto.setStudentId(userService.getCurrentUserId());
+    return super.search(dto, pageable);
   }
 
   //  @Scheduled(cron = "0,20,40 * * * * *")

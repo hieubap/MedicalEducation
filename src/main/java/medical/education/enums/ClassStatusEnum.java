@@ -31,6 +31,7 @@
     public short getValue() {
       return value;
     }
+
     @JsonCreator
     public static ClassStatusEnum decode(final Short value) {
       return Stream.of(ClassStatusEnum.values()).filter(targetEnum -> targetEnum.getValue()==value).findFirst().orElse(null);

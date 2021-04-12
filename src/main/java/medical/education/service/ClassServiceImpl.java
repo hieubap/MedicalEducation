@@ -80,8 +80,8 @@ public class ClassServiceImpl extends AbstractBaseService<ClassEntity, ClassDTO,
      */
     if (Strings.isNullOrEmpty(entity.getCode())) {
       String newCode = subjectRepository.findById(entity.getSubjectId()).get().getShortName();
-      Integer i = classRepository.countClassWithSubject(entity.getSubjectId());
-      newCode = newCode + "_" + i;
+      Long i = classRepository.count();
+      newCode = "CLASS_" + newCode + "_" + String.format("%04d",i);
       entity.setCode(newCode);
     }
     if (entity.getStatus() == null) {
@@ -145,8 +145,12 @@ public class ClassServiceImpl extends AbstractBaseService<ClassEntity, ClassDTO,
 //  public void schedule(){
 //    List<ClassEntity> list = (List<ClassEntity>) classRepository.findAll();
 //    for (ClassEntity e : list){
-//      String s = String.format("LOP_%04d",e.getId());
-//      e.setCode(s);
+////      String s = String.format("LOP_%04d",e.getId());
+////      e.setCode(s);
+//      String newCode = subjectRepository.findById(e.getSubjectId()).get().getShortName();
+//      Long i = e.getId();
+//      newCode = "CLASS_" + newCode + "_" + String.format("%04d",i);
+//      e.setCode(newCode);
 //    }
 //
 //    classRepository.saveAll(list);

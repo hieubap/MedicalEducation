@@ -44,6 +44,7 @@ public class CourseRegisterEntity extends BaseEntity {
    * 0 chờ xét duyệt
    * 1 thành công
    * 2 không thành công
+   * 3 đã hoàn thành khóa học
    */
   private Short status;
 }
