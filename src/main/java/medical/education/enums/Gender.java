@@ -2,7 +2,7 @@ package medical.education.enums;
 
 public enum Gender {
 
-  NAM((short) 1), NU((short) 2);
+  NAM((short) 0), NU((short) 1);
 
   private short value;
 

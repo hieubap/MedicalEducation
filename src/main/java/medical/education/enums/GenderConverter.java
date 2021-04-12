@@ -4,7 +4,7 @@ import java.util.Arrays;
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 
-@Converter
+@Converter(autoApply = true)
 public class GenderConverter implements AttributeConverter<Gender, Short> {
 
   @Override

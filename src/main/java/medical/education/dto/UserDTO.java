@@ -29,7 +29,7 @@ public class UserDTO extends BaseDTO {
 
   private Long age;
 
-  private Short gender;
+  private Gender gender;
 
   private String address;
 
