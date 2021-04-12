@@ -3,6 +3,7 @@ package medical.education.enums;
 import spring.backend.library.enums.IEnum;
 
 public enum ClassRegisterEnum implements IEnum {
+
   THANH_CONG((short) 0),
   LOP_BI_HUY((short) 1);
 

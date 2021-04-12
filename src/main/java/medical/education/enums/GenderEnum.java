@@ -4,7 +4,8 @@ import spring.backend.library.enums.IEnum;
 
 public enum GenderEnum implements IEnum {
 
-  NAM((short) 0), NU((short) 1);
+  NAM((short) 0),
+  NU((short) 1);
 
   private short value;
 

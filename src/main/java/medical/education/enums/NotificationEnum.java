@@ -5,7 +5,6 @@ import spring.backend.library.enums.IEnum;
 public enum NotificationEnum implements IEnum {
 
   CHUA_DOC((short) 1),
-
   DA_DOC((short) 2);
   private short value;
 
