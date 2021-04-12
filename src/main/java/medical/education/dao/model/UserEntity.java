@@ -17,6 +17,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import medical.education.enums.GenderEnum;
+import medical.education.enums.RoleEnum;
 import org.hibernate.annotations.Where;
 import spring.backend.library.dao.model.BaseEntity;
 
@@ -62,7 +63,7 @@ public class UserEntity extends BaseEntity {
    * 2: teacher
    * 3: student
    */
-  private Short role;
+  private RoleEnum role;
 
   @Column(name = "role_id")
   private Long roleId;

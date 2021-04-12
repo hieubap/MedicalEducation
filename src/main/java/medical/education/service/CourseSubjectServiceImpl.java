@@ -16,6 +16,7 @@ import spring.backend.library.service.AbstractBaseService;
 public class CourseSubjectServiceImpl extends
     AbstractBaseService<CourseSubjectEntity, CourseSubjectDTO, CourseSubjectRepository> implements
     CourseSubjectService {
+
   @Autowired
   private CourseSubjectRepository courseSubjectRepository;
 
@@ -33,25 +34,31 @@ public class CourseSubjectServiceImpl extends
   @Override
   protected void beforeSave(CourseSubjectEntity entity, CourseSubjectDTO dto) {
     super.beforeSave(entity, dto);
-    if (dto.getSubjectId() == null || !subjectRepository.existsById(dto.getSubjectId()))
-      throw new BaseException(400,"subjectId is null or not exist");
-    if (dto.getCourseId() == null || !courseRepository.existsById(dto.getCourseId()))
-      throw new BaseException(400,"courseId is null or not exist");
-    if (courseSubjectRepository.exist(dto.getCourseId(),dto.getSubjectId()))
-      throw new BaseException(400,"subject is exist on course");
+    if (dto.getSubjectId() == null || !subjectRepository.existsById(dto.getSubjectId())) {
+      throw new BaseException(400, "subjectId is null or not exist");
+    }
+    if (dto.getCourseId() == null || !courseRepository.existsById(dto.getCourseId())) {
+      throw new BaseException(400, "courseId is null or not exist");
+    }
+    if (courseSubjectRepository.exist(dto.getCourseId(), dto.getSubjectId())) {
+      throw new BaseException(400, "subject is exist on course");
+    }
   }
 
   @Override
   protected void afterSave(CourseSubjectEntity entity, CourseSubjectDTO dto) {
     super.afterSave(entity, dto);
-    entity.setSubject(subjectRepository.findById(entity.getSubjectId()).get());
+    if (subjectRepository.findById(entity.getSubjectId()).orElse(null) != null) {
+      entity.setSubject(subjectRepository.findById(entity.getSubjectId()).get());
+    }
   }
 
   @Override
   public void delete(Long courseId, Long subjectId) {
-    if (!courseSubjectRepository.exist(courseId,subjectId))
-      throw new BaseException(400,"subject not on course");
+    if (!courseSubjectRepository.exist(courseId, subjectId)) {
+      throw new BaseException(400, "subject not on course");
+    }
 
-    getRepository().deleteByCourseIdAndSubjectId(courseId,subjectId);
+    getRepository().deleteByCourseIdAndSubjectId(courseId, subjectId);
   }
 }

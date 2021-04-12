@@ -11,6 +11,7 @@ import javax.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import medical.education.enums.StudyProcessEnum;
 import org.hibernate.annotations.Where;
 import spring.backend.library.dao.model.BaseEntity;
 
@@ -44,7 +45,7 @@ public class StudyProcessEntity extends BaseEntity {
    * 5 đang học
    * 6 đình chỉ
    */
-  private Short status;
+  private StudyProcessEnum status;
 
   /**
    * điểm danh

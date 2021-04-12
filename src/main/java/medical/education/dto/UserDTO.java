@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import medical.education.enums.GenderEnum;
+import medical.education.enums.RoleEnum;
 import spring.backend.library.dto.BaseDTO;
 
 @Getter
@@ -36,7 +37,7 @@ public class UserDTO extends BaseDTO {
 
   private String phoneNumber;
 
-  private Short role;
+  private RoleEnum role;
 
   private RoleDTO roleDTO;
 

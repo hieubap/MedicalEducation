@@ -13,6 +13,7 @@ import medical.education.dao.model.UserEntity;
 import medical.education.dao.repository.UserRepository;
 import medical.education.dto.LoginDTO;
 import medical.education.dto.UserDTO;
+import medical.education.enums.RoleEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -140,7 +141,7 @@ public class UserServiceImpl extends
 
   @Override
   public ResponseEntity register(UserDTO userDTO) {
-    userDTO.setRole((short) 3);
+    userDTO.setRole(RoleEnum.STUDENT);
     userDTO.setStatus((short) 0);
     save(userDTO);
 
