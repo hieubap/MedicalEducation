@@ -11,6 +11,7 @@ import javax.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import medical.education.enums.NotificationEnum;
 import org.hibernate.annotations.Where;
 import spring.backend.library.dao.model.BaseEntity;
 
@@ -30,7 +31,7 @@ public class NotificationEntity extends BaseEntity {
   /** 1: chưa đọc
    *  2: đã đọc
    */
-  private Short isRead = 1;
+  private NotificationEnum isRead;
 
   @Column(name = "owner_id")
   private Long ownerId;
