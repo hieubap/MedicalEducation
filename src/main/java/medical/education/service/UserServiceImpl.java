@@ -200,7 +200,10 @@ public class UserServiceImpl extends
   @Override
   public String uploadAvatar(MultipartFile file) {
     storageService.save(file);
-    return "uploads" + "/" + file.getOriginalFilename();
+    UserEntity u = getRepository().findById(getCurrentUserId()).get();
+    u.setAvatar(file.getOriginalFilename());
+    getRepository().save(u);
+    return file.getOriginalFilename();
   }
 
 }

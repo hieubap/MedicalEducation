@@ -34,6 +34,8 @@ public class UserEntity extends BaseEntity {
   @SequenceGenerator(name = "users_generator", sequenceName = "users_sq", initialValue = 1)
   private Long id;
 
+  private String avatar;
+
   private String username;
 
   private String password;
