@@ -51,7 +51,8 @@ public class CourseRegisterServiceImpl extends
       throw new BaseException(400, Message.getMessage("Null.Or.Not.Exist",new Object[]{"code"}));
     }
     CourseEntity courseEntity = courseRepository.findByCode(dto.getCode());
-    CourseRegisterEntity e = courseRegisterRepository.findByCourseId(courseEntity.getId());
+    CourseRegisterEntity e = courseRegisterRepository.findByCourseIdAndStudentId(
+        courseEntity.getId(),userService.getCurrentUserId());
     if ( e != null && !e.getStatus().equals(CourseRegisterEnum.DONE.getValue())) {
       throw new BaseException(400, Message.getMessage("Has.Register.Course",new Object[]{e.getCourse().getName()}));
     }

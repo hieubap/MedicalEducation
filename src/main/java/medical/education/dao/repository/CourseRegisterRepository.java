@@ -18,7 +18,7 @@ public interface CourseRegisterRepository extends
       + " and (e.status = :#{#dto.status} or :#{#dto.status} is null)")
   Page<CourseRegisterEntity> search(CourseRegisterDTO dto, Pageable pageable);
 
-  CourseRegisterEntity findByCourseId(Long id);
+  CourseRegisterEntity findByCourseIdAndStudentId(Long courseID,Long studentId);
 
   boolean existsByCourseIdAndStudentId(Long courseId,Long studentId);
 }
