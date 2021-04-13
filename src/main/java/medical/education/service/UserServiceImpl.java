@@ -190,7 +190,7 @@ public class UserServiceImpl extends
   }
 
   @Override
-  @PreAuthorize("hasAnyRole('ADMIN')")
+//  @PreAuthorize("hasAnyRole('ADMIN')")
   public Page<UserDTO> search(UserDTO dto, Pageable pageable) {
     return super.search(dto, pageable);
   }

@@ -26,7 +26,6 @@ import spring.backend.library.controller.BaseController;
 import spring.backend.library.dto.ResponseEntity;
 import spring.backend.library.exception.BaseException;
 
-@CrossOrigin
 @RestController
 @RequestMapping("/users")
 public class UserController extends BaseController<UserDTO, UserService> {
