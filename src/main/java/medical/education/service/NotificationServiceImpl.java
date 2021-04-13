@@ -10,6 +10,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import spring.backend.library.exception.BaseException;
+import spring.backend.library.msg.Message;
 import spring.backend.library.service.AbstractBaseService;
 
 @Service
@@ -31,7 +32,7 @@ public class NotificationServiceImpl extends
     super.beforeSave(entity, dto);
     if (Strings.isNullOrEmpty(dto.getContent()) &&
         dto.getOwnerId() == null) {
-      throw new BaseException(400, "content or ownerId is null or empty", null);
+      throw new BaseException(400, Message.getMessage("content.null"), null);//"content or ownerId is null or empty"
     }
     entity.setIsRead(NotificationEnum.CHUA_DOC);
   }
