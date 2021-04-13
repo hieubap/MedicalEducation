@@ -2,17 +2,18 @@ package medical.education.enums;
 
 import spring.backend.library.enums.IEnum;
 
-public enum ClassRegisterEnum implements IEnum {
+public enum RoleEnum implements IEnum {
+  ADMIN((short) 1),
+  TEACHER((short) 2),
+  STUDENT((short) 3);
 
-  THANH_CONG((short) 0),
-  LOP_BI_HUY((short) 1);
+  public short value;
 
-  private short value;
-
-  ClassRegisterEnum(short value) {
+  RoleEnum(short value) {
     this.value = value;
   }
 
+  @Override
   public short getValue() {
     return value;
   }

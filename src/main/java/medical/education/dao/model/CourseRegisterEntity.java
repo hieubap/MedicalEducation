@@ -12,6 +12,7 @@ import javax.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import medical.education.enums.CourseRegisterEnum;
 import org.hibernate.annotations.Where;
 import spring.backend.library.dao.model.BaseEntity;
 
@@ -46,5 +47,5 @@ public class CourseRegisterEntity extends BaseEntity {
    * 2 không thành công
    * 3 đã hoàn thành khóa học
    */
-  private Short status;
+  private CourseRegisterEnum status;
 }

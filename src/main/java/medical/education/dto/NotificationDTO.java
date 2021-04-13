@@ -3,6 +3,7 @@ package medical.education.dto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import medical.education.enums.NotificationEnum;
 import spring.backend.library.dto.BaseDTO;
 
 @Getter
@@ -11,6 +12,6 @@ import spring.backend.library.dto.BaseDTO;
 public class NotificationDTO extends BaseDTO {
   private Long id;
   private String content;
-  private Short isRead;
+  private NotificationEnum isRead;
   private Long ownerId;
 }

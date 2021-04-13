@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import medical.education.enums.StudyProcessEnum;
 import spring.backend.library.dto.BaseDTO;
 
 @Getter
@@ -19,7 +20,7 @@ public class StudyProcessDTO extends BaseDTO {
    */
   private Long classId;
 
-  private Short status;
+  private StudyProcessEnum status;
 
   private String muster;
 

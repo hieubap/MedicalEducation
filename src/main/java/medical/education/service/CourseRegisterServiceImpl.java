@@ -57,7 +57,7 @@ public class CourseRegisterServiceImpl extends
       throw new BaseException(400, Message.getMessage("Has.Register.Course",new Object[]{e.getCourse().getName()}));
     }
     entity.setCourseId(courseRepository.findByCode(dto.getCode()).getId());
-    entity.setStatus(CourseRegisterEnum.WAIT_APPROVE.getValue());
+    entity.setStatus(CourseRegisterEnum.WAIT_APPROVE);
   }
 
   @Override
