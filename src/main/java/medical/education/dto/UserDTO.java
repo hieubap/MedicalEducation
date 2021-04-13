@@ -14,6 +14,7 @@ import spring.backend.library.dto.BaseDTO;
 @NoArgsConstructor
 @ToString(callSuper = true)
 public class UserDTO extends BaseDTO {
+  private String avatar;
 
   private String username;
 
