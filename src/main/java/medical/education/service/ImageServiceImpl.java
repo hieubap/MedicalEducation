@@ -51,6 +51,8 @@ public class ImageServiceImpl implements ImageService{
       System.out.println(filePath.toUri());
       Resource resource = new UrlResource(filePath.toUri());
       System.out.println(resource.getFilename());
+      System.out.println(resource.getURL()+"  __url");
+      System.out.println(resource.getURI()+"  __uri");
       if (resource.exists()) {
         System.out.println(resource.toString());
         return resource;
@@ -61,6 +63,8 @@ public class ImageServiceImpl implements ImageService{
     } catch (MalformedURLException ex) {
       System.out.println(ex.getMessage()+"------");
       throw new BaseException("File not found " + fileName);
+    } catch (IOException e) {
+      e.printStackTrace();
     }
   }
 }
