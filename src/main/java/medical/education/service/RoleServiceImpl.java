@@ -19,10 +19,4 @@ public class RoleServiceImpl extends AbstractBaseService<RoleEntity, RoleDTO, Ro
   protected RoleRepository getRepository() {
     return roleRepository;
   }
-
-  @Override
-  @PreAuthorize("permitAll()")
-  public RoleEntity findRoleEntityById(Long id) {
-    return roleRepository.findById(id).orElse(null);
-  }
 }

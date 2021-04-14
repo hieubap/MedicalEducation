@@ -38,6 +38,8 @@ public class UserDTO extends BaseDTO {
 
   private String phoneNumber;
 
+  private Long idChange;
+
   private RoleEnum role;
 
   private RoleDTO roleDTO;

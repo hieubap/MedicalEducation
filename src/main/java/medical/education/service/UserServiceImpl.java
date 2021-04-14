@@ -2,26 +2,20 @@ package medical.education.service;
 
 import com.google.common.base.Strings;
 import io.jsonwebtoken.Jwts;
-import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import javax.crypto.SecretKey;
 import javax.servlet.http.HttpServletRequest;
-import lombok.SneakyThrows;
 import medical.education.dao.model.RoleEntity;
 import medical.education.dao.model.UserEntity;
+import medical.education.dao.repository.RoleRepository;
 import medical.education.dao.repository.UserRepository;
 import medical.education.dto.LoginDTO;
 import medical.education.dto.UserDTO;
 import medical.education.enums.RoleEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -37,6 +31,7 @@ import spring.backend.library.config.filter.JwtProvider.JwtTokenProperties;
 import spring.backend.library.config.userdetail.UserDetail;
 import spring.backend.library.dto.ResponseEntity;
 import spring.backend.library.exception.BaseException;
+import spring.backend.library.msg.Message;
 import spring.backend.library.service.AbstractBaseService;
 import spring.backend.library.storage.StorageService;
 import spring.backend.library.utils.DigestUtil;
@@ -49,7 +44,7 @@ public class UserServiceImpl extends
   private UserRepository repository;
 
   @Autowired
-  private RoleService roleService;
+  private RoleRepository roleRepository;
 
   @Autowired
   private JwtProvider jwtProvider;
@@ -99,6 +94,7 @@ public class UserServiceImpl extends
   }
 
   @Override
+  @PreAuthorize("hasAnyRole('ADMIN')")
   protected void beforeSave(UserEntity entity, UserDTO dto) {
     super.beforeSave(entity, dto);
     if ((dto.getUsername() == null || repository.existsByUsername(dto.getUsername()))
@@ -115,8 +111,8 @@ public class UserServiceImpl extends
   protected void specificMapToEntity(UserDTO dto, UserEntity entity) {
     super.specificMapToEntity(dto, entity);
     if (dto.getRole() != null) {
-      RoleEntity roleEntity = roleService
-          .findRoleEntityById(Long.valueOf(dto.getRole().toString()));
+      RoleEntity roleEntity = roleRepository
+          .findByName(dto.getRole().getName());
 
       if (roleEntity != null) {
         entity.setRoleEntity(roleEntity);
@@ -206,4 +202,46 @@ public class UserServiceImpl extends
     return file.getOriginalFilename();
   }
 
+  @Override
+  @PreAuthorize("permitAll()")
+  public ResponseEntity changeInfo(UserDTO userDTO) {
+    UserEntity entity = getRepository().findById(getCurrentUserId()).get();
+    UserEntity entityChange = mapToEntity(userDTO);
+    entityChange.setId(entity.getIdChange());
+    entityChange.setUsername(null);
+    entityChange.setRole(entity.getRole());
+    entityChange.setIdChange((long)-1);
+
+    getRepository().save(entityChange);
+
+    entity.setIdChange(entityChange.getId());
+    getRepository().save(entity);
+
+    return new ResponseEntity(200, Message.getMessage("Wait.Admin.Approve.Info"),userDTO);
+  }
+
+  @Override
+  public ResponseEntity adminApproveChange(Long id) {
+    UserEntity entity = getRepository().findById(id).get();
+    UserEntity entityChange = getRepository().findById(entity.getIdChange()).get();
+
+    Long idEntity = entity.getId();
+    String userName = entity.getUsername();
+    String password = entity.getPassword();
+    RoleEnum role = entity.getRole();
+
+    UserDTO dto = mapToDTO(entityChange);
+    UserEntity entitySave = mapToEntity(dto);
+
+    entitySave.setId(idEntity);
+    entitySave.setUsername(userName);
+    entitySave.setPassword(password);
+    entitySave.setRole(role);
+    entitySave.setIdChange(null);
+
+    getRepository().deleteById(entityChange.getId());
+    getRepository().save(entitySave);
+
+    return new ResponseEntity(200,Message.getMessage("Admin.approve.Change.Info"));
+  }
 }

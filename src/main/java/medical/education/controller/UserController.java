@@ -26,6 +26,7 @@ import spring.backend.library.controller.BaseController;
 import spring.backend.library.dto.ResponseEntity;
 import spring.backend.library.exception.BaseException;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/users")
 public class UserController extends BaseController<UserDTO, UserService> {
@@ -57,6 +58,16 @@ public class UserController extends BaseController<UserDTO, UserService> {
   @ResponseStatus(HttpStatus.CREATED)
   public ResponseEntity uploadAvatar(@RequestParam MultipartFile file) {
     return response(getService().uploadAvatar(file));
+  }
+
+  @PutMapping(value = "/change-info")
+  public ResponseEntity changeInfo(@RequestBody UserDTO userDTO) {
+    return response(getService().changeInfo(userDTO));
+  }
+
+  @PutMapping(value = "/admin-approve-change-info/{id}")
+  public ResponseEntity approve(@PathVariable Long id) {
+    return response(getService().adminApproveChange(id));
   }
 
 }

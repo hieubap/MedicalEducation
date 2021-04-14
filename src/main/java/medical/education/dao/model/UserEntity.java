@@ -54,6 +54,8 @@ public class UserEntity extends BaseEntity {
 
   private String phoneNumber;
 
+  private Long idChange;
+
   /**
    * 0: hoạt động
    * 1: khóa
