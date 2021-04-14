@@ -20,10 +20,10 @@ import spring.backend.library.exception.BaseException;
 
 @Service
 public class ImageServiceImpl implements ImageService{
-  @Value("${image.upload-dir}")
-  private String imagePath;
+//  @Value("${image.upload-dir}")
+//  private String imagePath;
 
-  private Path imageLocation;
+  private final Path imageLocation = Paths.get("uploads");
 
   @Override
   public ResponseEntity<byte[]> getImage(String fileName,
@@ -37,13 +37,13 @@ public class ImageServiceImpl implements ImageService{
 
   public Resource loadFileAsResource(String fileName) {
     try {
-      File f = new File(imagePath);
+      File f = imageLocation.toFile();
       if (!f.exists()) {
         f.mkdirs();
       }
 
-      imageLocation = Paths.get(imagePath);
-      System.out.println(imagePath);
+//      imageLocation = Paths.get(imagePath);
+//      System.out.println(imagePath);
       System.out.println(imageLocation);
       System.out.println(fileName);
 
