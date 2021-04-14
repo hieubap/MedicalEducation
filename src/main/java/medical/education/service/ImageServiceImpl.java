@@ -65,6 +65,7 @@ public class ImageServiceImpl implements ImageService{
       throw new BaseException("File not found " + fileName);
     } catch (IOException e) {
       e.printStackTrace();
+      throw new BaseException("IOException" + fileName);
     }
   }
 }
