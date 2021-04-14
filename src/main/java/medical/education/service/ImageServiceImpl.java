@@ -20,9 +20,6 @@ import spring.backend.library.exception.BaseException;
 
 @Service
 public class ImageServiceImpl implements ImageService{
-//  @Value("${image.upload-dir}")
-//  private String imagePath;
-
   private final Path imageLocation = Paths.get("uploads");
 
   @Override
@@ -42,17 +39,8 @@ public class ImageServiceImpl implements ImageService{
         f.mkdirs();
       }
 
-//      imageLocation = Paths.get(imagePath);
-//      System.out.println(imagePath);
-      System.out.println(imageLocation);
-      System.out.println(fileName);
-
-      Path filePath = this.imageLocation.resolve(fileName+".png").normalize();
-      System.out.println(filePath.toUri());
+      Path filePath = this.imageLocation.resolve(fileName).normalize();
       Resource resource = new UrlResource(filePath.toUri());
-      System.out.println(resource.getFilename());
-      System.out.println(resource.getURL()+"  __url");
-      System.out.println(resource.getURI()+"  __uri");
       if (resource.exists()) {
         System.out.println(resource.toString());
         return resource;
@@ -63,9 +51,6 @@ public class ImageServiceImpl implements ImageService{
     } catch (MalformedURLException ex) {
       System.out.println(ex.getMessage()+"------");
       throw new BaseException("File not found " + fileName);
-    } catch (IOException e) {
-      e.printStackTrace();
-      throw new BaseException("IOException" + fileName);
     }
   }
 }
