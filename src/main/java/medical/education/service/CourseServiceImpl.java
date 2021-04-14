@@ -1,5 +1,6 @@
 package medical.education.service;
 
+import com.google.common.base.Strings;
 import java.util.ArrayList;
 import java.util.List;
 import medical.education.dao.model.CourseEntity;
@@ -47,6 +48,11 @@ public class CourseServiceImpl extends
     if (dto.getPrice() == null) {
       throw new BaseException(400, "price is not null");
     }
+    if (Strings.isNullOrEmpty(entity.getCode())) {
+      Long i = getRepository().count();
+      String newCode = "COURSE_" + String.format("%04d", i);
+      entity.setCode(newCode);
+    }
   }
 
   @Override
@@ -67,7 +73,7 @@ public class CourseServiceImpl extends
   @Override
   protected void specificMapToDTO(CourseEntity entity, CourseDTO dto) {
     super.specificMapToDTO(entity, dto);
-    if (entity.getMapAllProperties()){
+    if (entity.getMapAllProperties()) {
       List<SubjectDTO> dtos = new ArrayList<>();
       for (SubjectEntity e : entity.getSubjects()) {
         dtos.add(subjectService.findById(e.getId()));
@@ -78,8 +84,9 @@ public class CourseServiceImpl extends
 
   @Override
   public Page<CourseDTO> search(CourseDTO dto, Pageable pageable) {
-    if (dto.getName() != null)
-      dto.setName("%"+dto.getName().trim().replaceAll(" ","%") + "%");
+    if (dto.getName() != null) {
+      dto.setName("%" + dto.getName().trim().replaceAll(" ", "%") + "%");
+    }
     return super.search(dto, pageable);
   }
 }
