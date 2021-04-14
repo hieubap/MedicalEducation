@@ -52,11 +52,14 @@ public class ImageServiceImpl implements ImageService{
       Resource resource = new UrlResource(filePath.toUri());
       System.out.println(resource.getFilename());
       if (resource.exists()) {
+        System.out.println(resource.toString());
         return resource;
       } else {
+        System.out.println("not found");
         throw new BaseException("File not found " + fileName);
       }
     } catch (MalformedURLException ex) {
+      System.out.println(ex.getMessage()+"------");
       throw new BaseException("File not found " + fileName);
     }
   }
