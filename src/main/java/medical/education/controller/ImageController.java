@@ -19,7 +19,7 @@ public class ImageController{
   @Autowired
   private ImageService imageService;
 
-  @GetMapping("/{fileName}")
+  @GetMapping("/{fileName:.*}")
   public ResponseEntity<byte[]> getImage(@PathVariable String fileName, HttpServletRequest http)
       throws IOException {
     return imageService.getImage(fileName,http);

@@ -39,7 +39,7 @@ public class ImageServiceImpl implements ImageService{
         f.mkdirs();
       }
 
-      Path filePath = this.imageLocation.resolve(fileName).normalize();
+      Path filePath = this.imageLocation.resolve(fileName);
       Resource resource = new UrlResource(filePath.toUri());
       if (resource.exists()) {
         System.out.println(resource.toString());
