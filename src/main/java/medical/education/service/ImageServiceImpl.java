@@ -44,10 +44,13 @@ public class ImageServiceImpl implements ImageService{
 
       imageLocation = Paths.get(imagePath);
       System.out.println(imagePath);
-      System.out.println(imageLocation.toString());
+      System.out.println(imageLocation);
+      System.out.println(fileName);
 
       Path filePath = this.imageLocation.resolve(fileName+".png").normalize();
+      System.out.println(filePath.toUri());
       Resource resource = new UrlResource(filePath.toUri());
+      System.out.println(resource.getFilename());
       if (resource.exists()) {
         return resource;
       } else {
