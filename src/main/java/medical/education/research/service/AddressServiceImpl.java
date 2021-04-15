@@ -15,6 +15,7 @@ import spring.backend.library.service.AbstractBaseService;
 public class AddressServiceImpl extends
     AbstractBaseService<AddressEntity, AddressDTO, AddressRepository>
     implements AddressService {
+
   @Autowired
   private AddressRepository addressRepository;
 
@@ -35,12 +36,15 @@ public class AddressServiceImpl extends
   @Override
   protected void beforeSave(AddressEntity entity, AddressDTO dto) {
     super.beforeSave(entity, dto);
-    if (entity.getStreetId() == null)
-      throw new BaseException(400,"streetId is null");
-    if (entity.getCityId() == null)
-      throw new BaseException(400,"cityId is null");
-    if (entity.getProvincialId() == null)
-      throw new BaseException(400,"provincialId is null");
+    if (entity.getStreetId() == null) {
+      throw new BaseException(400, "streetId is null");
+    }
+    if (entity.getCityId() == null) {
+      throw new BaseException(400, "cityId is null");
+    }
+    if (entity.getProvincialId() == null) {
+      throw new BaseException(400, "provincialId is null");
+    }
     entity.setStreet(streetRepository.findById(dto.getStreetId()).get());
     entity.setCity(cityRepository.findById(dto.getCityId()).get());
     entity.setState(provincialRepository.findById(dto.getProvincialId()).get());

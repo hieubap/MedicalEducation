@@ -10,10 +10,11 @@ import spring.backend.library.service.AbstractBaseService;
 
 @Service
 public class CityServiceImpl extends AbstractBaseService<CityEntity, CityDTO, CityRepository>
-implements CityService{
+    implements CityService {
 
   @Autowired
   private CityRepository repository;
+
   @Override
   protected CityRepository getRepository() {
     return repository;
@@ -22,10 +23,12 @@ implements CityService{
   @Override
   protected void beforeSave(CityEntity entity, CityDTO dto) {
     super.beforeSave(entity, dto);
-    if (entity.getProvincialId() == null)
-      throw new BaseException(400,"provincialId is null");
-    if (entity.getName() == null)
-      throw new BaseException(400,"name is null");
+    if (entity.getProvincialId() == null) {
+      throw new BaseException(400, "provincialId is null");
+    }
+    if (entity.getName() == null) {
+      throw new BaseException(400, "name is null");
+    }
 
   }
 

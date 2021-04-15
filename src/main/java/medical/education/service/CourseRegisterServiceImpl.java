@@ -48,13 +48,14 @@ public class CourseRegisterServiceImpl extends
     super.beforeSave(entity, dto);
     entity.setStudentId(userService.getCurrentUserId());
     if (dto.getCode() == null || !courseRepository.existsByCode(dto.getCode())) {
-      throw new BaseException(400, Message.getMessage("Null.Or.Not.Exist",new Object[]{"code"}));
+      throw new BaseException(400, Message.getMessage("Null.Or.Not.Exist", new Object[]{"code"}));
     }
     CourseEntity courseEntity = courseRepository.findByCode(dto.getCode());
     CourseRegisterEntity e = courseRegisterRepository.findByCourseIdAndStudentId(
-        courseEntity.getId(),userService.getCurrentUserId());
-    if ( e != null && !e.getStatus().equals(CourseRegisterEnum.DONE.getValue())) {
-      throw new BaseException(400, Message.getMessage("Has.Register.Course",new Object[]{e.getCourse().getName()}));
+        courseEntity.getId(), userService.getCurrentUserId());
+    if (e != null && !e.getStatus().equals(CourseRegisterEnum.DONE.getValue())) {
+      throw new BaseException(400,
+          Message.getMessage("Has.Register.Course", new Object[]{e.getCourse().getName()}));
     }
     entity.setCourseId(courseRepository.findByCode(dto.getCode()).getId());
     entity.setStatus(CourseRegisterEnum.WAIT_APPROVE);

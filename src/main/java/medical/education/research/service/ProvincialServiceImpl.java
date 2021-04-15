@@ -24,7 +24,8 @@ public class ProvincialServiceImpl extends
   @Override
   protected void beforeSave(ProvincialEntity entity, ProvincialDTO dto) {
     super.beforeSave(entity, dto);
-    if (entity.getName() == null)
-      throw new BaseException(400,"name is null");
+    if (entity.getName() == null) {
+      throw new BaseException(400, "name is null");
+    }
   }
 }

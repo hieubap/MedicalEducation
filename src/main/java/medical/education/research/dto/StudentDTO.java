@@ -12,6 +12,7 @@ import spring.backend.library.dto.BaseDTO;
 @NoArgsConstructor
 @ToString(callSuper = true)
 public class StudentDTO extends BaseDTO {
+
   private Long id;
 
   private Boolean active;

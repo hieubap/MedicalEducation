@@ -32,7 +32,8 @@ public class NotificationServiceImpl extends
     super.beforeSave(entity, dto);
     if (Strings.isNullOrEmpty(dto.getContent()) &&
         dto.getOwnerId() == null) {
-      throw new BaseException(400, Message.getMessage("content.null"), null);//"content or ownerId is null or empty"
+      throw new BaseException(400, Message.getMessage("content.null"),
+          null);//"content or ownerId is null or empty"
     }
     entity.setIsRead(NotificationEnum.CHUA_DOC);
   }
