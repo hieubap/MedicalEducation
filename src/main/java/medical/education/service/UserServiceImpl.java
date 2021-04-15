@@ -229,6 +229,7 @@ public class UserServiceImpl extends
     String userName = entity.getUsername();
     String password = entity.getPassword();
     RoleEnum role = entity.getRole();
+    Long roleId = entity.getRoleId();
 
     UserDTO dto = mapToDTO(entityChange);
     UserEntity entitySave = mapToEntity(dto);
@@ -238,6 +239,7 @@ public class UserServiceImpl extends
     entitySave.setPassword(password);
     entitySave.setRole(role);
     entitySave.setIdChange(null);
+    entityChange.setRoleId(roleId);
 
     getRepository().deleteById(entityChange.getId());
     getRepository().save(entitySave);
