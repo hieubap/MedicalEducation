@@ -7,7 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import spring.backend.library.dao.repository.BaseRepository;
 
-public interface CityRepository extends BaseRepository<CityEntity, CityDTO,Long> {
+public interface CityRepository extends BaseRepository<CityEntity, CityDTO, Long> {
 
   @Override
   @Query("select e from CityEntity e"

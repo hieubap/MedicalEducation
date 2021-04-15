@@ -19,6 +19,7 @@ import spring.backend.library.dao.model.BaseEntity;
 @Setter
 @NoArgsConstructor
 public class StudentEntity extends BaseEntity {
+
   @Id
   @GeneratedValue(generator = "students_generator")
   @SequenceGenerator(name = "students_generator", sequenceName = "students_sq", initialValue = 1)

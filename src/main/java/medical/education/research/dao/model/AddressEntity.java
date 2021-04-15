@@ -19,6 +19,7 @@ import spring.backend.library.dao.model.BaseEntity;
 @Entity
 @Table(name = "address")
 public class AddressEntity extends BaseEntity {
+
   @Id
   @GeneratedValue(generator = "address_generator")
   @SequenceGenerator(name = "address_generator", sequenceName = "address_sq", initialValue = 1)
@@ -46,7 +47,7 @@ public class AddressEntity extends BaseEntity {
   private Long streetId;
 
   @ManyToOne
-  @JoinColumn(name = "street_id",updatable = false,insertable = false)
+  @JoinColumn(name = "street_id", updatable = false, insertable = false)
   private StreetEntity street;
 
   /**
@@ -56,7 +57,7 @@ public class AddressEntity extends BaseEntity {
   private Long cityId;
 
   @ManyToOne
-  @JoinColumn(name = "city_id",insertable = false,updatable = false)
+  @JoinColumn(name = "city_id", insertable = false, updatable = false)
   private CityEntity city;
 
   /**
@@ -66,7 +67,7 @@ public class AddressEntity extends BaseEntity {
   private Long provincialId;
 
   @ManyToOne
-  @JoinColumn(name = "provincial_id",updatable = false,insertable = false)
+  @JoinColumn(name = "provincial_id", updatable = false, insertable = false)
   private ProvincialEntity state;
 
   private String postalCode;

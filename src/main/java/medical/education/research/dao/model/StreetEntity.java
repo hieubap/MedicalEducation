@@ -19,6 +19,7 @@ import spring.backend.library.dao.model.BaseEntity;
 @Entity
 @Table(name = "street")
 public class StreetEntity extends BaseEntity {
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
@@ -30,7 +31,7 @@ public class StreetEntity extends BaseEntity {
   private Long cityId;
 
   @ManyToOne
-  @JoinColumn(name = "city_id",insertable = false,updatable = false)
+  @JoinColumn(name = "city_id", insertable = false, updatable = false)
   private CityEntity city;
 
 }

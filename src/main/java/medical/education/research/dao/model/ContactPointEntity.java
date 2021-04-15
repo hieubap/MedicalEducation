@@ -16,20 +16,19 @@ import lombok.Setter;
 @Entity
 @Table(name = "contact_point")
 public class ContactPointEntity {
+
   @Id
   @GeneratedValue(generator = "contact_point_generator")
   @SequenceGenerator(name = "contact_point_generator", sequenceName = "contact_point_sq", initialValue = 1)
   private Long id;
 
   /**
-   * phone | fax | email | pager | url | sms | other
-   * system
+   * phone | fax | email | pager | url | sms | other system
    */
   private Short systemType;
 
   /**
-   * home | work | temp | old | mobile - purpose of this contact point
-   * use
+   * home | work | temp | old | mobile - purpose of this contact point use
    */
   private Short useType;
 
