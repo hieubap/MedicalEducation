@@ -14,6 +14,7 @@ import spring.backend.library.service.AbstractBaseService;
 public class StudentServiceImpl extends
     AbstractBaseService<StudentEntity, StudentDTO, StudentRepository>
     implements StudentService {
+
   @Autowired
   private StudentRepository studentRepository;
 

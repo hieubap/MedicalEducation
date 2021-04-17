@@ -19,7 +19,8 @@ import org.springframework.stereotype.Service;
 import spring.backend.library.exception.BaseException;
 
 @Service
-public class ImageServiceImpl implements ImageService{
+public class ImageServiceImpl implements ImageService {
+
   private final Path imageLocation = Paths.get("uploads");
 
   @Override
@@ -29,7 +30,8 @@ public class ImageServiceImpl implements ImageService{
     final HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.IMAGE_PNG);
 
-    return new ResponseEntity<>(ByteStreams.toByteArray(resource.getInputStream()), headers, HttpStatus.OK);
+    return new ResponseEntity<>(ByteStreams.toByteArray(resource.getInputStream()), headers,
+        HttpStatus.OK);
   }
 
   public Resource loadFileAsResource(String fileName) {
@@ -49,7 +51,7 @@ public class ImageServiceImpl implements ImageService{
         throw new BaseException("File not found " + fileName);
       }
     } catch (MalformedURLException ex) {
-      System.out.println(ex.getMessage()+"------");
+      System.out.println(ex.getMessage() + "------");
       throw new BaseException("File not found " + fileName);
     }
   }

@@ -9,6 +9,7 @@ import spring.backend.library.dto.BaseDTO;
 @Setter
 @NoArgsConstructor
 public class ProvincialDTO extends BaseDTO {
+
   private String name;
 
 }

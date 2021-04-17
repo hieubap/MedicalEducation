@@ -15,6 +15,7 @@ import lombok.Setter;
 @Entity
 @Table(name = "name")
 public class NameEntity {
+
   @Id
   @GeneratedValue(generator = "names_generator")
   @SequenceGenerator(name = "names_generator", sequenceName = "names_sq", initialValue = 1)

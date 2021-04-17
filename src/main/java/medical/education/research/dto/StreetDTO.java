@@ -9,6 +9,7 @@ import spring.backend.library.dto.BaseDTO;
 @Setter
 @NoArgsConstructor
 public class StreetDTO extends BaseDTO {
+
   private String name;
 
   private Long cityId;

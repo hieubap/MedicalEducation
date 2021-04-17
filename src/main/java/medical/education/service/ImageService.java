@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 
 
 public interface ImageService {
+
   ResponseEntity<byte[]> getImage(String fileName, HttpServletRequest httpServletRequest)
       throws IOException;
 

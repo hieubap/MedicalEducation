@@ -17,6 +17,7 @@ import spring.backend.library.dao.model.BaseEntity;
 @Entity
 @Table(name = "provincial")
 public class ProvincialEntity extends BaseEntity {
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
 

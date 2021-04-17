@@ -17,6 +17,7 @@ import lombok.Setter;
 @Entity
 @Table(name = "attachment")
 public class AttachmentEntity {
+
   @Id
   @GeneratedValue(generator = "attachment_generator")
   @SequenceGenerator(name = "attachment_generator", sequenceName = "attachment_sq", initialValue = 1)
@@ -28,8 +29,7 @@ public class AttachmentEntity {
   private Short contentType;
 
   /**
-   * 1 vietnamese
-   * 2 english
+   * 1 vietnamese 2 english
    */
   private Short language;
 

@@ -15,6 +15,7 @@ import lombok.Setter;
 @Entity
 @Table(name = "qualification")
 public class QualificationEntity {
+
   @Id
   @GeneratedValue(generator = "qualification_generator")
   @SequenceGenerator(name = "qualification_generator", sequenceName = "qualification_sq", initialValue = 1)
