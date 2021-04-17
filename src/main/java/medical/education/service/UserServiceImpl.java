@@ -239,7 +239,7 @@ public class UserServiceImpl extends
     entitySave.setPassword(password);
     entitySave.setRole(role);
     entitySave.setIdChange(null);
-    entityChange.setRoleId(roleId);
+    entitySave.setRoleId(roleId);
 
     getRepository().deleteById(entityChange.getId());
     getRepository().save(entitySave);
