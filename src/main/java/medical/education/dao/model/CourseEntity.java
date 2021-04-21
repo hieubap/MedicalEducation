@@ -1,6 +1,7 @@
 package medical.education.dao.model;
 
 import java.util.List;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -8,6 +9,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import lombok.Getter;
@@ -32,12 +36,49 @@ public class CourseEntity extends BaseEntity {
 
   private String code;
 
-  private String thoiGianHoc;
+  /**
+   * thời gian bắt đầu
+   */
+  private String startTime;
 
-  private String details;
+  /**
+   * thời gian kết thúc
+   */
+  private String endTime;
 
+  /**
+   * giá
+   */
   private Long price;
 
+  /**
+   * số tiết học
+   */
+  private Integer numberLesson;
+
+  /**
+   * số lượng đăng ký
+   */
+  private Integer numberRegister;
+
+  /**
+   * giới hạn đăng ký
+   */
+  private Integer limitRegister;
+
+  /**
+   * cơ sở y tế
+   */
+  @Column(name = "health_facility_id")
+  private Long healthFacilityId;
+
+  @OneToOne
+  @JoinColumn(name = "health_facility_id",insertable = false,updatable = false)
+  private HealthFacilityEntity healthFacility;
+
+  /**
+   * các môn trong chương trình
+   */
   @ManyToMany(fetch = FetchType.LAZY)
   @JoinTable(
       name = "course_subject",

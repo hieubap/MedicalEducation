@@ -13,19 +13,33 @@ import spring.backend.library.dto.BaseDTO;
 @ToString(callSuper = true)
 public class CourseDTO extends BaseDTO {
 
+  private Long id;
+
   private String name;
 
   private String code;
 
-  private String thoiGianHoc;
+  private String startTime;
 
-  private String details;
+  private String endTime;
 
-  private List<SubjectDTO> listSubject;
+  private Long price;
+
+  private Integer numberLesson;
+
+  private Integer numberRegister;
+
+  private Integer limitRegister;
+
+  private Long healthFacilityId;
+
+  private Object healthFacility;
 
   private List<Long> subjectIds;
 
+  private List<SubjectDTO> listSubject;
+
   private List<UserDTO> listRegisters;
 
-  private Long price;
+  private Object userCreated;
 }

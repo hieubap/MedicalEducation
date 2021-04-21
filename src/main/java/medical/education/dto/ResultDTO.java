@@ -11,16 +11,20 @@ import spring.backend.library.dto.BaseDTO;
 @Setter
 @NoArgsConstructor
 @ToString(callSuper = true)
-public class StudyProcessDTO extends BaseDTO {
+public class ResultDTO extends BaseDTO {
   private Long studentId;
 
-  private SubjectDTO subject;
+  private Object student;
   /**
    * lớp học
    */
-  private Long classId;
+  private Long courseId;
 
-  private StudyProcessEnum status;
+  private CourseDTO course;
+
+  private Long subjectId;
+
+  private Object subject;
 
   private String muster;
 

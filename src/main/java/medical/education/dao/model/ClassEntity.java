@@ -44,11 +44,11 @@ public class ClassEntity extends BaseEntity {
    */
   private String code;
 
-  @Column(name = "subject_id")
-  private Long subjectId;
+//  @Column(name = "subject_id")
+//  private Long subjectId;
 
-//  @Column(name = "course_id")
-//  private Long courseId;
+  @Column(name = "course_id")
+  private Long courseId;
 
   @Column(name = "teacher_id")
   private Long teacherId;
@@ -82,12 +82,12 @@ public class ClassEntity extends BaseEntity {
    * t2: 2
    *
    */
-  private Short day;
+//  private Short day;
 
   /**
    * số lượng đăng ký
    */
-  private Long limitRegister;
+//  private Long limitRegister;
 
   @ManyToMany(fetch = FetchType.LAZY)
   @JoinTable(

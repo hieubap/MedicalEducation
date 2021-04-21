@@ -1,19 +1,15 @@
 package medical.education.service;
 
-import java.text.Normalizer;
-import java.util.List;
 import medical.education.dao.model.CourseEntity;
-import medical.education.dao.model.CourseRegisterEntity;
-import medical.education.dao.model.SubjectEntity;
-import medical.education.dao.repository.CourseRegisterRepository;
+import medical.education.dao.model.RegisterEntity;
+import medical.education.dao.repository.RegisterRepository;
 import medical.education.dao.repository.CourseRepository;
 import medical.education.dao.repository.UserRepository;
-import medical.education.dto.CourseRegisterDTO;
-import medical.education.enums.CourseRegisterEnum;
+import medical.education.dto.RegisterDTO;
+import medical.education.enums.RegisterEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import spring.backend.library.exception.BaseException;
@@ -22,12 +18,12 @@ import spring.backend.library.service.AbstractBaseService;
 
 @Service
 @PreAuthorize("hasAnyRole('TEARCHER', 'ADMIN', 'STUDENT')")
-public class CourseRegisterServiceImpl extends
-    AbstractBaseService<CourseRegisterEntity, CourseRegisterDTO, CourseRegisterRepository>
-    implements CourseRegisterService {
+public class RegisterServiceImpl extends
+    AbstractBaseService<RegisterEntity, RegisterDTO, RegisterRepository>
+    implements RegisterService {
 
   @Autowired
-  private CourseRegisterRepository courseRegisterRepository;
+  private RegisterRepository registerRepository;
 
   @Autowired
   private UserService userService;
@@ -39,38 +35,37 @@ public class CourseRegisterServiceImpl extends
   private UserRepository userRepository;
 
   @Override
-  protected CourseRegisterRepository getRepository() {
-    return courseRegisterRepository;
+  protected RegisterRepository getRepository() {
+    return registerRepository;
   }
 
   @Override
-  protected void beforeSave(CourseRegisterEntity entity, CourseRegisterDTO dto) {
+  protected void beforeSave(RegisterEntity entity, RegisterDTO dto) {
     super.beforeSave(entity, dto);
     entity.setStudentId(userService.getCurrentUserId());
     if (dto.getCode() == null || !courseRepository.existsByCode(dto.getCode())) {
       throw new BaseException(400, Message.getMessage("Null.Or.Not.Exist", new Object[]{"code"}));
     }
     CourseEntity courseEntity = courseRepository.findByCode(dto.getCode());
-    CourseRegisterEntity e = courseRegisterRepository.findByCourseIdAndStudentId(
+    RegisterEntity e = registerRepository.findByCourseIdAndStudentId(
         courseEntity.getId(), userService.getCurrentUserId());
-    if (e != null && !e.getStatus().equals(CourseRegisterEnum.DONE.getValue())) {
+    if (e != null && !e.getStatus().equals(RegisterEnum.DONED)) {
       throw new BaseException(400,
           Message.getMessage("Has.Register.Course", new Object[]{e.getCourse().getName()}));
     }
     entity.setCourseId(courseRepository.findByCode(dto.getCode()).getId());
-    entity.setStatus(CourseRegisterEnum.WAIT_APPROVE);
+    entity.setStatus(RegisterEnum.STUDYING);
   }
 
   @Override
-  protected void afterSave(CourseRegisterEntity entity, CourseRegisterDTO dto) {
+  protected void afterSave(RegisterEntity entity, RegisterDTO dto) {
     super.afterSave(entity, dto);
     entity.setCourse(courseRepository.findById(entity.getCourseId()).get());
     entity.setStudent(userRepository.findById(entity.getStudentId()).get());
-
   }
 
   @Override
-  public Page<CourseRegisterDTO> search(CourseRegisterDTO dto, Pageable pageable) {
+  public Page<RegisterDTO> search(RegisterDTO dto, Pageable pageable) {
     dto.setStudentId(userService.getCurrentUserId());
     return super.search(dto, pageable);
   }

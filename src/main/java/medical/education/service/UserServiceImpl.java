@@ -188,6 +188,17 @@ public class UserServiceImpl extends
   @Override
   @PreAuthorize("hasAnyRole('ADMIN')")
   public Page<UserDTO> search(UserDTO dto, Pageable pageable) {
+    if(dto.getUsername() != null)
+      dto.setUsername('%'+ dto.getUsername().replace(' ','%')+'%');
+    if(dto.getFullName() != null)
+      dto.setFullName('%'+ dto.getFullName().replace(' ','%')+'%');
+    if(dto.getAddress() != null)
+    dto.setAddress('%'+ dto.getAddress().replace(' ','%')+'%');
+    if(dto.getPhoneNumber() != null)
+    dto.setPhoneNumber('%'+ dto.getPhoneNumber().replace(' ','%')+'%');
+    if(dto.getEmail() != null)
+    dto.setEmail('%'+ dto.getEmail().replace(' ','%')+'%');
+
     return super.search(dto, pageable);
   }
 

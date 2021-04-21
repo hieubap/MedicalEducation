@@ -1,7 +1,7 @@
 package medical.education.controller;
 
-import medical.education.dto.ResultDTO;
-import medical.education.service.ResultService;
+import medical.education.dto.ScheduleDTO;
+import medical.education.service.ScheduleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,13 +10,13 @@ import spring.backend.library.controller.BaseController;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/study-process")
-public class StudyProcessController extends BaseController<ResultDTO, ResultService> {
+@RequestMapping("/schedule")
+public class ScheduleController extends BaseController<ScheduleDTO, ScheduleService> {
   @Autowired
-  private ResultService studyProcessService;
+  private ScheduleService scheduleService;
 
   @Override
-  public ResultService getService() {
-    return studyProcessService;
+  public ScheduleService getService() {
+    return scheduleService;
   }
 }

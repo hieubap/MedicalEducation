@@ -1,5 +1,6 @@
 package medical.education.dao.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -19,42 +20,60 @@ import spring.backend.library.dao.model.BaseEntity;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "learning")
+@Table(name = "result")
 @Where(clause = "deleted=0")
-public class StudyProcessEntity extends BaseEntity {
+public class ResultEntity extends BaseEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
+  /**
+   * sinh viên
+   */
+  @Column(name = "student_id")
+  private Long studentId;
+
   @ManyToOne
-  @JoinColumn(name = "student_id")
+  @JoinColumn(name = "student_id",updatable = false,insertable = false)
   private UserEntity student;
 
   /**
-   * lớp học
+   * khóa học
    */
+  @Column(name = "course_id")
+  private Long courseId;
+
   @OneToOne
-  @JoinColumn(name = "class_id")
-  private ClassEntity clazz;
+  @JoinColumn(name = "class_id",insertable = false,updatable = false)
+  private CourseEntity course;
 
   /**
-   * 1 Tốt
-   * 2 Khá
-   * 3 Trung Bình
-   * 4 Trượt
-   * 5 đang học
-   * 6 đình chỉ
+   * môn học
    */
-  private StudyProcessEnum status;
+  @Column(name = "subject_id")
+  private Long subjectId;
+
+  @OneToOne
+  @JoinColumn(name = "subject_id",updatable = false,insertable = false)
+  private SubjectEntity subject;
 
   /**
    * điểm danh
    */
   private String muster;
 
+  /**
+   * điểm giữa kỳ
+   */
   private Double midPoint;
 
+  /**
+   * điểm cuối kỳ
+   */
   private Double endPoint;
 
+  /**
+   * tổng kết môn
+   */
   private Double total;
 }

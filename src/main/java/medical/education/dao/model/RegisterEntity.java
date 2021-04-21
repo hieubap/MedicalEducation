@@ -12,7 +12,7 @@ import javax.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import medical.education.enums.CourseRegisterEnum;
+import medical.education.enums.RegisterEnum;
 import org.hibernate.annotations.Where;
 import spring.backend.library.dao.model.BaseEntity;
 
@@ -20,32 +20,53 @@ import spring.backend.library.dao.model.BaseEntity;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "course_register")
+@Table(name = "register")
 @Where(clause = "deleted=0")
-public class CourseRegisterEntity extends BaseEntity {
+public class RegisterEntity extends BaseEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
+  /**
+   * sinh viên đăng ký
+   */
   @Column(name = "student_id")
   private Long studentId;
-
-  @Column(name = "course_id")
-  private Long courseId;
 
   @OneToOne
   @JoinColumn(name = "student_id",insertable = false,updatable = false)
   private UserEntity student;
+
+  /**
+   * khóa đăng ký
+   */
+  @Column(name = "course_id")
+  private Long courseId;
 
   @ManyToOne
   @JoinColumn(name = "course_id",insertable = false,updatable = false)
   private CourseEntity course;
 
   /**
-   * 0 chờ xét duyệt
-   * 1 thành công
-   * 2 không thành công
-   * 3 đã hoàn thành khóa học
+   * Trạng thái học tập
+   * 0 đang học
+   * 1 hoàn  thành
+   * 2 trượt
    */
-  private CourseRegisterEnum status;
+  private RegisterEnum status;
+
+  /**
+   * tổng kết
+   */
+  private Double total;
+
+  /**
+   * xếp loại học tập
+   */
+  private String kind;
+
+  /**
+   * chữ ký
+   */
+  private String signature;
 }

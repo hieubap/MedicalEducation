@@ -2,18 +2,17 @@ package medical.education.enums;
 
 import spring.backend.library.enums.IEnum;
 
-public enum CourseRegisterEnum implements IEnum {
+public enum RegisterEnum implements IEnum {
 
-  WAIT_APPROVE((short) 0, "Chờ xác nhận"),
-  APPROVED((short) 1, "Đã xác nhận"),
-  NOT_APPROVE((short) 2, "Không được xác nhận"),
-  DONE((short) 3, "Đã hoàn thành");
+  STUDYING((short) 0, "Đang học"),
+  DONED((short) 1, "Hoàn thành"),
+  DONT_DONE((short) 2, "Không hoàn thành");
 
   private Short value;
   private String name;
 
 
-  CourseRegisterEnum(Short value, String name) {
+  RegisterEnum(Short value, String name) {
     this.value = value;
     this.name = name;
   }

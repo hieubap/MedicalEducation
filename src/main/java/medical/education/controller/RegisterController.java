@@ -1,7 +1,7 @@
 package medical.education.controller;
 
-import medical.education.dto.ResultDTO;
-import medical.education.service.ResultService;
+import medical.education.dto.RegisterDTO;
+import medical.education.service.RegisterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -9,14 +9,15 @@ import org.springframework.web.bind.annotation.RestController;
 import spring.backend.library.controller.BaseController;
 
 @CrossOrigin
+@RequestMapping("/register")
 @RestController
-@RequestMapping("/study-process")
-public class StudyProcessController extends BaseController<ResultDTO, ResultService> {
+public class RegisterController extends BaseController<RegisterDTO, RegisterService> {
   @Autowired
-  private ResultService studyProcessService;
+  private RegisterService courseRegisterService;
 
   @Override
-  public ResultService getService() {
-    return studyProcessService;
+  public RegisterService getService() {
+    return courseRegisterService;
   }
+
 }

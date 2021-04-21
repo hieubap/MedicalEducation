@@ -3,7 +3,6 @@ package medical.education.service;
 import com.google.common.base.Strings;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import medical.education.dao.model.ClassEntity;
 import medical.education.dao.model.ClassRegisterEntity;
 import medical.education.dao.model.NotificationEntity;
@@ -14,13 +13,9 @@ import medical.education.dao.repository.PlaceRepository;
 import medical.education.dao.repository.SubjectRepository;
 import medical.education.dao.repository.UserRepository;
 import medical.education.dto.ClassDTO;
-import medical.education.dto.CourseDTO;
 import medical.education.enums.ClassRegisterEnum;
 import medical.education.enums.ClassStatusEnum;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import spring.backend.library.dto.ResponseEntity;
@@ -38,7 +33,7 @@ public class ClassServiceImpl extends AbstractBaseService<ClassEntity, ClassDTO,
   private SubjectRepository subjectRepository;
 
   @Autowired
-  private StudyProcessService studyProcessService;
+  private ResultService studyProcessService;
 
   @Autowired
   private UserRepository userRepository;
@@ -61,9 +56,6 @@ public class ClassServiceImpl extends AbstractBaseService<ClassEntity, ClassDTO,
   @PreAuthorize("hasAnyRole('ADMIN')")
   protected void beforeSave(ClassEntity entity, ClassDTO dto) {
     super.beforeSave(entity, dto);
-    if (entity.getSubjectId() == null || !subjectRepository.existsById(entity.getSubjectId())) {
-      throw new BaseException(400, "subjectId is null or not exist");
-    }
     if (entity.getPlaceId() == null || !placeRepository.existsById(entity.getPlaceId())) {
       throw new BaseException(400, "placeId is null or not exist");
     }
@@ -73,18 +65,15 @@ public class ClassServiceImpl extends AbstractBaseService<ClassEntity, ClassDTO,
     if (Strings.isNullOrEmpty(entity.getTime())) {
       throw new BaseException(400, "time is null or empty");
     }
-    if (entity.getLimitRegister() == null) {
-      throw new BaseException(400, "numberRegister is null or empty");
-    }
     /**
      * sinh mã lớp
      */
-    if (Strings.isNullOrEmpty(entity.getCode())) {
-      String newCode = subjectRepository.findById(entity.getSubjectId()).get().getShortName();
-      Long i = classRepository.count();
-      newCode = "CLASS_" + newCode + "_" + String.format("%04d", i);
-      entity.setCode(newCode);
-    }
+//    if (Strings.isNullOrEmpty(entity.getCode())) {
+//      String newCode = subjectRepository.findById(entity.getSubjectId()).get().getShortName();
+//      Long i = classRepository.count();
+//      newCode = "CLASS_" + newCode + "_" + String.format("%04d", i);
+//      entity.setCode(newCode);
+//    }
     if (entity.getStatus() == null) {
       entity.setStatus(ClassStatusEnum.CHO_DANG_KY_LOP);
     }
@@ -117,7 +106,7 @@ public class ClassServiceImpl extends AbstractBaseService<ClassEntity, ClassDTO,
 
     classEntity.setStatus(ClassStatusEnum.XAC_NHAN);
 
-    studyProcessService.generateLearningRoute(id);
+    studyProcessService.generateResult(id);
 
     return new ResponseEntity(200, "successful");
   }

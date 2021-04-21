@@ -29,29 +29,32 @@ public class SubjectServiceImpl extends
   @PreAuthorize("hasAnyRole('ADMIN')")
   protected void beforeSave(SubjectEntity entity, SubjectDTO dto) {
     super.beforeSave(entity, dto);
+
     if (Strings.isNullOrEmpty(dto.getName())) {
       throw new BaseException("name is null");
     }
     if (Strings.isNullOrEmpty(dto.getType())) {
       throw new BaseException("type is null");
     }
-    String s = Normalizer.normalize(dto.getName(), Normalizer.Form.NFD);
-    s = s.toUpperCase().replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
 
-    String shortName = s.charAt(0) + "" + s.charAt(1);
+    if (Strings.isNullOrEmpty(dto.getCode())) {
+      String s = Normalizer.normalize(dto.getName(), Normalizer.Form.NFD);
+      s = s.toUpperCase().replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
 
-    entity.setCode(shortName+ String.format("_%04d", repository.countAll()));
-    entity.setShortName(shortName);
+      String shortName = s.charAt(0) + "" + s.charAt(1);
+
+      entity.setCode(shortName + String.format("_%04d", repository.countAll()));
+      entity.setShortName(shortName);
+    }
   }
-
-  public SubjectEntity findEntityByid(Long id) {
-    return repository.findById(id).orElse(null);
-  }
-
   @Override
   public Page<SubjectDTO> search(SubjectDTO dto, Pageable pageable) {
-    if (dto.getName() != null)
-    dto.setName("%"+dto.getName().trim().replaceAll(" ","%") + "%");
+    if (dto.getName() != null) {
+      dto.setName("%" + dto.getName().toLowerCase().trim().replaceAll(" ", "%") + "%");
+    }
+    if (dto.getCode() != null) {
+      dto.setCode("%" + dto.getCode().toLowerCase().trim().replaceAll(" ", "%") + "%");
+    }
     return super.search(dto, pageable);
   }
 

@@ -1,0 +1,72 @@
+package medical.education.dao.model;
+
+import java.time.LocalDateTime;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import spring.backend.library.dao.model.BaseEntity;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@Entity
+@Table(name = "schedule")
+public class ScheduleEntity extends BaseEntity {
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
+
+  /**
+   * thứ
+   */
+  private Short day;
+
+  /**
+   * bắt đầu
+   */
+  private String startTime;
+
+  /**
+   * kết thúc
+   */
+  private String endTime;
+
+  /**
+   * địa điểm
+   */
+  @Column(name = "place_id")
+  private Long placeId;
+
+  @ManyToOne()
+  @JoinColumn(name = "place_id",insertable = false,updatable = false)
+  private PlaceEntity place;
+
+  /**
+   * môn học
+   */
+  @Column(name = "subject_id")
+  private Long subjectId;
+
+  @OneToOne
+  @JoinColumn(name = "subject_id",insertable = false,updatable = false)
+  private SubjectEntity subject;
+
+  /**
+   * khóa học
+   */
+  @Column(name = "course_id")
+  private Long courseId;
+
+  @OneToOne
+  @JoinColumn(name = "course_id",updatable = false,insertable = false)
+  private CourseEntity course;
+}

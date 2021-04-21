@@ -13,4 +13,5 @@ import lombok.Setter;
 @ToString(callSuper = true)
 public class PlaceDTO extends BaseDTO {
   private String address;
+  private Long healthFacilityId;
 }

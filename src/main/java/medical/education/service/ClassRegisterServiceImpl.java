@@ -48,10 +48,10 @@ public class ClassRegisterServiceImpl extends
     if (getRepository().existsByClassIdAndStudentId(classId, studentId)) {
       throw new BaseException(400, Message.getMessage("ClassId.Has.Registered"));
     }
-    if (classRepository.findByCode(dto.getCodeClass()).getLimitRegister() <=
-        classRegisterRepository.countByClassId(classId)) {
-      throw new BaseException(400, Message.getMessage("Class.Is.Full"));
-    }
+//    if (classRepository.findByCode(dto.getCodeClass()).getLimitRegister() <=
+//        classRegisterRepository.countByClassId(classId)) {
+//      throw new BaseException(400, Message.getMessage("Class.Is.Full"));
+//    }
     entity.setClassId(classId);
     entity.setStatus(ClassRegisterEnum.THANH_CONG);
   }

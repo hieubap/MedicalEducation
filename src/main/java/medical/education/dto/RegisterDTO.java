@@ -4,14 +4,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import medical.education.enums.CourseRegisterEnum;
+import medical.education.enums.RegisterEnum;
 import spring.backend.library.dto.BaseDTO;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @ToString(callSuper = true)
-public class CourseRegisterDTO extends BaseDTO {
+public class RegisterDTO extends BaseDTO {
 
   private Long studentId;
 
@@ -23,5 +23,5 @@ public class CourseRegisterDTO extends BaseDTO {
 
   private CourseDTO course;
 
-  private CourseRegisterEnum status;
+  private RegisterEnum status;
 }

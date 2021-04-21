@@ -44,6 +44,6 @@ public class UserDTO extends BaseDTO {
 
   private RoleDTO roleDTO;
 
-  private List<StudyProcessDTO> listStudyProcess;
+  private List<ResultDTO> listStudyProcess;
 
 }

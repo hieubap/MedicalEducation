@@ -10,13 +10,8 @@ import spring.backend.library.dto.BaseDTO;
 @Setter
 @NoArgsConstructor
 @ToString(callSuper = true)
-public class SubjectDTO extends BaseDTO {
-
-  private String code;
-
+public class HealthFacilityDTO extends BaseDTO {
   private String name;
-
-  private String type;
-
-  private Integer lesson;
+  private String address;
+  private String level;
 }

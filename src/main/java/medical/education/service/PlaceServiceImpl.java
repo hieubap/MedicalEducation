@@ -2,6 +2,7 @@ package medical.education.service;
 
 import com.google.common.base.Strings;
 import medical.education.dao.model.PlaceEntity;
+import medical.education.dao.repository.HealthFacilityRepository;
 import medical.education.dao.repository.PlaceRepository;
 import medical.education.dto.PlaceDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,9 +14,13 @@ import spring.backend.library.service.AbstractBaseService;
 @Service
 @PreAuthorize("hasAnyRole('ADMIN')")
 public class PlaceServiceImpl extends AbstractBaseService<PlaceEntity, PlaceDTO, PlaceRepository>
-implements PlaceService{
+    implements PlaceService {
+
   @Autowired
   private PlaceRepository placeRepository;
+
+  @Autowired
+  private HealthFacilityRepository healthFacilityRepository;
 
   @Override
   protected PlaceRepository getRepository() {
@@ -25,9 +30,12 @@ implements PlaceService{
   @Override
   protected void beforeSave(PlaceEntity entity, PlaceDTO dto) {
     super.beforeSave(entity, dto);
-    if(Strings.isNullOrEmpty(dto.getAddress())){
-      throw new BaseException(400,"address is null or empty");
+    if (Strings.isNullOrEmpty(dto.getAddress())) {
+      throw new BaseException(400, "address is null or empty");
     }
-
+    if (dto.getHealthFacilityId() == null || !healthFacilityRepository
+        .existsById(dto.getHealthFacilityId())) {
+      throw new BaseException(400, "healthFacilityId is null or empty");
+    }
   }
 }

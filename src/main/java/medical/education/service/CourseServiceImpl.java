@@ -6,7 +6,8 @@ import java.util.List;
 import medical.education.dao.model.CourseEntity;
 import medical.education.dao.model.SubjectEntity;
 import medical.education.dao.repository.CourseRepository;
-import medical.education.dao.repository.SubjectRepository;
+import medical.education.dao.repository.HealthFacilityRepository;
+import medical.education.dao.repository.UserRepository;
 import medical.education.dto.CourseDTO;
 import medical.education.dto.SubjectDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,13 @@ public class CourseServiceImpl extends
   private SubjectService subjectService;
 
   @Autowired
-  private SubjectRepository subjectRepository;
+  private UserRepository userRepository;
+
+  @Autowired
+  private UserServiceImpl userService;
+
+  @Autowired
+  private HealthFacilityRepository healthFacilityRepository;
 
   @Override
   protected CourseRepository getRepository() {
@@ -39,19 +46,37 @@ public class CourseServiceImpl extends
   @PreAuthorize("hasAnyRole('ADMIN')")
   protected void beforeSave(CourseEntity entity, CourseDTO dto) {
     super.beforeSave(entity, dto);
-    if (dto.getName() == null) {
-      throw new BaseException(400, "name is not null");
-    }
-//    if (dto.getThoiGianHoc() == null) {
-//      throw new BaseException(400, "thoiGianHoc is not null");
-//    }
-    if (dto.getPrice() == null) {
-      throw new BaseException(400, "price is not null");
-    }
+
     if (Strings.isNullOrEmpty(entity.getCode())) {
       Long i = getRepository().count();
       String newCode = "COURSE_" + String.format("%04d", i);
       entity.setCode(newCode);
+    }
+    if (dto.getName() == null) {
+      throw new BaseException(400, "name is null");
+    }
+    if (Strings.isNullOrEmpty(dto.getStartTime())) {
+      throw new BaseException(400, "startTime is null");
+    }
+
+    if (Strings.isNullOrEmpty(dto.getEndTime())) {
+      throw new BaseException(400, "endTime is null");
+    }
+
+    if (dto.getPrice() == null) {
+      throw new BaseException(400, "price is null");
+    }
+    if (dto.getNumberLesson() == null) {
+      throw new BaseException(400, "numberLesson is null");
+    }
+
+    if (dto.getLimitRegister() == null) {
+      throw new BaseException(400, "limitRegister is null");
+    }
+
+    if (dto.getHealthFacilityId() == null || !healthFacilityRepository
+        .existsById(dto.getHealthFacilityId())) {
+      throw new BaseException(400, "healthFacilityId is null or not exist");
     }
   }
 

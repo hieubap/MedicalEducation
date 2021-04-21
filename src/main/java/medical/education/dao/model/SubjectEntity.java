@@ -33,16 +33,27 @@ public class SubjectEntity extends BaseEntity {
   @Column(nullable = false)
   private String code;
 
+  /**
+   * tên môn học
+   */
   @Column(nullable = false)
   private String name;
 
   /**
-   * tên tắt
+   * tên viết tắt
    */
   private String shortName;
 
+  /**
+   * loại môn học
+   */
 //  @Column(columnDefinition = "VARCHAR(60) CHECK (status in ('LT + BT','TH'))", nullable = false)
   private String type;
+
+  /**
+   * số tiết
+   */
+  private Integer lesson;
 
   @ManyToMany(fetch = FetchType.LAZY)
   @JoinTable(

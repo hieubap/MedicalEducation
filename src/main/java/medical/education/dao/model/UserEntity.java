@@ -84,6 +84,6 @@ public class UserEntity extends BaseEntity {
   private List<CourseEntity> courses;
 
   @OneToMany(mappedBy = "student")
-  private List<StudyProcessEntity> listStudyProcess;
+  private List<ResultEntity> listStudyProcess;
 
 }
