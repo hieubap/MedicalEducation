@@ -6,8 +6,8 @@ import java.util.List;
 import medical.education.dao.model.CourseEntity;
 import medical.education.dao.model.SubjectEntity;
 import medical.education.dao.repository.CourseRepository;
+import medical.education.dao.repository.CourseSubjectRepository;
 import medical.education.dao.repository.HealthFacilityRepository;
-import medical.education.dao.repository.UserRepository;
 import medical.education.dto.CourseDTO;
 import medical.education.dto.SubjectDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,10 +29,7 @@ public class CourseServiceImpl extends
   private SubjectService subjectService;
 
   @Autowired
-  private UserRepository userRepository;
-
-  @Autowired
-  private UserServiceImpl userService;
+  private CourseSubjectRepository courseSubjectRepository;
 
   @Autowired
   private HealthFacilityRepository healthFacilityRepository;
@@ -80,6 +77,33 @@ public class CourseServiceImpl extends
     }
   }
 
+//  @Override
+//  @Transactional
+//  protected void afterSave(CourseEntity entity, CourseDTO dto) {
+//    super.afterSave(entity, dto);
+//
+//    List<CourseSubjectEntity> listDelete = courseSubjectRepository.findByCourseId(entity.getId());
+//    List<CourseSubjectEntity> listAdd = new ArrayList<>();
+//
+//    for (Long id : dto.getSubjectIds()) {
+//      if (!courseSubjectRepository.exist(entity.getId(), id)) {
+//        CourseSubjectEntity e = new CourseSubjectEntity();
+//        e.setCourseId(entity.getId());
+//        e.setSubjectId(id);
+//        listAdd.add(e);
+//      } else {
+//        for (int i = 0; i < listDelete.size(); i++) {
+//          if (listDelete.get(i).getSubjectId().equals(id)) {
+//            listDelete.remove(i);
+//            break;
+//          }
+//        }
+//      }
+//    }
+////    courseSubjectRepository.saveAll(listAdd);
+//    courseSubjectRepository.deleteAll(listDelete);
+//  }
+
   @Override
   protected void specificMapToEntity(CourseDTO dto, CourseEntity entity) {
 //    super.specificMapToEntity(dto, entity);
@@ -98,10 +122,12 @@ public class CourseServiceImpl extends
   @Override
   protected void specificMapToDTO(CourseEntity entity, CourseDTO dto) {
     super.specificMapToDTO(entity, dto);
-    if (entity.getMapAllProperties()) {
+    if (entity.getMapAllProperties() && entity.getSubjectIds()!=null && entity.getSubjectIds().length() > 2) {
+      String[] ids = entity.getSubjectIds().substring(1, entity.getSubjectIds().length() - 1)
+          .split(",");
       List<SubjectDTO> dtos = new ArrayList<>();
-      for (SubjectEntity e : entity.getSubjects()) {
-        dtos.add(subjectService.findById(e.getId()));
+      for (String e : ids) {
+        dtos.add(subjectService.findById(Long.valueOf(e)));
       }
       dto.setListSubject(dtos);
     }

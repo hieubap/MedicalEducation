@@ -79,6 +79,8 @@ public class CourseEntity extends BaseEntity {
   /**
    * các môn trong chương trình
    */
+  private String subjectIds;
+
   @ManyToMany(fetch = FetchType.LAZY)
   @JoinTable(
       name = "course_subject",

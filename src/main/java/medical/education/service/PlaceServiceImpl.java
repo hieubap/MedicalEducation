@@ -6,6 +6,8 @@ import medical.education.dao.repository.HealthFacilityRepository;
 import medical.education.dao.repository.PlaceRepository;
 import medical.education.dto.PlaceDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import spring.backend.library.exception.BaseException;
@@ -37,5 +39,12 @@ public class PlaceServiceImpl extends AbstractBaseService<PlaceEntity, PlaceDTO,
         .existsById(dto.getHealthFacilityId())) {
       throw new BaseException(400, "healthFacilityId is null or empty");
     }
+  }
+
+  @Override
+  public Page<PlaceDTO> search(PlaceDTO dto, Pageable pageable) {
+    if(dto.getAddress()!=null)
+    dto.setAddress('%' + dto.getAddress().trim().toLowerCase().replace(' ', '%') + '%');
+    return super.search(dto, pageable);
   }
 }

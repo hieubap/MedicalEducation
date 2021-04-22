@@ -35,7 +35,7 @@ public class CourseDTO extends BaseDTO {
 
   private Object healthFacility;
 
-  private List<Long> subjectIds;
+  private String subjectIds;
 
   private List<SubjectDTO> listSubject;
 
