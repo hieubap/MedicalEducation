@@ -68,7 +68,7 @@ public class ScheduleEntity extends BaseEntity {
   @Column(name = "course_id")
   private Long courseId;
 
-  @OneToOne
+  @ManyToOne
   @JoinColumn(name = "course_id",updatable = false,insertable = false)
   private CourseEntity course;
 }

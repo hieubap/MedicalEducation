@@ -18,4 +18,8 @@ public interface CourseSubjectRepository extends BaseRepository<CourseSubjectEnt
 
   @Transactional
   void deleteByCourseIdAndSubjectId(Long courseId,Long subjectId);
+
+  @Override
+  @Query("delete CourseSubjectEntity e where e.id = :#{#aLong}")
+  void deleteById(Long aLong);
 }

@@ -42,4 +42,6 @@ public class CourseDTO extends BaseDTO {
   private List<UserDTO> listRegisters;
 
   private Object userCreated;
+
+  private List<ScheduleDTO> listSchedules;
 }

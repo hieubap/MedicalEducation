@@ -3,12 +3,16 @@ package medical.education.service;
 import com.google.common.base.Strings;
 import java.util.ArrayList;
 import java.util.List;
+import javax.transaction.Transactional;
 import medical.education.dao.model.CourseEntity;
+import medical.education.dao.model.ScheduleEntity;
 import medical.education.dao.model.SubjectEntity;
 import medical.education.dao.repository.CourseRepository;
 import medical.education.dao.repository.CourseSubjectRepository;
 import medical.education.dao.repository.HealthFacilityRepository;
+import medical.education.dao.repository.SubjectRepository;
 import medical.education.dto.CourseDTO;
+import medical.education.dto.ScheduleDTO;
 import medical.education.dto.SubjectDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -26,7 +30,13 @@ public class CourseServiceImpl extends
   private CourseRepository repository;
 
   @Autowired
+  private SubjectRepository subjectRepository;
+
+  @Autowired
   private SubjectService subjectService;
+
+  @Autowired
+  private ScheduleService scheduleService;
 
   @Autowired
   private CourseSubjectRepository courseSubjectRepository;
@@ -75,34 +85,43 @@ public class CourseServiceImpl extends
         .existsById(dto.getHealthFacilityId())) {
       throw new BaseException(400, "healthFacilityId is null or not exist");
     }
+
+    if (dto.getSubjectIds() != null) {
+      List<SubjectEntity> listSubject = new ArrayList<>();
+      String[] ids = dto.getSubjectIds().substring(1, dto.getSubjectIds().length() - 1)
+          .split(",");
+      for (String idStr : ids) {
+        Long id = Long.valueOf(idStr);
+        SubjectEntity e = subjectRepository.findById(id).get();
+        listSubject.add(e);
+      }
+      entity.setSubjects(listSubject);
+    }
   }
 
-//  @Override
-//  @Transactional
-//  protected void afterSave(CourseEntity entity, CourseDTO dto) {
-//    super.afterSave(entity, dto);
-//
+  @Override
+  @Transactional
+  protected void afterSave(CourseEntity entity, CourseDTO dto) {
+    super.afterSave(entity, dto);
+
 //    List<CourseSubjectEntity> listDelete = courseSubjectRepository.findByCourseId(entity.getId());
+//    for (CourseSubjectEntity e : listDelete) {
+//      courseSubjectRepository.deleteById(e.getId());
+//    }
+//
 //    List<CourseSubjectEntity> listAdd = new ArrayList<>();
 //
-//    for (Long id : dto.getSubjectIds()) {
-//      if (!courseSubjectRepository.exist(entity.getId(), id)) {
-//        CourseSubjectEntity e = new CourseSubjectEntity();
-//        e.setCourseId(entity.getId());
-//        e.setSubjectId(id);
-//        listAdd.add(e);
-//      } else {
-//        for (int i = 0; i < listDelete.size(); i++) {
-//          if (listDelete.get(i).getSubjectId().equals(id)) {
-//            listDelete.remove(i);
-//            break;
-//          }
-//        }
-//      }
+//    String[] ids = dto.getSubjectIds().substring(1, dto.getSubjectIds().length() - 1)
+//        .split(",");
+//    for (String idStr : ids) {
+//      Long id = Long.valueOf(idStr);
+//      CourseSubjectEntity e = new CourseSubjectEntity();
+//      e.setCourseId(entity.getId());
+//      e.setSubjectId(id);
+//      listAdd.add(e);
 //    }
-////    courseSubjectRepository.saveAll(listAdd);
-//    courseSubjectRepository.deleteAll(listDelete);
-//  }
+//    courseSubjectRepository.saveAll(listAdd);
+  }
 
   @Override
   protected void specificMapToEntity(CourseDTO dto, CourseEntity entity) {
@@ -122,14 +141,21 @@ public class CourseServiceImpl extends
   @Override
   protected void specificMapToDTO(CourseEntity entity, CourseDTO dto) {
     super.specificMapToDTO(entity, dto);
-    if (entity.getMapAllProperties() && entity.getSubjectIds()!=null && entity.getSubjectIds().length() > 2) {
-      String[] ids = entity.getSubjectIds().substring(1, entity.getSubjectIds().length() - 1)
-          .split(",");
-      List<SubjectDTO> dtos = new ArrayList<>();
-      for (String e : ids) {
-        dtos.add(subjectService.findById(Long.valueOf(e)));
+    if (entity.getMapAllProperties()) {
+      if (entity.getSubjects() != null) {
+        List<SubjectDTO> subjectDTOS = new ArrayList<>();
+        for (SubjectEntity e : entity.getSubjects()) {
+          subjectDTOS.add(subjectService.findById(e.getId()));
+        }
+        dto.setListSubject(subjectDTOS);
       }
-      dto.setListSubject(dtos);
+      if (entity.getSchedules() != null) {
+        List<ScheduleDTO> scheduleDTOS = new ArrayList<>();
+        for (ScheduleEntity e : entity.getSchedules()) {
+          scheduleDTOS.add(scheduleService.findById(e.getId()));
+        }
+        dto.setListSchedules(scheduleDTOS);
+      }
     }
   }
 

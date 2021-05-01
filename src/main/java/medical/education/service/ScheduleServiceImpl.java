@@ -29,6 +29,12 @@ public class ScheduleServiceImpl extends
   @Autowired
   private CourseRepository courseRepository;
 
+  @Autowired
+  private SubjectService subjectService;
+
+  @Autowired
+  private PlaceService placeService;
+
   @Override
   protected ScheduleRepository getRepository() {
     return scheduleRepository;
@@ -55,4 +61,12 @@ public class ScheduleServiceImpl extends
     if(dto.getCourseId() == null || !courseRepository.existsById(dto.getCourseId()))
       throw new BaseException(400,"courseId is null or not exist");
   }
+
+  @Override
+  protected void afterSave(ScheduleEntity entity, ScheduleDTO dto) {
+    super.afterSave(entity, dto);
+    entity.setSubject(subjectRepository.findById(entity.getSubjectId()).get());
+    entity.setPlace(placeRepository.findById(entity.getPlaceId()).get());
+  }
+
 }

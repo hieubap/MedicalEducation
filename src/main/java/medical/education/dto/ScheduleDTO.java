@@ -22,5 +22,4 @@ public class ScheduleDTO extends BaseDTO {
   private Long subjectId;
   private SubjectDTO subject;
   private Long courseId;
-  private CourseEntity course;
 }

@@ -76,17 +76,21 @@ public class CourseEntity extends BaseEntity {
   @JoinColumn(name = "health_facility_id",insertable = false,updatable = false)
   private HealthFacilityEntity healthFacility;
 
-  /**
-   * các môn trong chương trình
-   */
-  private String subjectIds;
+//  /**
+//   * các môn trong chương trình
+//   */
+//  private String subjectIds;
 
   @ManyToMany(fetch = FetchType.LAZY)
   @JoinTable(
-      name = "course_subject",
+      name = "course_subject2",
       joinColumns = @JoinColumn(name = "course_id", referencedColumnName = "id"),
       inverseJoinColumns = @JoinColumn(name = "subject_id", referencedColumnName = "id"))
   private List<SubjectEntity> subjects;
+
+  @OneToMany(fetch = FetchType.LAZY,mappedBy = "course")
+  private List<ScheduleEntity> schedules;
+
 
   @ManyToMany(fetch = FetchType.LAZY)
   @JoinTable(
