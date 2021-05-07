@@ -53,6 +53,7 @@ public class RegisterEntity extends BaseEntity {
    * 1 hoàn  thành
    * 2 trượt
    */
+  @JoinColumn(name = "status")
   private RegisterEnum status;
 
   /**

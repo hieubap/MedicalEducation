@@ -1,11 +1,11 @@
 package medical.education.service;
 
-import medical.education.dao.model.CourseEntity;
 import medical.education.dao.model.RegisterEntity;
-import medical.education.dao.repository.RegisterRepository;
 import medical.education.dao.repository.CourseRepository;
+import medical.education.dao.repository.RegisterRepository;
 import medical.education.dao.repository.UserRepository;
 import medical.education.dto.RegisterDTO;
+import medical.education.dto.UserDTO;
 import medical.education.enums.RegisterEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -43,18 +43,29 @@ public class RegisterServiceImpl extends
   protected void beforeSave(RegisterEntity entity, RegisterDTO dto) {
     super.beforeSave(entity, dto);
     entity.setStudentId(userService.getCurrentUserId());
-    if (dto.getCode() == null || !courseRepository.existsByCode(dto.getCode())) {
+//    if (dto.getCode() == null || !courseRepository.existsByCode(dto.getCode())) {
+//      throw new BaseException(400, Message.getMessage("Null.Or.Not.Exist", new Object[]{"code"}));
+//    }
+    if (dto.getCourseId() == null || !courseRepository.existsById(dto.getCourseId())) {
       throw new BaseException(400, Message.getMessage("Null.Or.Not.Exist", new Object[]{"code"}));
     }
-    CourseEntity courseEntity = courseRepository.findByCode(dto.getCode());
+//    CourseEntity courseEntity = courseRepository.findByCode(dto.getCode());
+
+//    if (e != null && !e.getStatus().equals(RegisterEnum.DONED)) {
+//      throw new BaseException(400,
+//          Message.getMessage("Has.Register.Course", new Object[]{e.getCourse().getName()}));
+//    }
+    UserDTO currentUser = userService.getCurrentUser();
     RegisterEntity e = registerRepository.findByCourseIdAndStudentId(
-        courseEntity.getId(), userService.getCurrentUserId());
-    if (e != null && !e.getStatus().equals(RegisterEnum.DONED)) {
-      throw new BaseException(400,
+        currentUser.getCurrentCourseId(), userService.getCurrentUserId());
+    if (currentUser.getCurrentCourseId() != null) {
+      throw new BaseException(410,
           Message.getMessage("Has.Register.Course", new Object[]{e.getCourse().getName()}));
+    } else {
+      currentUser.setCurrentCourseId(dto.getCourseId());
+      userService.save(currentUser.getId(), currentUser);
     }
-    entity.setCourseId(courseRepository.findByCode(dto.getCode()).getId());
-    entity.setStatus(RegisterEnum.STUDYING);
+    entity.setStatus(RegisterEnum.REGISTER_DONED);
   }
 
   @Override
@@ -68,6 +79,18 @@ public class RegisterServiceImpl extends
   public Page<RegisterDTO> search(RegisterDTO dto, Pageable pageable) {
     dto.setStudentId(userService.getCurrentUserId());
     return super.search(dto, pageable);
+  }
+
+  @Override
+  public void delete(Long id) {
+    RegisterEntity entity = getRepository().findById(id).get();
+    if (!entity.getStatus().equals(RegisterEnum.REGISTER_DONED)) {
+      throw new BaseException(411, Message.getMessage("Cant.cancel.course"));
+    }
+    UserDTO currentUser = userService.getCurrentUser();
+    currentUser.setCurrentCourseId(null);
+    userService.save(currentUser);
+    super.delete(id);
   }
 
   //  @Scheduled(cron = "0,20,40 * * * * *")

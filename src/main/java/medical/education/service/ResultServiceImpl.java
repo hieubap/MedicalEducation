@@ -20,7 +20,6 @@ import spring.backend.library.exception.BaseException;
 import spring.backend.library.service.AbstractBaseService;
 
 @Service
-@PreAuthorize("hasAnyRole('TEARCHER', 'ADMIN')")
 public class ResultServiceImpl extends
     AbstractBaseService<ResultEntity, ResultDTO, ResultRepository>
     implements ResultService {
@@ -48,6 +47,7 @@ public class ResultServiceImpl extends
   }
 
   @Override
+  @PreAuthorize("hasAnyRole('TEARCHER', 'ADMIN')")
   protected void beforeSave(ResultEntity entity, ResultDTO dto) {
     super.beforeSave(entity, dto);
     if (dto.getStudentId() == null || !userRepository.existsById(dto.getStudentId()))

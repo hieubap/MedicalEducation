@@ -11,6 +11,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import lombok.Getter;
@@ -68,6 +69,16 @@ public class UserEntity extends BaseEntity {
    * 3: student
    */
   private RoleEnum role;
+
+  /**
+   * KHóa đang học hiện tại
+   */
+  @JoinColumn(name = "current_course")
+  private Long currentCourseId;
+
+  @OneToOne
+  @JoinColumn(name = "current_course",updatable = false,insertable = false)
+  private CourseEntity currentCourse;
 
   @Column(name = "role_id")
   private Long roleId;

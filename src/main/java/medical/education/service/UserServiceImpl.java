@@ -97,14 +97,16 @@ public class UserServiceImpl extends
   @PreAuthorize("hasAnyRole('ADMIN')")
   protected void beforeSave(UserEntity entity, UserDTO dto) {
     super.beforeSave(entity, dto);
-    if ((dto.getUsername() == null || repository.existsByUsername(dto.getUsername()))
-        && dto.getPasswordChange() == null) {
-      throw new BaseException(400, "username is exists or null");
-    }
+//    if ((dto.getUsername() == null || repository.existsByUsername(dto.getUsername()))
+//        && dto.getPasswordChange() == null) {
+//      throw new BaseException(400, "username is exists or null");
+//    }
     if (Strings.isNullOrEmpty(dto.getPassword())) {
       throw new BaseException(400, "password is empty or null");
     }
-    entity.setPassword(DigestUtil.sha256Hex(dto.getPassword()));
+    if (entity.getId() == null) {
+      entity.setPassword(DigestUtil.sha256Hex(dto.getPassword()));
+    }
   }
 
   @Override
@@ -188,16 +190,21 @@ public class UserServiceImpl extends
   @Override
   @PreAuthorize("hasAnyRole('ADMIN')")
   public Page<UserDTO> search(UserDTO dto, Pageable pageable) {
-    if(dto.getUsername() != null)
-      dto.setUsername('%'+ dto.getUsername().replace(' ','%')+'%');
-    if(dto.getFullName() != null)
-      dto.setFullName('%'+ dto.getFullName().replace(' ','%')+'%');
-    if(dto.getAddress() != null)
-    dto.setAddress('%'+ dto.getAddress().replace(' ','%')+'%');
-    if(dto.getPhoneNumber() != null)
-    dto.setPhoneNumber('%'+ dto.getPhoneNumber().replace(' ','%')+'%');
-    if(dto.getEmail() != null)
-    dto.setEmail('%'+ dto.getEmail().replace(' ','%')+'%');
+    if (dto.getUsername() != null) {
+      dto.setUsername('%' + dto.getUsername().replace(' ', '%') + '%');
+    }
+    if (dto.getFullName() != null) {
+      dto.setFullName('%' + dto.getFullName().replace(' ', '%') + '%');
+    }
+    if (dto.getAddress() != null) {
+      dto.setAddress('%' + dto.getAddress().replace(' ', '%') + '%');
+    }
+    if (dto.getPhoneNumber() != null) {
+      dto.setPhoneNumber('%' + dto.getPhoneNumber().replace(' ', '%') + '%');
+    }
+    if (dto.getEmail() != null) {
+      dto.setEmail('%' + dto.getEmail().replace(' ', '%') + '%');
+    }
 
     return super.search(dto, pageable);
   }
@@ -221,14 +228,14 @@ public class UserServiceImpl extends
     entityChange.setId(entity.getIdChange());
     entityChange.setUsername(null);
     entityChange.setRole(entity.getRole());
-    entityChange.setIdChange((long)-1);
+    entityChange.setIdChange((long) -1);
 
     getRepository().save(entityChange);
 
     entity.setIdChange(entityChange.getId());
     getRepository().save(entity);
 
-    return new ResponseEntity(200, Message.getMessage("Wait.Admin.Approve.Info"),userDTO);
+    return new ResponseEntity(200, Message.getMessage("Wait.Admin.Approve.Info"), userDTO);
   }
 
   @Override
@@ -255,6 +262,6 @@ public class UserServiceImpl extends
     getRepository().deleteById(entityChange.getId());
     getRepository().save(entitySave);
 
-    return new ResponseEntity(200,Message.getMessage("Admin.approve.Change.Info"));
+    return new ResponseEntity(200, Message.getMessage("Admin.approve.Change.Info"));
   }
 }

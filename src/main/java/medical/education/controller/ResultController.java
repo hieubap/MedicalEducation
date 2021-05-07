@@ -10,8 +10,8 @@ import spring.backend.library.controller.BaseController;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/study-process")
-public class StudyProcessController extends BaseController<ResultDTO, ResultService> {
+@RequestMapping("/result")
+public class ResultController extends BaseController<ResultDTO, ResultService> {
   @Autowired
   private ResultService studyProcessService;
 

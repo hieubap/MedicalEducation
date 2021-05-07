@@ -46,4 +46,7 @@ public class UserDTO extends BaseDTO {
 
   private List<ResultDTO> listStudyProcess;
 
+  private Long currentCourseId;
+
+  private CourseDTO currentCourse;
 }

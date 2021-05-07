@@ -19,4 +19,9 @@ public interface RegisterRepository extends
   Page<RegisterEntity> search(RegisterDTO dto, Pageable pageable);
 
   RegisterEntity findByCourseIdAndStudentId(Long courseID,Long studentId);
+
+  @Query("select case when count(e) > 0 then true else false end "
+      + " from RegisterEntity e"
+      + " where (e.studentId = :#{#studentId} and e.status <> medical.education.enums.RegisterEnum.DONED)")
+  boolean isStudying(Long studentId);
 }

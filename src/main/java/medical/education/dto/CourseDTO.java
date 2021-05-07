@@ -44,4 +44,6 @@ public class CourseDTO extends BaseDTO {
   private Object userCreated;
 
   private List<ScheduleDTO> listSchedules;
+
+  private Short status;
 }
