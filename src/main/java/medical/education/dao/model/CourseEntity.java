@@ -1,5 +1,6 @@
 package medical.education.dao.model;
 
+import java.util.Date;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,6 +18,7 @@ import javax.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import medical.education.enums.CourseStatusEnum;
 import org.hibernate.annotations.Where;
 import spring.backend.library.dao.model.BaseEntity;
 
@@ -41,17 +43,17 @@ public class CourseEntity extends BaseEntity {
    * 1: đang học
    * 2: hoàn thành
    */
-  private Short status;
+  private CourseStatusEnum courseStatusEnum;
 
   /**
    * thời gian bắt đầu
    */
-  private String startTime;
+  private Date ngayKhaiGiang;
 
   /**
    * thời gian kết thúc
    */
-  private String endTime;
+  private Date ngayKetThuc;
 
   /**
    * giá

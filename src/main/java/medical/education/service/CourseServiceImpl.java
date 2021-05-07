@@ -2,6 +2,7 @@ package medical.education.service;
 
 import com.google.common.base.Strings;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.transaction.Transactional;
 import medical.education.dao.model.CourseEntity;
@@ -14,6 +15,7 @@ import medical.education.dao.repository.SubjectRepository;
 import medical.education.dto.CourseDTO;
 import medical.education.dto.ScheduleDTO;
 import medical.education.dto.SubjectDTO;
+import medical.education.enums.CourseStatusEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -64,13 +66,13 @@ public class CourseServiceImpl extends
     if (dto.getName() == null) {
       throw new BaseException(400, "name is null");
     }
-    if (Strings.isNullOrEmpty(dto.getStartTime())) {
-      throw new BaseException(400, "startTime is null");
-    }
-
-    if (Strings.isNullOrEmpty(dto.getEndTime())) {
-      throw new BaseException(400, "endTime is null");
-    }
+//    if (Strings.isNullOrEmpty(dto.getStartTime())) {
+//      throw new BaseException(400, "startTime is null");
+//    }
+//
+//    if (Strings.isNullOrEmpty(dto.getEndTime())) {
+//      throw new BaseException(400, "endTime is null");
+//    }
 
     if (dto.getPrice() == null) {
       throw new BaseException(400, "price is null");
@@ -98,7 +100,7 @@ public class CourseServiceImpl extends
       }
       entity.setSubjects(listSubject);
     }
-    entity.setStatus((short)0);
+    entity.setCourseStatusEnum(CourseStatusEnum.THOI_GIAN_DANG_KI);
   }
 
   @Override
@@ -169,14 +171,20 @@ public class CourseServiceImpl extends
     return super.search(dto, pageable);
   }
 
-//  @Scheduled(cron = "0 * * * * *")
-//  public void update(){
-//    CourseDTO courseSearch = new CourseDTO();
-//    courseSearch.setStatus((short)1);
-//    List<CourseEntity> allCourse = (List<CourseEntity>) getRepository().search(courseSearch, PageRequest.of(0,999999));
-//    for(CourseEntity e : allCourse){
-//      if(e.start)
-//    }
-
-//  }
+  @Scheduled(cron = "0 * * * * *")
+  public void update() {
+    CourseDTO courseSearch = new CourseDTO();
+    courseSearch.setCourseStatusEnum(CourseStatusEnum.THOI_GIAN_DANG_KI);
+    List<CourseEntity> allCourse = (List<CourseEntity>) getRepository()
+        .search(courseSearch, PageRequest.of(0, 999999));
+    for (CourseEntity e : allCourse) {
+      if (e.getNgayKhaiGiang().before(new Date())) {
+        e.setCourseStatusEnum(CourseStatusEnum.DANG_HOC);
+      }
+      if (e.getNgayKetThuc().after(new Date())) {
+        e.setCourseStatusEnum(CourseStatusEnum.HOAN_THANH);
+      }
+    }
+    getRepository().saveAll(allCourse);
+  }
 }

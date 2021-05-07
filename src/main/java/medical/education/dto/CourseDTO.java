@@ -1,10 +1,13 @@
 package medical.education.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Date;
 import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import medical.education.enums.CourseStatusEnum;
 import spring.backend.library.dto.BaseDTO;
 
 @Getter
@@ -19,9 +22,11 @@ public class CourseDTO extends BaseDTO {
 
   private String code;
 
-  private String startTime;
+  @JsonProperty
+  private Date ngayKhaiGiang;
 
-  private String endTime;
+  @JsonProperty
+  private Date ngayKetThuc;
 
   private Long price;
 
@@ -45,5 +50,5 @@ public class CourseDTO extends BaseDTO {
 
   private List<ScheduleDTO> listSchedules;
 
-  private Short status;
+  private CourseStatusEnum courseStatusEnum;
 }
