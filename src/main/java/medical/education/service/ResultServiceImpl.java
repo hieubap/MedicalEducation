@@ -2,13 +2,11 @@ package medical.education.service;
 
 import java.util.ArrayList;
 import java.util.List;
-import medical.education.dao.model.ClassEntity;
 import medical.education.dao.model.CourseEntity;
 import medical.education.dao.model.ResultEntity;
 import medical.education.dao.model.SubjectEntity;
 import medical.education.dao.model.UserEntity;
 import medical.education.dao.repository.CourseRepository;
-import medical.education.dao.repository.CourseSubjectRepository;
 import medical.education.dao.repository.ResultRepository;
 import medical.education.dao.repository.SubjectRepository;
 import medical.education.dao.repository.UserRepository;
@@ -34,9 +32,6 @@ public class ResultServiceImpl extends
 
   @Autowired
   private SubjectRepository subjectRepository;
-
-  @Autowired
-  private CourseSubjectRepository courseSubjectRepository;
 
   @Autowired
   private SubjectServiceImpl subjectService;
