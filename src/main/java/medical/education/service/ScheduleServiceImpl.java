@@ -6,6 +6,7 @@ import medical.education.dao.repository.PlaceRepository;
 import medical.education.dao.repository.ScheduleRepository;
 import medical.education.dao.repository.SubjectRepository;
 import medical.education.dto.ScheduleDTO;
+import medical.education.enums.KipHocEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -36,12 +37,6 @@ public class ScheduleServiceImpl extends
   @Autowired
   private CourseRepository courseRepository;
 
-  @Autowired
-  private CourseService courseService;
-
-  @Autowired
-  private PlaceService placeService;
-
   @Override
   protected ScheduleRepository getRepository() {
     return scheduleRepository;
@@ -54,13 +49,6 @@ public class ScheduleServiceImpl extends
     if (dto.getDay() == null) {
       throw new BaseException(400, "day is null");
     }
-    if (dto.getStartTime() == null) {
-      throw new BaseException(400, "startTime is null");
-    }
-
-    if (dto.getEndTime() == null) {
-      throw new BaseException(400, "endTime is null");
-    }
 
     if (dto.getPlaceId() == null || !placeRepository.existsById(dto.getPlaceId())) {
       throw new BaseException(400, "placeId is null or not exist");
@@ -72,6 +60,13 @@ public class ScheduleServiceImpl extends
 
     if (dto.getCourseId() == null || !courseRepository.existsById(dto.getCourseId())) {
       throw new BaseException(400, "courseId is null or not exist");
+    }
+    kiemTraLopHoc(dto.getKipHoc(), dto.getDay(), dto.getCourseId());
+  }
+
+  private void kiemTraLopHoc(KipHocEnum kipHoc, Short day, Long courseId) {
+    if(getRepository().checkExistByDayAndKipHoc(kipHoc, day, courseId)){
+      throw new BaseException(400, "Trùng lịch");
     }
   }
 

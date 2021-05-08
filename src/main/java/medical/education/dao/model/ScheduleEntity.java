@@ -13,6 +13,7 @@ import javax.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import medical.education.enums.KipHocEnum;
 import org.hibernate.annotations.Where;
 import spring.backend.library.dao.model.BaseEntity;
 
@@ -32,15 +33,7 @@ public class ScheduleEntity extends BaseEntity {
    */
   private Short day;
 
-  /**
-   * bắt đầu
-   */
-  private String startTime;
-
-  /**
-   * kết thúc
-   */
-  private String endTime;
+  private KipHocEnum kipHoc;
 
   /**
    * địa điểm
