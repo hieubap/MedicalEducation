@@ -27,6 +27,7 @@ public interface ScheduleRepository extends BaseRepository<ScheduleEntity, Sched
           + "where 1=1 "
           + "and (e.kipHoc = :kipHoc)"
           + "and (e.id <> :id or :id is null)"
-          + "and (e.day = :day)")
-  Boolean checkExistByDayAndKipHoc(KipHocEnum kipHoc, Short day, Long id);
+          + "and (e.day = :day)"
+          + "and (e.placeId = :placeId)")
+  Boolean checkExistByDayAndKipHoc(KipHocEnum kipHoc, Short day, Long id, Long placeId);
 }

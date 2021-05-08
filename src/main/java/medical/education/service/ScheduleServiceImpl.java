@@ -61,14 +61,15 @@ public class ScheduleServiceImpl extends
     if (dto.getCourseId() == null || !courseRepository.existsById(dto.getCourseId())) {
       throw new BaseException(400, "courseId is null or not exist");
     }
-    kiemTraLopHoc(dto.getKipHoc(), dto.getDay(), dto.getCourseId());
+    kiemTraLopHoc(dto.getKipHoc(), dto.getDay(), dto.getCourseId(), dto.getPlaceId());
   }
 
-  private void kiemTraLopHoc(KipHocEnum kipHoc, Short day, Long courseId) {
-    if(getRepository().checkExistByDayAndKipHoc(kipHoc, day, courseId)){
+  private void kiemTraLopHoc(KipHocEnum kipHoc, Short day, Long courseId, Long placeId) {
+    if (getRepository().checkExistByDayAndKipHoc(kipHoc, day, courseId, placeId)) {
       throw new BaseException(400, "Trùng lịch");
     }
   }
+
 
   @Override
   protected void afterSave(ScheduleEntity entity, ScheduleDTO dto) {
