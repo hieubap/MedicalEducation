@@ -129,7 +129,7 @@ public class CourseServiceImpl extends
     return super.search(dto, pageable);
   }
 
-  @Scheduled(fixedDelay = 1000)
+  @Scheduled(cron = "0 * * * * *")
   public void update() {
     List<CourseEntity> allCourse = StreamSupport.stream(repository.findAll().spliterator(), false)
             .collect(Collectors.toList());
