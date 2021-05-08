@@ -101,6 +101,7 @@ public class CourseServiceImpl extends
       entity.setSubjects(listSubject);
     }
     entity.setCourseStatusEnum(CourseStatusEnum.THOI_GIAN_DANG_KI);
+    entity.setStatus(CourseStatusEnum.THOI_GIAN_DANG_KI.getValue());
   }
 
   @Override
@@ -168,10 +169,19 @@ public class CourseServiceImpl extends
     if (dto.getName() != null) {
       dto.setName("%" + dto.getName().trim().replaceAll(" ", "%") + "%");
     }
+    if (dto.getCode() != null) {
+      dto.setCode("%" + dto.getCode().trim().replaceAll(" ", "%") + "%");
+    }
+    if (dto.getNameHealthFacility() != null) {
+      dto.setNameHealthFacility("%" + dto.getNameHealthFacility().trim().replaceAll(" ", "%") + "%");
+    }
+    if (dto.getNameUserCreated() != null) {
+      dto.setNameUserCreated("%" + dto.getNameUserCreated().trim().replaceAll(" ", "%") + "%");
+    }
     return super.search(dto, pageable);
   }
 
-  @Scheduled(cron = "0 * * * * *")
+  @Scheduled(cron = "0 0 0 * * *")
   public void update() {
     CourseDTO courseSearch = new CourseDTO();
     courseSearch.setCourseStatusEnum(CourseStatusEnum.THOI_GIAN_DANG_KI);

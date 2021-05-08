@@ -39,10 +39,12 @@ public class CourseEntity extends BaseEntity {
   private String code;
 
   /**
-   * 0: Thời gian đăng ký
-   * 1: đang học
-   * 2: hoàn thành
+   * 1: Thời gian đăng ký
+   * 2: đang học
+   * 3: hoàn thành
    */
+  private Short status;
+
   private CourseStatusEnum courseStatusEnum;
 
   /**

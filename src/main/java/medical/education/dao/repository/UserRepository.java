@@ -23,6 +23,8 @@ public interface UserRepository extends BaseRepository<UserEntity, UserDTO, Long
       + " where (e.id = :#{#dto.id} or :#{#dto.id} is null)"
       + " and (e.role = :#{#dto.role} or :#{#dto.role} is null)"
       + " and (e.idChange <> -1 or e.idChange is null)"
+      + " and (e.age = :#{#dto.age} or :#{#dto.age} is null)"
+      + " and (e.gender = :#{#dto.gender} or :#{#dto.gender} is null)"
       + " and (e.username like :#{#dto.username} or :#{#dto.username} is null)"
       + " and (e.address like :#{#dto.address} or :#{#dto.address} is null)"
       + " and (e.fullName like :#{#dto.fullName} or :#{#dto.fullName} is null)"

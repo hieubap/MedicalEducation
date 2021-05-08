@@ -22,6 +22,12 @@ public class CourseDTO extends BaseDTO {
 
   private String code;
 
+  private String nameHealthFacility;
+
+  private String nameUserCreated;
+
+  private Short status;
+
   @JsonProperty
   private Date ngayKhaiGiang;
 
