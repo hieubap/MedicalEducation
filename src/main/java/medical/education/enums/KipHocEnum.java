@@ -3,10 +3,11 @@ package medical.education.enums;
 import spring.backend.library.enums.IEnum;
 
 public enum KipHocEnum implements IEnum {
-    KIP1((short) 1, "Kíp 1"),
-    KIP2((short) 2, "Kíp 2"),
-    KIP3((short) 3, "Kíp 3"),
-    KIP4((short) 4, "Kíp 4");
+
+    KIP_1((short) 0, "Kíp 1"),
+    KIP_2((short) 1, "Kíp 2"),
+    KIP_3((short) 2, "Kíp 3"),
+    KIP_4((short) 3, "Kíp 4");
 
     private short value;
     private String name;
@@ -25,7 +26,6 @@ public enum KipHocEnum implements IEnum {
         this.name = name;
     }
 
-    @Override
     public short getValue() {
         return value;
     }
