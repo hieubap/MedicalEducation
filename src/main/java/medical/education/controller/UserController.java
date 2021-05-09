@@ -70,4 +70,9 @@ public class UserController extends BaseController<UserDTO, UserService> {
     return response(getService().adminApproveChange(id));
   }
 
+  @PutMapping(value = "/admin-approve-teacher/{id}")
+  public ResponseEntity approveTeacher(@PathVariable Long id,@RequestBody UserDTO dto) {
+    return response(getService().approveTeacher(id,dto));
+  }
+
 }

@@ -97,4 +97,9 @@ public class UserEntity extends BaseEntity {
   @OneToMany(mappedBy = "student")
   private List<ResultEntity> listStudyProcess;
 
+  @ManyToMany
+  @JoinTable(name = "user_subject",
+  joinColumns = @JoinColumn(name = "teacher_id",referencedColumnName = "id"),
+  inverseJoinColumns = @JoinColumn(name = "subject_id",referencedColumnName = "id"))
+  private List<SubjectEntity> subjects;
 }

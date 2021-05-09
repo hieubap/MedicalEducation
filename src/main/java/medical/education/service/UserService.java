@@ -3,7 +3,6 @@ package medical.education.service;
 import java.util.Map;
 import medical.education.dto.LoginDTO;
 import medical.education.dto.UserDTO;
-import org.springframework.core.io.ByteArrayResource;
 import org.springframework.web.multipart.MultipartFile;
 import spring.backend.library.dto.ResponseEntity;
 import spring.backend.library.service.BaseService;
@@ -26,4 +25,5 @@ public interface UserService extends BaseService<UserDTO> {
 
   String uploadAvatar(MultipartFile file);
 
+  UserDTO approveTeacher(Long id,UserDTO dto);
 }

@@ -1,5 +1,6 @@
 package medical.education.dto;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,6 +19,9 @@ public class ScheduleDTO extends BaseDTO {
     private PlaceDTO place;
     private Long subjectId;
     private SubjectDTO subject;
+    private Long teacherId;
+    private UserDTO teacher;
     private Long courseId;
-    private KipHocEnum kipHoc;
+    private CourseDTO course;
+    private Short kipHoc;
 }

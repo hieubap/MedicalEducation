@@ -8,8 +8,10 @@ import java.util.Map;
 import javax.crypto.SecretKey;
 import javax.servlet.http.HttpServletRequest;
 import medical.education.dao.model.RoleEntity;
+import medical.education.dao.model.SubjectEntity;
 import medical.education.dao.model.UserEntity;
 import medical.education.dao.repository.RoleRepository;
+import medical.education.dao.repository.SubjectRepository;
 import medical.education.dao.repository.UserRepository;
 import medical.education.dto.LoginDTO;
 import medical.education.dto.UserDTO;
@@ -45,6 +47,9 @@ public class UserServiceImpl extends
 
   @Autowired
   private RoleRepository roleRepository;
+
+  @Autowired
+  private SubjectRepository subjectRepository;
 
   @Autowired
   private JwtProvider jwtProvider;
@@ -263,5 +268,23 @@ public class UserServiceImpl extends
     getRepository().save(entitySave);
 
     return new ResponseEntity(200, Message.getMessage("Admin.approve.Change.Info"));
+  }
+
+  @Override
+  public UserDTO approveTeacher(Long id, UserDTO dto) {
+    if (dto.getSubjectsId() == null || dto.getSubjectsId().size() == 0) {
+      throw new BaseException(400, Message.getMessage("subjectIds.null.or.empty"));
+    }
+    UserEntity userDTO = getRepository().findById(id).get();
+    userDTO.setRole(RoleEnum.TEACHER);
+    List<SubjectEntity> subjects = new ArrayList<>();
+    for (Long subjectId : dto.getSubjectsId()) {
+      SubjectEntity subjectDTO = subjectRepository.findById(subjectId).get();
+      subjects.add(subjectDTO);
+    }
+    userDTO.setSubjects(subjects);
+    userDTO = getRepository().save(userDTO);
+
+    return mapToDTO(userDTO);
   }
 }

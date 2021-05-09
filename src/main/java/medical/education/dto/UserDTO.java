@@ -49,4 +49,10 @@ public class UserDTO extends BaseDTO {
   private Long currentCourseId;
 
   private CourseDTO currentCourse;
+
+  private List<Long> subjectsId;
+
+  private Long subjectId;
+
+//  private List<SubjectDTO> subjects;
 }

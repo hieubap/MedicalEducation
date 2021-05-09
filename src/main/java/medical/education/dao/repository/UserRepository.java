@@ -22,6 +22,7 @@ public interface UserRepository extends BaseRepository<UserEntity, UserDTO, Long
   @Query("select e from UserEntity e"
       + " where (e.id = :#{#dto.id} or :#{#dto.id} is null)"
       + " and (e.role = :#{#dto.role} or :#{#dto.role} is null)"
+      + " and (e.status = :#{#dto.status} or :#{#dto.status} is null)"
       + " and (e.idChange <> -1 or e.idChange is null)"
       + " and (e.age = :#{#dto.age} or :#{#dto.age} is null)"
       + " and (e.gender = :#{#dto.gender} or :#{#dto.gender} is null)"
@@ -29,6 +30,7 @@ public interface UserRepository extends BaseRepository<UserEntity, UserDTO, Long
       + " and (e.address like :#{#dto.address} or :#{#dto.address} is null)"
       + " and (e.fullName like :#{#dto.fullName} or :#{#dto.fullName} is null)"
       + " and (e.phoneNumber like :#{#dto.phoneNumber} or :#{#dto.phoneNumber} is null)"
-      + " and (e.email like :#{#dto.email} or :#{#dto.email} is null)")
+      + " and (e.email like :#{#dto.email} or :#{#dto.email} is null)"
+      + " and (exists (select 1 from e.subjects subject where :#{#dto.subjectId} = subject.id) or :#{#dto.subjectId} is null)")
   Page<UserEntity> search(UserDTO dto, Pageable pageable);
 }

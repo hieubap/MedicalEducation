@@ -3,10 +3,10 @@ package medical.education.enums;
 import spring.backend.library.enums.IEnum;
 
 public enum KipHocEnum implements IEnum {
-    KIP1((short) 1, "Kíp 1"),
-    KIP2((short) 2, "Kíp 2"),
-    KIP3((short) 3, "Kíp 3"),
-    KIP4((short) 4, "Kíp 4");
+    KIP1((short) 1, "07:00 - 09:00"),
+    KIP2((short) 2, "09:00 - 11:00"),
+    KIP3((short) 3, "12:00 - 15:00"),
+    KIP4((short) 4, "15:00 - 17:00");
 
     private short value;
     private String name;

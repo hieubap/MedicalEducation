@@ -33,7 +33,7 @@ public class ScheduleEntity extends BaseEntity {
    */
   private Short day;
 
-  private KipHocEnum kipHoc;
+  private Short kipHoc;
 
   /**
    * địa điểm
@@ -64,4 +64,14 @@ public class ScheduleEntity extends BaseEntity {
   @ManyToOne
   @JoinColumn(name = "course_id",updatable = false,insertable = false)
   private CourseEntity course;
+
+  /**
+   * giảng viên
+   */
+  @Column(name = "teacher_id")
+  private Long teacherId;
+
+  @ManyToOne
+  @JoinColumn(name = "teacher_id",insertable = false,updatable = false)
+  private UserEntity teacher;
 }
