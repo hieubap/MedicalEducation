@@ -20,7 +20,7 @@ public class ResultDTO extends BaseDTO {
    */
   private Long courseId;
 
-  private CourseDTO course;
+  private Object course;
 
   private Long subjectId;
 

@@ -27,7 +27,7 @@ public interface ScheduleRepository extends BaseRepository<ScheduleEntity, Sched
   @Query("select case when count(e) > 0 then true else false end from ScheduleEntity e "
           + "where 1=1 "
           + "and (e.kipHoc = :kipHoc)"
-          + "and (e.id <> :id or :id is null)"
+          + "and (e.id <> :id or :id is null) "
           + "and (e.day = :day)")
   Boolean checkExistByDayAndKipHoc(Short kipHoc, Short day, Long id);
 }

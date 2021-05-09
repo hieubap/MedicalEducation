@@ -25,7 +25,6 @@ public enum KipHocEnum implements IEnum {
         this.name = name;
     }
 
-    @Override
     public short getValue() {
         return value;
     }

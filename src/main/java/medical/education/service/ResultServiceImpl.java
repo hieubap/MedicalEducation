@@ -7,10 +7,12 @@ import medical.education.dao.model.ResultEntity;
 import medical.education.dao.model.SubjectEntity;
 import medical.education.dao.model.UserEntity;
 import medical.education.dao.repository.CourseRepository;
+import medical.education.dao.repository.CourseSubjectRepository;
 import medical.education.dao.repository.ResultRepository;
 import medical.education.dao.repository.SubjectRepository;
 import medical.education.dao.repository.UserRepository;
 import medical.education.dto.ResultDTO;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
@@ -25,6 +27,15 @@ public class ResultServiceImpl extends
   private ResultRepository resultRepository;
 
   @Autowired
+  private UserService userService;
+
+  @Autowired
+  private CourseService courseService;
+
+  @Autowired
+  private SubjectService subjectService;
+
+  @Autowired
   private UserRepository userRepository;
 
   @Autowired
@@ -32,9 +43,6 @@ public class ResultServiceImpl extends
 
   @Autowired
   private SubjectRepository subjectRepository;
-
-  @Autowired
-  private SubjectServiceImpl subjectService;
 
   @Override
   protected ResultRepository getRepository() {
@@ -51,7 +59,15 @@ public class ResultServiceImpl extends
       throw new BaseException(400,"courseId is null or not exist");
     if (dto.getSubjectId() == null || !subjectRepository.existsById(dto.getSubjectId()))
       throw new BaseException(400,"subjectId is null or not exist");
-
+    if (dto.getMidPoint() < 0 && dto.getMidPoint() > 10) {
+      throw new BaseException(400, "0 <= Midpoint <= 10");
+    }
+    if (dto.getEndPoint() < 0 && dto.getEndPoint() > 10) {
+      throw new BaseException(400, "0 <= Endpoint <= 10");
+    }
+    if (dto.getEndPoint() != null && dto.getMidPoint() != null) {
+      entity.setTotal(dto.getMidPoint() * 0.3 + dto.getEndPoint() * 0.7);
+    }
   }
 
   @Override
@@ -78,6 +94,9 @@ public class ResultServiceImpl extends
   @Override
   protected void specificMapToDTO(ResultEntity entity, ResultDTO dto) {
     super.specificMapToDTO(entity, dto);
-    dto.setSubject(subjectService.mapToDTO(entity.getSubject()));
+    dto.setStudent(userService.findById(entity.getStudentId()));
+    dto.setCourse(courseService.findById(entity.getCourseId()));
+    dto.setSubject(subjectService.findById(entity.getSubjectId()));
+
   }
 }
