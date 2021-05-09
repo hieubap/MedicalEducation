@@ -12,7 +12,6 @@ import javax.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import medical.education.enums.StudyProcessEnum;
 import org.hibernate.annotations.Where;
 import spring.backend.library.dao.model.BaseEntity;
 
@@ -44,7 +43,7 @@ public class ResultEntity extends BaseEntity {
   private Long courseId;
 
   @OneToOne
-  @JoinColumn(name = "class_id",insertable = false,updatable = false)
+  @JoinColumn(name = "course_id",insertable = false,updatable = false)
   private CourseEntity course;
 
   /**
