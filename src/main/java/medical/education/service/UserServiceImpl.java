@@ -193,7 +193,7 @@ public class UserServiceImpl extends
   }
 
   @Override
-  @PreAuthorize("hasAnyRole('ADMIN')")
+  @PreAuthorize("hasAnyRole('ADMIN','TEACHER')")
   public Page<UserDTO> search(UserDTO dto, Pageable pageable) {
     if (dto.getUsername() != null) {
       dto.setUsername('%' + dto.getUsername().replace(' ', '%') + '%');

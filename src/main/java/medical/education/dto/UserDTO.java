@@ -54,5 +54,5 @@ public class UserDTO extends BaseDTO {
 
   private Long subjectId;
 
-//  private List<SubjectDTO> subjects;
+  private List<SubjectDTO> subjects;
 }

@@ -14,19 +14,19 @@ import spring.backend.library.dto.BaseDTO;
 public class ResultDTO extends BaseDTO {
   private Long studentId;
 
-  private Object student;
+//  private Object student;
   /**
    * lớp học
    */
   private Long courseId;
 
-  private Object course;
+//  private Object course;
 
   private Long subjectId;
 
-  private Object subject;
+//  private Object subject;
 
-  private String muster;
+  private Integer muster;
 
   private Double midPoint;
 

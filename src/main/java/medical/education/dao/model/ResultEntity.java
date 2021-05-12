@@ -19,7 +19,7 @@ import spring.backend.library.dao.model.BaseEntity;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "result")
+@Table(name = "results")
 @Where(clause = "deleted=0")
 public class ResultEntity extends BaseEntity {
   @Id
@@ -59,7 +59,8 @@ public class ResultEntity extends BaseEntity {
   /**
    * điểm danh
    */
-  private String muster;
+  @Column(name = "attendance")
+  private Integer muster;
 
   /**
    * điểm giữa kỳ

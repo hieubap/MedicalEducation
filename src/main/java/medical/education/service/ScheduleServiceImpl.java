@@ -93,6 +93,7 @@ public class ScheduleServiceImpl extends
     super.afterSave(entity, dto);
     entity.setSubject(subjectRepository.findById(entity.getSubjectId()).get());
     entity.setPlace(placeRepository.findById(entity.getPlaceId()).get());
+    entity.setTeacher(userRepository.findById(entity.getTeacherId()).get());
   }
 
   @Override
