@@ -287,4 +287,9 @@ public class UserServiceImpl extends
 
     return mapToDTO(userDTO);
   }
+
+  @Override
+  public UserDTO profile() {
+    return getCurrentUser();
+  }
 }
