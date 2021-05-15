@@ -30,7 +30,7 @@ public class ClassEntity implements Serializable {
 
   private Double total;
 
-  private String muster;
+  private Integer muster;
 
   private Long classId;
 

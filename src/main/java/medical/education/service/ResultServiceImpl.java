@@ -108,6 +108,9 @@ public class ResultServiceImpl extends
 
   @Override
   public ResultDTO attendance(Long id) {
+    if(!getRepository().existsById(id)){
+      throw new BaseException(421,Message.getMessage("no.id",new Object[]{id}));
+    }
     ResultDTO result = findById(id);
     ResultEntity entity = getRepository().findById(id).get();
     if (entity.getSubject() != null &&

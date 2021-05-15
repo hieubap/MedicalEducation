@@ -18,7 +18,7 @@ public interface ClassRepository extends CrudRepository<ClassEntity, Long> {
       + "             u.current_course as class_id,"
       + "             rl.mid_point     as mid_point,"
       + "             rl.end_point     as end_point,"
-      + "             rl.muster        as muster,"
+      + "             rl.attendance    as muster,"
       + "             rl.total         as total,"
       + "             rl.subject_id    as subject_id,"
       + "             sj.lesson        as lesson"

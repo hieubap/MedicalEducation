@@ -27,6 +27,7 @@ public class ScheduleServiceImpl extends
 
   @Autowired
   private ScheduleService scheduleService;
+
   @Autowired
   private UserService userService;
 
@@ -100,7 +101,7 @@ public class ScheduleServiceImpl extends
   public Page<ScheduleDTO> getSchedule() {
     ScheduleDTO scheduleSearch = new ScheduleDTO();
     scheduleSearch.setCourseId(userService.getCurrentUser().getCurrentCourseId());
-    return scheduleService.search(scheduleSearch, PageRequest.of(0, 999999));
+    return search(scheduleSearch, PageRequest.of(0, 999999));
   }
 
   @Override
