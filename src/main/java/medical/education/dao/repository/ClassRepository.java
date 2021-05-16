@@ -15,7 +15,7 @@ public interface ClassRepository extends CrudRepository<ClassEntity, Long> {
   @Query(value = "select u.id             as id,"
       + "             rl.id             as result_id,"
       + "             u.full_name      as name,"
-      + "             u.current_course as class_id,"
+      + "             u.current_course_id as class_id,"
       + "             rl.mid_point     as mid_point,"
       + "             rl.end_point     as end_point,"
       + "             rl.attendance    as muster,"
@@ -24,9 +24,9 @@ public interface ClassRepository extends CrudRepository<ClassEntity, Long> {
       + "             sj.lesson        as lesson"
       + "      from users u"
       + "           join results rl on u.id = rl.student_id"
-      + "           join course cr on cr.id = u.current_course"
+      + "           join course cr on cr.id = u.current_course_id"
       + "           join subject sj on sj.id = rl.subject_id"
-      + " where (u.current_course = :#{#dto.classId} or :#{#dto.classId} = -1)"
+      + " where (rl.subject_id = :#{#dto.classId} and :#{#dto.classId} <> -1)"
       + " and (lower(u.full_name) like :#{#dto.name} or :#{#dto.name} = '')"
       ,nativeQuery = true)
   Page<ClassEntity> search(ClassDTO dto, Pageable pageable);

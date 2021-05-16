@@ -80,12 +80,12 @@ public class UserEntity extends BaseEntity {
   @JoinColumn(name = "current_course",updatable = false,insertable = false)
   private CourseEntity currentCourse;
 
-  @Column(name = "role_id")
-  private Long roleId;
-
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "role_id",updatable = false,insertable = false)
-  private RoleEntity roleEntity;
+//  @Column(name = "role_id")
+//  private Long roleId;
+//
+//  @ManyToOne(fetch = FetchType.LAZY)
+//  @JoinColumn(name = "role_id",updatable = false,insertable = false)
+//  private RoleEntity roleEntity;
 
   @ManyToMany(fetch = FetchType.LAZY)
   @JoinTable(

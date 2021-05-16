@@ -42,8 +42,6 @@ public class UserDTO extends BaseDTO {
 
   private RoleEnum role;
 
-  private RoleDTO roleDTO;
-
   private List<ResultDTO> listStudyProcess;
 
   private List<CourseDTO> courses;

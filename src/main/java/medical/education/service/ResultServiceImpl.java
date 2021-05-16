@@ -66,17 +66,17 @@ public class ResultServiceImpl extends
     if (dto.getSubjectId() == null || !subjectRepository.existsById(dto.getSubjectId())) {
       throw new BaseException(400, "subjectId is null or not exist");
     }
-    if (dto.getMidPoint() < 0 && dto.getMidPoint() > 10) {
+    if (dto.getEndPoint() != null && dto.getMidPoint() < 0 && dto.getMidPoint() > 10) {
       throw new BaseException(400, "0 <= Midpoint <= 10");
     }
-    if (dto.getEndPoint() < 0 && dto.getEndPoint() > 10) {
+    if (dto.getEndPoint() != null && dto.getEndPoint() < 0 && dto.getEndPoint() > 10) {
       throw new BaseException(400, "0 <= Endpoint <= 10");
     }
     if (dto.getEndPoint() != null && dto.getMidPoint() != null) {
       entity.setTotal(dto.getMidPoint() * 0.3 + dto.getEndPoint() * 0.7);
     }
     if (entity.getMuster() == null) {
-      dto.setMuster(0);
+      entity.setMuster(0);
     }
   }
 
@@ -90,6 +90,7 @@ public class ResultServiceImpl extends
       ResultEntity result = new ResultEntity();
       result.setStudentId(studentId);
       result.setCourseId(courseId);
+      result.setMuster(0);
       result.setSubjectId(subjectEntity.getId());
       listResult.add(result);
     }
@@ -110,16 +111,16 @@ public class ResultServiceImpl extends
     if (!getRepository().existsById(id)) {
       throw new BaseException(421, Message.getMessage("no.id", new Object[]{id}));
     }
-    ResultDTO result = findById(id);
+//    ResultDTO result = findById(id);
     ResultEntity entity = getRepository().findById(id).get();
     if (entity.getSubject() != null &&
-        result.getMuster() < entity.getSubject().getLesson()) {
-      result.setMuster(result.getMuster() + 1);
+        entity.getMuster() < entity.getSubject().getLesson()) {
+      entity.setMuster(entity.getMuster() + 1);
     } else {
       throw new BaseException(420, Message.getMessage("attendance.out"));
     }
 
-    return save(result);
+    return mapToDTO(getRepository().save(entity));
   }
 
   @Override

@@ -80,8 +80,8 @@ public class UserServiceImpl extends
     List<String> roles = new ArrayList<>();
 
     String role = "";
-    if (userEntity.getRoleEntity() != null) {
-      role = userEntity.getRoleEntity().getName();
+    if (userEntity.getRole().getName() != null) {
+      role = userEntity.getRole().getName();
     }
 
     if (role != null) {
@@ -93,6 +93,7 @@ public class UserServiceImpl extends
         .username(userEntity.getUsername())
         .fullName(userEntity.getFullName())
         .role(roles.get(0))
+        .avatar(userEntity.getAvatar())
         .privileges(roles)
         .build();
     return jwtProvider.generateToken(jwts);
@@ -114,18 +115,18 @@ public class UserServiceImpl extends
     }
   }
 
-  @Override
-  protected void specificMapToEntity(UserDTO dto, UserEntity entity) {
-    super.specificMapToEntity(dto, entity);
-    if (dto.getRole() != null) {
-      RoleEntity roleEntity = roleRepository
-          .findByName(dto.getRole().getName());
-
-      if (roleEntity != null) {
-        entity.setRoleEntity(roleEntity);
-      }
-    }
-  }
+//  @Override
+//  protected void specificMapToEntity(UserDTO dto, UserEntity entity) {
+//    super.specificMapToEntity(dto, entity);
+//    if (dto.getRole() != null) {
+//      RoleEntity roleEntity = roleRepository
+//          .findByName(dto.getRole().getName());
+//
+//      if (roleEntity != null) {
+//        entity.setRoleEntity(roleEntity);
+//      }
+//    }
+//  }
 
 //  @Override
 //  protected void specificMapToDTO(UserEntity entity, UserDTO dto) {
@@ -252,7 +253,6 @@ public class UserServiceImpl extends
     String userName = entity.getUsername();
     String password = entity.getPassword();
     RoleEnum role = entity.getRole();
-    Long roleId = entity.getRoleId();
 
     UserDTO dto = mapToDTO(entityChange);
     UserEntity entitySave = mapToEntity(dto);
@@ -262,7 +262,6 @@ public class UserServiceImpl extends
     entitySave.setPassword(password);
     entitySave.setRole(role);
     entitySave.setIdChange(null);
-    entitySave.setRoleId(roleId);
 
     getRepository().deleteById(entityChange.getId());
     getRepository().save(entitySave);
