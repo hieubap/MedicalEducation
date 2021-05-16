@@ -1,14 +1,19 @@
 package medical.education.service;
 
+import java.util.List;
 import medical.education.dao.model.RegisterEntity;
+import medical.education.dao.model.ResultEntity;
 import medical.education.dao.repository.CourseRepository;
 import medical.education.dao.repository.RegisterRepository;
+import medical.education.dao.repository.ResultRepository;
 import medical.education.dao.repository.UserRepository;
 import medical.education.dto.RegisterDTO;
+import medical.education.dto.ResultDTO;
 import medical.education.dto.UserDTO;
 import medical.education.enums.RegisterEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
@@ -33,6 +38,12 @@ public class RegisterServiceImpl extends
 
   @Autowired
   private UserRepository userRepository;
+
+  @Autowired
+  private ResultService resultService;
+
+  @Autowired
+  private ResultRepository resultRepository;
 
   @Override
   protected RegisterRepository getRepository() {
@@ -71,6 +82,7 @@ public class RegisterServiceImpl extends
   @Override
   protected void afterSave(RegisterEntity entity, RegisterDTO dto) {
     super.afterSave(entity, dto);
+    resultService.generateResultsForStudent(entity.getCourseId(), entity.getStudentId());
     entity.setCourse(courseRepository.findById(entity.getCourseId()).get());
     entity.setStudent(userRepository.findById(entity.getStudentId()).get());
   }
@@ -88,8 +100,19 @@ public class RegisterServiceImpl extends
       throw new BaseException(411, Message.getMessage("Cant.cancel.course"));
     }
     UserDTO currentUser = userService.getCurrentUser();
+
+    ResultDTO searchDTO = new ResultDTO();
+    searchDTO.setStudentId(currentUser.getId());
+    searchDTO.setCourseId(entity.getCourseId());
+    List<ResultEntity> listResult = resultRepository
+        .search(searchDTO, PageRequest.of(0, 999999)).toList();
+
+    resultRepository.deleteAll(listResult);
+
     currentUser.setCurrentCourseId(null);
     userService.save(currentUser);
+
+
     super.delete(id);
   }
 

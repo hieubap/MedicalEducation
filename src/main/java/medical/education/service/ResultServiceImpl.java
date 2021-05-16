@@ -11,7 +11,10 @@ import medical.education.dao.repository.ResultRepository;
 import medical.education.dao.repository.SubjectRepository;
 import medical.education.dao.repository.UserRepository;
 import medical.education.dto.ResultDTO;
+import medical.education.dto.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import spring.backend.library.exception.BaseException;
@@ -19,6 +22,7 @@ import spring.backend.library.msg.Message;
 import spring.backend.library.service.AbstractBaseService;
 
 @Service
+@PreAuthorize("hasAnyRole('TEACHER','ADMIN')")
 public class ResultServiceImpl extends
     AbstractBaseService<ResultEntity, ResultDTO, ResultRepository>
     implements ResultService {
@@ -77,23 +81,18 @@ public class ResultServiceImpl extends
   }
 
   @Override
-  public void generateResult(Long courseId) {
-    CourseEntity c = courseRepository.findById(courseId).get();
-    List<SubjectEntity> listSubject = c.getSubjects();
-    List<UserEntity> listStudent = c.getRegisters();
+  @PreAuthorize("hasAnyRole('TEACHER','ADMIN','STUDENT')")
+  public void generateResultsForStudent(Long courseId, Long studentId) {
+    CourseEntity courseEntity = courseRepository.findById(courseId).get();
     List<ResultEntity> listResult = new ArrayList<>();
 
-    for (UserEntity student : listStudent) {
-      for (SubjectEntity subject : listSubject) {
-        ResultEntity result = new ResultEntity();
-        result.setStudent(student);
-        result.setCourse(c);
-        result.setSubject(subject);
-
-        listResult.add(result);
-      }
+    for (SubjectEntity subjectEntity : courseEntity.getSubjects()) {
+      ResultEntity result = new ResultEntity();
+      result.setStudentId(studentId);
+      result.setCourseId(courseId);
+      result.setSubjectId(subjectEntity.getId());
+      listResult.add(result);
     }
-
     getRepository().saveAll(listResult);
   }
 
@@ -108,19 +107,40 @@ public class ResultServiceImpl extends
 
   @Override
   public ResultDTO attendance(Long id) {
-    if(!getRepository().existsById(id)){
-      throw new BaseException(421,Message.getMessage("no.id",new Object[]{id}));
+    if (!getRepository().existsById(id)) {
+      throw new BaseException(421, Message.getMessage("no.id", new Object[]{id}));
     }
     ResultDTO result = findById(id);
     ResultEntity entity = getRepository().findById(id).get();
     if (entity.getSubject() != null &&
         result.getMuster() < entity.getSubject().getLesson()) {
-      result.setMuster(result.getMuster()+1);
-    }
-    else{
+      result.setMuster(result.getMuster() + 1);
+    } else {
       throw new BaseException(420, Message.getMessage("attendance.out"));
     }
 
     return save(result);
   }
+
+  @Override
+  @PreAuthorize("hasAnyRole('STUDENT')")
+  public Page<ResultDTO> getResult(ResultDTO searchDTO, Pageable page) {
+    UserDTO currentUser = userService.getCurrentUser();
+    searchDTO.setStudentId(currentUser.getId());
+    if (searchDTO.getCourseId() == null) {
+      searchDTO.setCourseId(currentUser.getCurrentCourseId());
+    }
+    return search(searchDTO, page);
+  }
+
+//  @Override
+//  public void delete(Long id) {
+////    CourseEntity courseEntity = courseRepository.findById(courseId).get();
+//    ResultDTO searchDTO = new ResultDTO();
+//    searchDTO.setId(id);
+//    List<ResultEntity> listResult = getRepository().search();
+//
+//    getRepository().deleteAll(listResult);
+//    super.delete(id);
+//  }
 }

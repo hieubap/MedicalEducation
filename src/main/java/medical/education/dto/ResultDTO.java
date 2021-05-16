@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import medical.education.enums.StudyProcessEnum;
 import spring.backend.library.dto.BaseDTO;
 
 @Getter
@@ -12,6 +11,7 @@ import spring.backend.library.dto.BaseDTO;
 @NoArgsConstructor
 @ToString(callSuper = true)
 public class ResultDTO extends BaseDTO {
+
   private Long studentId;
 
 //  private Object student;
@@ -24,7 +24,7 @@ public class ResultDTO extends BaseDTO {
 
   private Long subjectId;
 
-//  private Object subject;
+  private SubjectDTO subject;
 
   private Integer muster;
 
