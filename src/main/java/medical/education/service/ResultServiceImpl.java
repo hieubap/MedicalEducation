@@ -97,14 +97,14 @@ public class ResultServiceImpl extends
     getRepository().saveAll(listResult);
   }
 
-//  @Override
-//  protected void specificMapToDTO(ResultEntity entity, ResultDTO dto) {
-//    super.specificMapToDTO(entity, dto);
+  @Override
+  protected void specificMapToDTO(ResultEntity entity, ResultDTO dto) {
+    super.specificMapToDTO(entity, dto);
 //    dto.setStudent(userService.findById(entity.getStudentId()));
 //    dto.setCourse(courseService.findById(entity.getCourseId()));
-//    dto.setSubject(subjectService.findById(entity.getSubjectId()));
-//
-//  }
+    dto.setSubjectData(subjectService.findById(entity.getSubjectId()));
+
+  }
 
   @Override
   public ResultDTO attendance(Long id) {

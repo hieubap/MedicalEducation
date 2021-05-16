@@ -24,7 +24,7 @@ public class ResultDTO extends BaseDTO {
 
   private Long subjectId;
 
-//  private Object subject;
+  private SubjectDTO subjectData;
 
   private Integer muster;
 
