@@ -116,18 +116,18 @@ public class CourseServiceImpl extends
         .equals(CourseStatusEnum.DANG_HOC.getValue())) {
       throw new BaseException(403, "Không thể thay đổi khai giảng trong thời gian học");
     }
-    List<Authority> listRole = (List<Authority>) SecurityContextHolder.getContext().getAuthentication()
-        .getAuthorities();
-    boolean isAdmin = false;
-    for (Authority a : listRole) {
-      if (a.getAuthority().equals("ROLE_ADMIN")){
-        isAdmin = true;
-        break;
-      }
-    }
-    if (!isAdmin){
-      throw new BaseException(403, "Không đủ quyền");
-    }
+//    List<Authority> listRole = (List<Authority>) SecurityContextHolder.getContext().getAuthentication()
+//        .getAuthorities();
+//    boolean isAdmin = false;
+//    for (Authority a : listRole) {
+//      if (a.getAuthority().equals("ROLE_ADMIN")){
+//        isAdmin = true;
+//        break;
+//      }
+//    }
+//    if (!isAdmin){
+//      throw new BaseException(403, "Không đủ quyền");
+//    }
   }
 
   @Override
