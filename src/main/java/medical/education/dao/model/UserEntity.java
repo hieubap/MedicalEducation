@@ -5,6 +5,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -31,8 +32,7 @@ import spring.backend.library.dao.model.BaseEntity;
 public class UserEntity extends BaseEntity {
 
   @Id
-  @GeneratedValue(generator = "users_generator")
-  @SequenceGenerator(name = "users_generator", sequenceName = "users_sq", initialValue = 1)
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
   private String avatar;

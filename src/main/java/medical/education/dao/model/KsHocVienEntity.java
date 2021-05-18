@@ -3,6 +3,7 @@ package medical.education.dao.model;
 import java.time.ZonedDateTime;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -24,8 +25,7 @@ import spring.backend.library.dao.model.BaseEntity;
 public class KsHocVienEntity extends BaseEntity {
 
   @Id
-  @GeneratedValue(generator = "ks_hoc_vien_generator")
-  @SequenceGenerator(name = "ks_hoc_vien_generator", sequenceName = "ks_hoc_vien_sq", initialValue = 1)
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
   private String tenBenhVien;

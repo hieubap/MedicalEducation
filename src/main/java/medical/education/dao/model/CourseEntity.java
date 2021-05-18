@@ -6,6 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -30,8 +31,7 @@ import spring.backend.library.dao.model.BaseEntity;
 @NoArgsConstructor
 public class CourseEntity extends BaseEntity {
   @Id
-  @GeneratedValue(generator = "course_generator")
-  @SequenceGenerator(name = "course_generator", sequenceName = "course_sq", initialValue = 1)
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
   private String name;
