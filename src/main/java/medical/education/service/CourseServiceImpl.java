@@ -1,12 +1,9 @@
 package medical.education.service;
 
 import com.google.common.base.Strings;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 import medical.education.dao.model.CourseEntity;
 import medical.education.dao.model.ScheduleEntity;
 import medical.education.dao.model.SubjectEntity;
@@ -20,14 +17,18 @@ import medical.education.dto.SubjectDTO;
 import medical.education.enums.CourseStatusEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import spring.backend.library.config.userdetail.Authority;
 import spring.backend.library.exception.BaseException;
 import spring.backend.library.service.AbstractBaseService;
 
 @Service
+//@PreAuthorize("hasRole('ADMIN')")
 public class CourseServiceImpl extends
     AbstractBaseService<CourseEntity, CourseDTO, CourseRepository> implements CourseService {
 
@@ -67,13 +68,15 @@ public class CourseServiceImpl extends
     if (dto.getName() == null) {
       throw new BaseException(400, "name is null");
     }
-//    if (Strings.isNullOrEmpty(dto.getStartTime())) {
-//      throw new BaseException(400, "startTime is null");
+//    if (dto.getNgayKhaiGiang()) {
+//      throw new BaseException(450, "ngayKhaiGiang is null");
 //    }
-//
-//    if (Strings.isNullOrEmpty(dto.getEndTime())) {
-//      throw new BaseException(400, "endTime is null");
-//    }
+
+    if (dto.getNgayKhaiGiang() != null && dto.getNgayKetThuc() != null &&
+        dto.getNgayKhaiGiang().after(dto.getNgayKetThuc())
+    ) {
+      throw new BaseException(451, "ngayKhaiGiang after ngayKetThuc");
+    }
 
     if (dto.getPrice() == null) {
       throw new BaseException(400, "price is null");
@@ -101,8 +104,30 @@ public class CourseServiceImpl extends
       }
       entity.setSubjects(listSubject);
     }
-    entity.setCourseStatusEnum(CourseStatusEnum.THOI_GIAN_DANG_KI);
-    entity.setStatus(CourseStatusEnum.THOI_GIAN_DANG_KI.getValue());
+    if (entity.getStatus() == null) {
+      entity.setStatus(CourseStatusEnum.THOI_GIAN_DANG_KI.getValue());
+    }
+
+    if (dto.getNgayKhaiGiang() != null
+        && entity.getStatus().equals(CourseStatusEnum.HOAN_THANH.getValue())) {
+      entity.setStatus(CourseStatusEnum.THOI_GIAN_DANG_KI.getValue());
+    }
+    if (dto.getNgayKhaiGiang() != null && entity.getStatus()
+        .equals(CourseStatusEnum.DANG_HOC.getValue())) {
+      throw new BaseException(403, "Không thể thay đổi khai giảng trong thời gian học");
+    }
+    List<Authority> listRole = (List<Authority>) SecurityContextHolder.getContext().getAuthentication()
+        .getAuthorities();
+    boolean isAdmin = false;
+    for (Authority a : listRole) {
+      if (a.getAuthority().equals("ROLE_ADMIN")){
+        isAdmin = true;
+        break;
+      }
+    }
+    if (!isAdmin){
+      throw new BaseException(403, "Không đủ quyền");
+    }
   }
 
   @Override
@@ -127,6 +152,7 @@ public class CourseServiceImpl extends
   }
 
   @Override
+  @PreAuthorize("hasAnyRole('ADMIN','TEACHER','STUDENT')")
   public Page<CourseDTO> search(CourseDTO dto, Pageable pageable) {
     if (dto.getName() != null) {
       dto.setName("%" + dto.getName().trim().replaceAll(" ", "%") + "%");
@@ -135,7 +161,8 @@ public class CourseServiceImpl extends
       dto.setCode("%" + dto.getCode().trim().replaceAll(" ", "%") + "%");
     }
     if (dto.getNameHealthFacility() != null) {
-      dto.setNameHealthFacility("%" + dto.getNameHealthFacility().trim().replaceAll(" ", "%") + "%");
+      dto.setNameHealthFacility(
+          "%" + dto.getNameHealthFacility().trim().replaceAll(" ", "%") + "%");
     }
     if (dto.getNameUserCreated() != null) {
       dto.setNameUserCreated("%" + dto.getNameUserCreated().trim().replaceAll(" ", "%") + "%");
@@ -143,24 +170,29 @@ public class CourseServiceImpl extends
     return super.search(dto, pageable);
   }
 
-  @Scheduled(cron = "0 0 0 * * *")
+  @Scheduled(cron = "0,20,40 * * * * *")
   public void update() {
-    List<CourseEntity> allCourse = StreamSupport.stream(repository.findAll().spliterator(), false)
-            .collect(Collectors.toList());
+    List<CourseEntity> allCourse = repository.search(new CourseDTO(),
+        PageRequest.of(0, Integer.MAX_VALUE)).toList();
+    List<CourseEntity> listSave = new ArrayList<>();
     for (CourseEntity e : allCourse) {
       if (e.getNgayKhaiGiang().before(new Date())) {
-        e.setCourseStatusEnum(CourseStatusEnum.THOI_GIAN_DANG_KI);
-      }else if (e.getNgayKetThuc().after(new Date())) {
-        e.setCourseStatusEnum(CourseStatusEnum.HOAN_THANH);
+        e.setStatus(CourseStatusEnum.DANG_HOC.getValue());
+        listSave.add(e);
+      } else if (e.getNgayKetThuc().before(new Date())) {
+        e.setStatus(CourseStatusEnum.HOAN_THANH.getValue());
+        listSave.add(e);
       }
 
       // xóa lịch khi vào khai giảng mới
-      if(e.getStatus().equals(CourseStatusEnum.HOAN_THANH.getValue()) &&
-          e.getNgayKhaiGiang().after(new Date())){
+      if (e.getStatus().equals(CourseStatusEnum.HOAN_THANH.getValue()) &&
+          e.getNgayKhaiGiang().after(new Date())) {
         e.setStatus(CourseStatusEnum.THOI_GIAN_DANG_KI.getValue());
         scheduleRepository.deleteAll(e.getSchedules());
+        listSave.add(e);
       }
     }
-    repository.saveAll(allCourse);
+
+    getRepository().saveAll(listSave);
   }
 }

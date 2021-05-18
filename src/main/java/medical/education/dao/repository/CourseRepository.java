@@ -13,14 +13,14 @@ public interface CourseRepository extends BaseRepository<CourseEntity, CourseDTO
       + " where (lower(e.name) like :#{#dto.name} or :#{#dto.name} is null) "
       + " and (e.id = :#{#dto.id} or :#{#dto.id} is null) "
       + " and (lower(e.code) like :#{#dto.code} or :#{#dto.code} is null) "
-//      + " and (lower(e) like :#{#dto.name} or :#{#dto.name} is null)"
       + " and (e.price = :#{#dto.price} or :#{#dto.price} is null) "
       + " and (e.status = :#{#dto.status} or :#{#dto.status} is null) "
       + " and (e.numberLesson = :#{#dto.numberLesson} or :#{#dto.numberLesson} is null) "
       + " and (e.numberRegister = :#{#dto.numberRegister} or :#{#dto.numberRegister} is null) "
       + " and (e.limitRegister = :#{#dto.limitRegister} or :#{#dto.limitRegister} is null) "
       + " and (e.healthFacilityId = :#{#dto.healthFacilityId} or :#{#dto.healthFacilityId} is null) "
-      + " and (lower(e.healthFacility.name) like :#{#dto.nameHealthFacility} or :#{#dto.nameHealthFacility} is null)")
+      + " and (lower(e.healthFacility.name) like :#{#dto.nameHealthFacility} or :#{#dto.nameHealthFacility} is null)"
+  )
   Page<CourseEntity> search(CourseDTO dto, Pageable pageable);
 
   boolean existsByCode(String code);

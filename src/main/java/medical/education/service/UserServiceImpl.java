@@ -7,10 +7,8 @@ import java.util.List;
 import java.util.Map;
 import javax.crypto.SecretKey;
 import javax.servlet.http.HttpServletRequest;
-import medical.education.dao.model.RoleEntity;
 import medical.education.dao.model.SubjectEntity;
 import medical.education.dao.model.UserEntity;
-import medical.education.dao.repository.RoleRepository;
 import medical.education.dao.repository.SubjectRepository;
 import medical.education.dao.repository.UserRepository;
 import medical.education.dto.LoginDTO;
@@ -44,9 +42,6 @@ public class UserServiceImpl extends
 
   @Autowired
   private UserRepository repository;
-
-  @Autowired
-  private RoleRepository roleRepository;
 
   @Autowired
   private SubjectRepository subjectRepository;

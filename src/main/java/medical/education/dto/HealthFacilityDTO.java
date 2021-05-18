@@ -14,4 +14,5 @@ public class HealthFacilityDTO extends BaseDTO {
   private String name;
   private String address;
   private String level;
+
 }

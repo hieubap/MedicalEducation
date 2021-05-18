@@ -45,7 +45,7 @@ public class CourseEntity extends BaseEntity {
    */
   private Short status;
 
-  private CourseStatusEnum courseStatusEnum;
+//  private CourseStatusEnum courseStatusEnum;
 
   /**
    * thời gian bắt đầu
@@ -94,7 +94,7 @@ public class CourseEntity extends BaseEntity {
 
   @ManyToMany(fetch = FetchType.LAZY)
   @JoinTable(
-      name = "course_subject2",
+      name = "course_subject",
       joinColumns = @JoinColumn(name = "course_id", referencedColumnName = "id"),
       inverseJoinColumns = @JoinColumn(name = "subject_id", referencedColumnName = "id"))
   private List<SubjectEntity> subjects;
