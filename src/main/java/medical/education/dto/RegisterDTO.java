@@ -24,4 +24,6 @@ public class RegisterDTO extends BaseDTO {
   private CourseDTO course;
 
   private RegisterEnum status;
+
+  private Integer semester;
 }

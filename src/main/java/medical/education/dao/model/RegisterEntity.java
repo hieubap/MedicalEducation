@@ -1,5 +1,6 @@
 package medical.education.dao.model;
 
+import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -70,4 +71,10 @@ public class RegisterEntity extends BaseEntity {
    * chữ ký
    */
   private String signature;
+
+  /**
+   * Kỳ học:
+   * = năm khai giảng + tháng khai giảng
+   */
+  private Integer semester;
 }

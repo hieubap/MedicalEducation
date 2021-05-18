@@ -1,5 +1,6 @@
 package medical.education.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Date;
 import java.util.List;
@@ -8,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import medical.education.enums.CourseStatusEnum;
+import org.springframework.format.annotation.DateTimeFormat;
 import spring.backend.library.dto.BaseDTO;
 
 @Getter
@@ -28,11 +30,13 @@ public class CourseDTO extends BaseDTO {
 
   private Short status;
 
-  @JsonProperty
+  @JsonFormat(pattern = "yyyy-MM-dd")
   private Date ngayKhaiGiang;
 
-  @JsonProperty
+  @JsonFormat(pattern = "yyyy-MM-dd")
   private Date ngayKetThuc;
+
+  private Integer semester;
 
   private Long price;
 

@@ -1,5 +1,6 @@
 package medical.education.dao.model;
 
+import java.util.Date;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -42,6 +43,10 @@ public class UserEntity extends BaseEntity {
   private String password;
 
   private String fullName;
+
+  private String cmnd;
+
+  private Date birth;
 
   private String value;
 

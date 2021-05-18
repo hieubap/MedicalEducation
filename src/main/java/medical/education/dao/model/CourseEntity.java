@@ -58,6 +58,12 @@ public class CourseEntity extends BaseEntity {
   private Date ngayKetThuc;
 
   /**
+   * Kỳ học
+   * = năm khai giảng + tháng khai giảng + ngày khai giảng
+   */
+  private Integer semester;
+
+  /**
    * giá
    */
   private Long price;

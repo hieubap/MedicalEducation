@@ -1,12 +1,15 @@
 package medical.education.service;
 
 import com.google.common.base.Strings;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import medical.education.dao.model.CourseEntity;
 import medical.education.dao.model.ScheduleEntity;
 import medical.education.dao.model.SubjectEntity;
+import medical.education.dao.model.UserEntity;
 import medical.education.dao.repository.CourseRepository;
 import medical.education.dao.repository.HealthFacilityRepository;
 import medical.education.dao.repository.ScheduleRepository;
@@ -21,9 +24,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import spring.backend.library.config.userdetail.Authority;
 import spring.backend.library.exception.BaseException;
 import spring.backend.library.service.AbstractBaseService;
 
@@ -43,6 +44,9 @@ public class CourseServiceImpl extends
 
   @Autowired
   private ScheduleService scheduleService;
+
+  @Autowired
+  private RegisterService registerService;
 
   @Autowired
   private ScheduleRepository scheduleRepository;
@@ -107,15 +111,31 @@ public class CourseServiceImpl extends
     if (entity.getStatus() == null) {
       entity.setStatus(CourseStatusEnum.THOI_GIAN_DANG_KI.getValue());
     }
-
+    if (entity.getNumberRegister() == null) {
+      entity.setNumberRegister(0);
+    }
     if (dto.getNgayKhaiGiang() != null
-        && entity.getStatus().equals(CourseStatusEnum.HOAN_THANH.getValue())) {
+        && entity.getStatus().equals(CourseStatusEnum.HOAN_THANH.getValue())
+        && entity.getNgayKhaiGiang().after(new Date())) {
       entity.setStatus(CourseStatusEnum.THOI_GIAN_DANG_KI.getValue());
+      for (UserEntity e : entity.getRegisters()) {
+
+      }
+      scheduleRepository.deleteAll(entity.getSchedules());
     }
-    if (dto.getNgayKhaiGiang() != null && entity.getStatus()
-        .equals(CourseStatusEnum.DANG_HOC.getValue())) {
-      throw new BaseException(403, "Không thể thay đổi khai giảng trong thời gian học");
+
+    if (entity.getId() != null) {
+      LocalDate ngayKhaiGiang = entity.getNgayKhaiGiang().toInstant()
+          .atZone(ZoneId.systemDefault()).toLocalDate();
+      Integer semester = ngayKhaiGiang.getYear()*100
+          + ngayKhaiGiang.getMonthValue();
+      entity.setSemester(semester);
+      registerService.changeSemester(entity.getId(), semester);
     }
+//    if (dto.getNgayKhaiGiang() != null && entity.getStatus()
+//        .equals(CourseStatusEnum.DANG_HOC.getValue())) {
+//      throw new BaseException(403, "Chỉ có thể thay đổi ngày khai giảng khi khóa học kết thúc");
+//    }
 //    List<Authority> listRole = (List<Authority>) SecurityContextHolder.getContext().getAuthentication()
 //        .getAuthorities();
 //    boolean isAdmin = false;
@@ -170,29 +190,30 @@ public class CourseServiceImpl extends
     return super.search(dto, pageable);
   }
 
-//  @Scheduled(cron = "0 0 0 * * *")
-//  public void update() {
-//    List<CourseEntity> allCourse = repository.search(new CourseDTO(),
-//        PageRequest.of(0, Integer.MAX_VALUE)).toList();
-//    List<CourseEntity> listSave = new ArrayList<>();
-//    for (CourseEntity e : allCourse) {
-//      if (e.getNgayKhaiGiang().before(new Date())) {
-//        e.setStatus(CourseStatusEnum.DANG_HOC.getValue());
-//        listSave.add(e);
-//      } else if (e.getNgayKetThuc().before(new Date())) {
-//        e.setStatus(CourseStatusEnum.HOAN_THANH.getValue());
-//        listSave.add(e);
-//      }
-//
-//      // xóa lịch khi vào khai giảng mới
-//      if (e.getStatus().equals(CourseStatusEnum.HOAN_THANH.getValue()) &&
+  @Scheduled(cron = "0,30 * * * * *")
+  public void update() {
+    List<CourseEntity> allCourse = repository.search(new CourseDTO(),
+        PageRequest.of(0, Integer.MAX_VALUE)).toList();
+    List<CourseEntity> listSave = new ArrayList<>();
+    for (CourseEntity e : allCourse) {
+      if (e.getNgayKhaiGiang().before(new Date())
+          && e.getStatus().equals(CourseStatusEnum.THOI_GIAN_DANG_KI.getValue())) {
+        e.setStatus(CourseStatusEnum.DANG_HOC.getValue());
+        listSave.add(e);
+      } else if (e.getNgayKetThuc().before(new Date())
+          && e.getStatus().equals(CourseStatusEnum.DANG_HOC.getValue())) {
+        e.setStatus(CourseStatusEnum.HOAN_THANH.getValue());
+        listSave.add(e);
+      }
+
+      // xóa lịch khi vào khai giảng mới
+//      else if (e.getStatus().equals(CourseStatusEnum.HOAN_THANH.getValue()) &&
 //          e.getNgayKhaiGiang().after(new Date())) {
-//        e.setStatus(CourseStatusEnum.THOI_GIAN_DANG_KI.getValue());
-//        scheduleRepository.deleteAll(e.getSchedules());
+//
 //        listSave.add(e);
 //      }
-//    }
-//
-//    getRepository().saveAll(listSave);
-//  }
+    }
+
+    getRepository().saveAll(listSave);
+  }
 }

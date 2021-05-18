@@ -1,5 +1,8 @@
 package medical.education.service;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,7 +31,7 @@ import spring.backend.library.msg.Message;
 import spring.backend.library.service.AbstractBaseService;
 
 @Service
-@PreAuthorize("hasAnyRole('TEARCHER', 'ADMIN', 'STUDENT')")
+//@PreAuthorize("hasAnyRole('TEARCHER', 'ADMIN', 'STUDENT')")
 public class RegisterServiceImpl extends
     AbstractBaseService<RegisterEntity, RegisterDTO, RegisterRepository>
     implements RegisterService {
@@ -88,12 +91,27 @@ public class RegisterServiceImpl extends
         throw new BaseException(431, "Chỉ có thể đăng ký khóa trong thời gian đăng ký");
       }
       entityCourse.setNumberRegister(entityCourse.getNumberRegister() + 1);
+
+      LocalDate ngayKhaiGiang = entityCourse.getNgayKhaiGiang().toInstant()
+          .atZone(ZoneId.systemDefault()).toLocalDate();
+      Integer semester = ngayKhaiGiang.getYear()*100
+          + ngayKhaiGiang.getMonthValue();
+      entity.setSemester(semester);
+
       courseRepository.save(entityCourse);
       userService.save(currentUser.getId(), currentUser);
     }
     entity.setStatus(RegisterEnum.REGISTER_DONED);
   }
 
+  @Override
+  public void changeSemester(Long courseId, Integer semester){
+    List<RegisterEntity> listChange = registerRepository.findRegistersToChangeSemester(courseId);
+    for(RegisterEntity e : listChange){
+      e.setSemester(semester);
+    }
+    registerRepository.saveAll(listChange);
+  }
   @Override
   protected void afterSave(RegisterEntity entity, RegisterDTO dto) {
     super.afterSave(entity, dto);
@@ -104,9 +122,14 @@ public class RegisterServiceImpl extends
 
   @Override
   public Page<RegisterDTO> search(RegisterDTO dto, Pageable pageable) {
-    dto.setStudentId(userService.getCurrentUserId());
+//    dto.setStudentId(userService.getCurrentUserId());
     return super.search(dto, pageable);
   }
+
+  @Override
+  public List<Integer> getListSemester(Long courseId){
+    return getRepository().getListSemester(courseId);
+  };
 
   @Override
   public void delete(Long id) {
@@ -134,17 +157,24 @@ public class RegisterServiceImpl extends
     super.delete(id);
   }
 
-  @Scheduled(cron = "0 0 1 * * *")
+  @Scheduled(cron = "10,40 * * * * *")
   public void update() {
     List<RegisterEntity> allRegister = StreamSupport.stream(getRepository().findAll().spliterator(), false)
         .collect(Collectors.toList());
+    List<RegisterEntity> listSave = new ArrayList<>();
     for (RegisterEntity e : allRegister) {
       if(e.getCourse().getStatus().equals(CourseStatusEnum.DANG_HOC.getValue()) &&
       e.getStatus().equals(RegisterEnum.REGISTER_DONED)){
         e.setStatus(RegisterEnum.STUDYING);
+        listSave.add(e);
+      }
+      else if(e.getCourse().getStatus().equals(CourseStatusEnum.HOAN_THANH.getValue()) &&
+          e.getStatus().equals(RegisterEnum.STUDYING)){
+        e.setStatus(RegisterEnum.WAIT_TEACHER);
+        listSave.add(e);
       }
     }
-    registerRepository.saveAll(allRegister);
+    registerRepository.saveAll(listSave);
   }
 
   //  @Scheduled(cron = "0,20,40 * * * * *")

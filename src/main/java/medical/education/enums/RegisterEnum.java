@@ -4,10 +4,12 @@ import spring.backend.library.enums.IEnum;
 
 public enum RegisterEnum implements IEnum {
 
-  REGISTER_DONED((short) 3, "Đăng ký thành công"),
-  STUDYING((short) 0, "Đang học"),
-  DONED((short) 1, "Hoàn thành"),
-  FAIL((short) 2, "Không hoàn thành");
+  REGISTER_DONED((short) 1, "Đăng ký thành công"),
+  STUDYING((short) 2, "Đang học"),
+  WAIT_TEACHER((short) 3, "Chờ giảng viên nhập điểm"),
+  DONED((short) 4, "Hoàn thành"),
+  FAIL((short) 5, "Không hoàn thành");
+
 
   private Short value;
   private String name;

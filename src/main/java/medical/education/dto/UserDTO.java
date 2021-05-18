@@ -1,5 +1,7 @@
 package medical.education.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import java.util.Date;
 import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,6 +31,11 @@ public class UserDTO extends BaseDTO {
   private Short status;
 
   private Long age;
+
+  private String cmnd;
+
+  @JsonFormat(pattern = "yyyy-MM-dd")
+  private Date birth;
 
   private GenderEnum gender;
 
