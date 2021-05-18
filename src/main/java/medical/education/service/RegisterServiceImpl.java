@@ -1,6 +1,10 @@
 package medical.education.service;
 
+import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+import medical.education.dao.model.CourseEntity;
 import medical.education.dao.model.RegisterEntity;
 import medical.education.dao.model.ResultEntity;
 import medical.education.dao.repository.CourseRepository;
@@ -10,11 +14,13 @@ import medical.education.dao.repository.UserRepository;
 import medical.education.dto.RegisterDTO;
 import medical.education.dto.ResultDTO;
 import medical.education.dto.UserDTO;
+import medical.education.enums.CourseStatusEnum;
 import medical.education.enums.RegisterEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import spring.backend.library.exception.BaseException;
@@ -74,6 +80,15 @@ public class RegisterServiceImpl extends
           Message.getMessage("Has.Register.Course", new Object[]{e.getCourse().getName()}));
     } else {
       currentUser.setCurrentCourseId(dto.getCourseId());
+      CourseEntity entityCourse = courseRepository.findById(dto.getCourseId()).get();
+      if (entityCourse.getNumberRegister() >= entityCourse.getLimitRegister()) {
+        throw new BaseException(430, "Khóa học đã quá giới hạn đăng ký");
+      }
+      if (!entityCourse.getStatus().equals(CourseStatusEnum.THOI_GIAN_DANG_KI.getValue())) {
+        throw new BaseException(431, "Chỉ có thể đăng ký khóa trong thời gian đăng ký");
+      }
+      entityCourse.setNumberRegister(entityCourse.getNumberRegister() + 1);
+      courseRepository.save(entityCourse);
       userService.save(currentUser.getId(), currentUser);
     }
     entity.setStatus(RegisterEnum.REGISTER_DONED);
@@ -101,6 +116,10 @@ public class RegisterServiceImpl extends
     }
     UserDTO currentUser = userService.getCurrentUser();
 
+    CourseEntity courseEntity = courseRepository.findById(entity.getCourseId()).get();
+    courseEntity.setNumberRegister(courseEntity.getNumberRegister()-1);
+    courseRepository.save(courseEntity);
+
     ResultDTO searchDTO = new ResultDTO();
     searchDTO.setStudentId(currentUser.getId());
     searchDTO.setCourseId(entity.getCourseId());
@@ -112,8 +131,20 @@ public class RegisterServiceImpl extends
     currentUser.setCurrentCourseId(null);
     userService.save(currentUser);
 
-
     super.delete(id);
+  }
+
+  @Scheduled(cron = "0 0 1 * * *")
+  public void update() {
+    List<RegisterEntity> allRegister = StreamSupport.stream(getRepository().findAll().spliterator(), false)
+        .collect(Collectors.toList());
+    for (RegisterEntity e : allRegister) {
+      if(e.getCourse().getStatus().equals(CourseStatusEnum.DANG_HOC.getValue()) &&
+      e.getStatus().equals(RegisterEnum.REGISTER_DONED)){
+        e.setStatus(RegisterEnum.STUDYING);
+      }
+    }
+    registerRepository.saveAll(allRegister);
   }
 
   //  @Scheduled(cron = "0,20,40 * * * * *")

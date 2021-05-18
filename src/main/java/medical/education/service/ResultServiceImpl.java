@@ -5,13 +5,13 @@ import java.util.List;
 import medical.education.dao.model.CourseEntity;
 import medical.education.dao.model.ResultEntity;
 import medical.education.dao.model.SubjectEntity;
-import medical.education.dao.model.UserEntity;
 import medical.education.dao.repository.CourseRepository;
 import medical.education.dao.repository.ResultRepository;
 import medical.education.dao.repository.SubjectRepository;
 import medical.education.dao.repository.UserRepository;
 import medical.education.dto.ResultDTO;
 import medical.education.dto.UserDTO;
+import medical.education.enums.CourseStatusEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -78,6 +78,10 @@ public class ResultServiceImpl extends
     if (entity.getMuster() == null) {
       entity.setMuster(0);
     }
+    if (entity.getId() != null && !entity.getCourse().getStatus()
+        .equals(CourseStatusEnum.DANG_HOC.getValue())) {
+      throw new BaseException(432,"Chỉ có thể nhập điểm trong thời gian học");
+    }
   }
 
   @Override
@@ -118,6 +122,10 @@ public class ResultServiceImpl extends
       entity.setMuster(entity.getMuster() + 1);
     } else {
       throw new BaseException(420, Message.getMessage("attendance.out"));
+    }
+    if (!entity.getCourse().getStatus()
+        .equals(CourseStatusEnum.DANG_HOC.getValue())) {
+      throw new BaseException(432,"Chỉ có thể điểm danh trong thời gian học");
     }
 
     return mapToDTO(getRepository().save(entity));

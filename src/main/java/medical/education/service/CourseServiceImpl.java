@@ -12,6 +12,7 @@ import medical.education.dao.model.ScheduleEntity;
 import medical.education.dao.model.SubjectEntity;
 import medical.education.dao.repository.CourseRepository;
 import medical.education.dao.repository.HealthFacilityRepository;
+import medical.education.dao.repository.ScheduleRepository;
 import medical.education.dao.repository.SubjectRepository;
 import medical.education.dto.CourseDTO;
 import medical.education.dto.ScheduleDTO;
@@ -41,6 +42,9 @@ public class CourseServiceImpl extends
 
   @Autowired
   private ScheduleService scheduleService;
+
+  @Autowired
+  private ScheduleRepository scheduleRepository;
 
   @Autowired
   private HealthFacilityRepository healthFacilityRepository;
@@ -148,8 +152,13 @@ public class CourseServiceImpl extends
         e.setCourseStatusEnum(CourseStatusEnum.THOI_GIAN_DANG_KI);
       }else if (e.getNgayKetThuc().after(new Date())) {
         e.setCourseStatusEnum(CourseStatusEnum.HOAN_THANH);
-      }else {
-        e.setCourseStatusEnum(CourseStatusEnum.DANG_HOC);
+      }
+
+      // xóa lịch khi vào khai giảng mới
+      if(e.getStatus().equals(CourseStatusEnum.HOAN_THANH.getValue()) &&
+          e.getNgayKhaiGiang().after(new Date())){
+        e.setStatus(CourseStatusEnum.THOI_GIAN_DANG_KI.getValue());
+        scheduleRepository.deleteAll(e.getSchedules());
       }
     }
     repository.saveAll(allCourse);

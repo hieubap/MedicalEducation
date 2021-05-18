@@ -13,6 +13,7 @@ public interface SubjectRepository extends BaseRepository<SubjectEntity, Subject
       + " where (lower(e.name) like :#{#dto.name} or :#{#dto.name} is null) "
       + " and (lower(e.code) like :#{#dto.code} or :#{#dto.code} is null) "
       + " and (e.type = :#{#dto.type} or :#{#dto.type} is null)"
+      + " and (e.lesson = :#{#dto.lesson} or :#{#dto.lesson} is null)"
       )
   Page<SubjectEntity> search(SubjectDTO dto, Pageable pageable);
 
