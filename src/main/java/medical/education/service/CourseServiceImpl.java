@@ -170,29 +170,29 @@ public class CourseServiceImpl extends
     return super.search(dto, pageable);
   }
 
-  @Scheduled(cron = "0,20,40 * * * * *")
-  public void update() {
-    List<CourseEntity> allCourse = repository.search(new CourseDTO(),
-        PageRequest.of(0, Integer.MAX_VALUE)).toList();
-    List<CourseEntity> listSave = new ArrayList<>();
-    for (CourseEntity e : allCourse) {
-      if (e.getNgayKhaiGiang().before(new Date())) {
-        e.setStatus(CourseStatusEnum.DANG_HOC.getValue());
-        listSave.add(e);
-      } else if (e.getNgayKetThuc().before(new Date())) {
-        e.setStatus(CourseStatusEnum.HOAN_THANH.getValue());
-        listSave.add(e);
-      }
-
-      // xóa lịch khi vào khai giảng mới
-      if (e.getStatus().equals(CourseStatusEnum.HOAN_THANH.getValue()) &&
-          e.getNgayKhaiGiang().after(new Date())) {
-        e.setStatus(CourseStatusEnum.THOI_GIAN_DANG_KI.getValue());
-        scheduleRepository.deleteAll(e.getSchedules());
-        listSave.add(e);
-      }
-    }
-
-    getRepository().saveAll(listSave);
-  }
+//  @Scheduled(cron = "0 0 0 * * *")
+//  public void update() {
+//    List<CourseEntity> allCourse = repository.search(new CourseDTO(),
+//        PageRequest.of(0, Integer.MAX_VALUE)).toList();
+//    List<CourseEntity> listSave = new ArrayList<>();
+//    for (CourseEntity e : allCourse) {
+//      if (e.getNgayKhaiGiang().before(new Date())) {
+//        e.setStatus(CourseStatusEnum.DANG_HOC.getValue());
+//        listSave.add(e);
+//      } else if (e.getNgayKetThuc().before(new Date())) {
+//        e.setStatus(CourseStatusEnum.HOAN_THANH.getValue());
+//        listSave.add(e);
+//      }
+//
+//      // xóa lịch khi vào khai giảng mới
+//      if (e.getStatus().equals(CourseStatusEnum.HOAN_THANH.getValue()) &&
+//          e.getNgayKhaiGiang().after(new Date())) {
+//        e.setStatus(CourseStatusEnum.THOI_GIAN_DANG_KI.getValue());
+//        scheduleRepository.deleteAll(e.getSchedules());
+//        listSave.add(e);
+//      }
+//    }
+//
+//    getRepository().saveAll(listSave);
+//  }
 }
