@@ -190,7 +190,7 @@ public class CourseServiceImpl extends
     return super.search(dto, pageable);
   }
 
-  @Scheduled(cron = "0,30 * * * * *")
+  @Scheduled(cron = "0 0 0 * * *")
   public void update() {
     List<CourseEntity> allCourse = repository.search(new CourseDTO(),
         PageRequest.of(0, Integer.MAX_VALUE)).toList();

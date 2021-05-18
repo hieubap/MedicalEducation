@@ -157,7 +157,7 @@ public class RegisterServiceImpl extends
     super.delete(id);
   }
 
-  @Scheduled(cron = "10,40 * * * * *")
+  @Scheduled(cron = "0 0 1 * * *")
   public void update() {
     List<RegisterEntity> allRegister = StreamSupport.stream(getRepository().findAll().spliterator(), false)
         .collect(Collectors.toList());
