@@ -15,4 +15,10 @@ public interface ResultRepository extends BaseRepository<ResultEntity, ResultDTO
       + " (e.studentId = :#{#dto.studentId} or :#{#dto.studentId} is null)"
       + " and (e.courseId = :#{#dto.courseId} or :#{#dto.courseId} is null)")
   Page<ResultEntity> search(ResultDTO dto, Pageable pageable);
+
+//  @Query(" select e from ResultEntity e where "
+//      + " ( e. = :#{#dto.studentId} or :#{#dto.studentId} is null)"
+//      + " and (e.courseId = :#{#dto.courseId} or :#{#dto.courseId} is null)")
+//  Page<ResultEntity> findByCourseId(Long courseId,Long studentId);
+
 }

@@ -57,6 +57,16 @@ public class ResultEntity extends BaseEntity {
   private SubjectEntity subject;
 
   /**
+   * đăng ký
+   */
+  @Column(name = "register_id")
+  private Long registerId;
+
+  @ManyToOne()
+  @JoinColumn(name = "register_id",updatable = false,insertable = false)
+  private RegisterEntity register;
+
+  /**
    * điểm danh
    */
   @Column(name = "attendance")

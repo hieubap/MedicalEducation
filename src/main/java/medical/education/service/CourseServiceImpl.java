@@ -81,6 +81,9 @@ public class CourseServiceImpl extends
     ) {
       throw new BaseException(451, "ngayKhaiGiang after ngayKetThuc");
     }
+    if(dto.getSemester() == null){
+      throw new BaseException(451, "semester is null");
+    }
 
     if (dto.getPrice() == null) {
       throw new BaseException(400, "price is null");
@@ -118,20 +121,19 @@ public class CourseServiceImpl extends
         && entity.getStatus().equals(CourseStatusEnum.HOAN_THANH.getValue())
         && entity.getNgayKhaiGiang().after(new Date())) {
       entity.setStatus(CourseStatusEnum.THOI_GIAN_DANG_KI.getValue());
-      for (UserEntity e : entity.getRegisters()) {
-
-      }
+      entity.setNumberRegister(0);
       scheduleRepository.deleteAll(entity.getSchedules());
     }
 
-    if (entity.getId() != null) {
-      LocalDate ngayKhaiGiang = entity.getNgayKhaiGiang().toInstant()
-          .atZone(ZoneId.systemDefault()).toLocalDate();
-      Integer semester = ngayKhaiGiang.getYear()*100
-          + ngayKhaiGiang.getMonthValue();
-      entity.setSemester(semester);
-      registerService.changeSemester(entity.getId(), semester);
-    }
+
+//    if (entity.getId() != null) {
+//      LocalDate ngayKhaiGiang = entity.getNgayKhaiGiang().toInstant()
+//          .atZone(ZoneId.systemDefault()).toLocalDate();
+//      Integer semester = ngayKhaiGiang.getYear()*100
+//          + ngayKhaiGiang.getMonthValue();
+//      entity.setSemester(semester);
+//      registerService.changeSemester(entity.getId(), semester);
+//    }
 //    if (dto.getNgayKhaiGiang() != null && entity.getStatus()
 //        .equals(CourseStatusEnum.DANG_HOC.getValue())) {
 //      throw new BaseException(403, "Chỉ có thể thay đổi ngày khai giảng khi khóa học kết thúc");

@@ -86,12 +86,13 @@ public class ResultServiceImpl extends
 
   @Override
   @PreAuthorize("hasAnyRole('TEACHER','ADMIN','STUDENT')")
-  public void generateResultsForStudent(Long courseId, Long studentId) {
+  public void generateResultsForStudent(Long courseId, Long studentId, Long registerId) {
     CourseEntity courseEntity = courseRepository.findById(courseId).get();
     List<ResultEntity> listResult = new ArrayList<>();
 
     for (SubjectEntity subjectEntity : courseEntity.getSubjects()) {
       ResultEntity result = new ResultEntity();
+      result.setRegisterId(registerId);
       result.setStudentId(studentId);
       result.setCourseId(courseId);
       result.setMuster(0);
@@ -107,7 +108,7 @@ public class ResultServiceImpl extends
 //    dto.setStudent(userService.findById(entity.getStudentId()));
 //    dto.setCourse(courseService.findById(entity.getCourseId()));
     dto.setSubjectData(subjectService.findById(entity.getSubjectId()));
-
+    dto.setRank(applyRank(dto.getTotal()));
   }
 
   @Override
@@ -142,6 +143,18 @@ public class ResultServiceImpl extends
     return search(searchDTO, page);
   }
 
+  public String applyRank(Double total){
+    if (total > 9.0) return "A+";
+    if (total > 8.5) return "A";
+    if (total > 8.0) return "B+";
+    if (total > 7.0) return "B";
+    if (total > 6.5) return "C+";
+    if (total > 6.0) return "C";
+    if (total > 5.0) return "D+";
+    if (total > 4.0) return "D";
+    if (total > 3.0) return "E";
+    return "F";
+  }
 //  @Override
 //  public void delete(Long id) {
 ////    CourseEntity courseEntity = courseRepository.findById(courseId).get();

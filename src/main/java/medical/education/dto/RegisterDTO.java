@@ -17,13 +17,15 @@ public class RegisterDTO extends BaseDTO {
 
   private Long courseId;
 
-  private String code;
+  private Object studentInfo;
 
-  private UserDTO student;
-
-  private CourseDTO course;
+  private Object courseInfo;
 
   private RegisterEnum status;
+
+  private Double total;
+
+  private String kind;
 
   private Integer semester;
 }

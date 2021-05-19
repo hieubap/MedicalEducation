@@ -33,4 +33,6 @@ public class ResultDTO extends BaseDTO {
   private Double endPoint;
 
   private Double total;
+
+  private String rank;
 }
