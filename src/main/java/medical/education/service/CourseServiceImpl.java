@@ -1,15 +1,12 @@
 package medical.education.service;
 
 import com.google.common.base.Strings;
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import medical.education.dao.model.CourseEntity;
 import medical.education.dao.model.ScheduleEntity;
 import medical.education.dao.model.SubjectEntity;
-import medical.education.dao.model.UserEntity;
 import medical.education.dao.repository.CourseRepository;
 import medical.education.dao.repository.HealthFacilityRepository;
 import medical.education.dao.repository.ScheduleRepository;
@@ -29,7 +26,6 @@ import spring.backend.library.exception.BaseException;
 import spring.backend.library.service.AbstractBaseService;
 
 @Service
-//@PreAuthorize("hasRole('ADMIN')")
 public class CourseServiceImpl extends
     AbstractBaseService<CourseEntity, CourseDTO, CourseRepository> implements CourseService {
 
@@ -44,9 +40,6 @@ public class CourseServiceImpl extends
 
   @Autowired
   private ScheduleService scheduleService;
-
-  @Autowired
-  private RegisterService registerService;
 
   @Autowired
   private ScheduleRepository scheduleRepository;
@@ -67,14 +60,17 @@ public class CourseServiceImpl extends
     if (Strings.isNullOrEmpty(entity.getCode())) {
       Long i = getRepository().count();
       String newCode = "COURSE_" + String.format("%04d", i);
+      dto.setCode(newCode);
       entity.setCode(newCode);
     }
+
     if (dto.getName() == null) {
       throw new BaseException(400, "name is null");
     }
-//    if (dto.getNgayKhaiGiang()) {
-//      throw new BaseException(450, "ngayKhaiGiang is null");
-//    }
+
+    if (repository.existsByCodeAndId(dto.getCode(), dto.getId())) {
+      throw new BaseException(400, "Mã đã tồn tại");
+    }
 
     if (dto.getNgayKhaiGiang() != null && dto.getNgayKetThuc() != null &&
         dto.getNgayKhaiGiang().after(dto.getNgayKetThuc())
@@ -124,32 +120,6 @@ public class CourseServiceImpl extends
       entity.setNumberRegister(0);
       scheduleRepository.deleteAll(entity.getSchedules());
     }
-
-
-//    if (entity.getId() != null) {
-//      LocalDate ngayKhaiGiang = entity.getNgayKhaiGiang().toInstant()
-//          .atZone(ZoneId.systemDefault()).toLocalDate();
-//      Integer semester = ngayKhaiGiang.getYear()*100
-//          + ngayKhaiGiang.getMonthValue();
-//      entity.setSemester(semester);
-//      registerService.changeSemester(entity.getId(), semester);
-//    }
-//    if (dto.getNgayKhaiGiang() != null && entity.getStatus()
-//        .equals(CourseStatusEnum.DANG_HOC.getValue())) {
-//      throw new BaseException(403, "Chỉ có thể thay đổi ngày khai giảng khi khóa học kết thúc");
-//    }
-//    List<Authority> listRole = (List<Authority>) SecurityContextHolder.getContext().getAuthentication()
-//        .getAuthorities();
-//    boolean isAdmin = false;
-//    for (Authority a : listRole) {
-//      if (a.getAuthority().equals("ROLE_ADMIN")){
-//        isAdmin = true;
-//        break;
-//      }
-//    }
-//    if (!isAdmin){
-//      throw new BaseException(403, "Không đủ quyền");
-//    }
   }
 
   @Override
@@ -207,13 +177,6 @@ public class CourseServiceImpl extends
         e.setStatus(CourseStatusEnum.HOAN_THANH.getValue());
         listSave.add(e);
       }
-
-      // xóa lịch khi vào khai giảng mới
-//      else if (e.getStatus().equals(CourseStatusEnum.HOAN_THANH.getValue()) &&
-//          e.getNgayKhaiGiang().after(new Date())) {
-//
-//        listSave.add(e);
-//      }
     }
 
     getRepository().saveAll(listSave);

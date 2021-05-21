@@ -24,7 +24,15 @@ public interface CourseRepository extends BaseRepository<CourseEntity, CourseDTO
   )
   Page<CourseEntity> search(CourseDTO dto, Pageable pageable);
 
-  boolean existsByCode(String code);
+  @Query("select case when count (e) > 0 then true else false end from CourseEntity e"
+          + " where 1 = 1"
+          + " and (e.name = :name)"
+          + " and ( :id is null or e.id <> :id ) ")
+  Boolean existsByNameAndId(String name, Long id);
 
-  CourseEntity findByCode(String code);
+  @Query("select case when count (e) > 0 then true else false end from CourseEntity e"
+          + " where 1 = 1"
+          + " and (e.code = :code)"
+          + " and ( :id is null or e.id <> :id ) ")
+  Boolean existsByCodeAndId(String code, Long id);
 }
