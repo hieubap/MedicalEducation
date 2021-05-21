@@ -14,5 +14,5 @@ import lombok.Setter;
 public class PlaceDTO extends BaseDTO {
   private String address;
   private Long healthFacilityId;
-  private HealthFacilityDTO healthFacility;
+  private Object healthFacility;
 }

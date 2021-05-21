@@ -22,6 +22,7 @@ import spring.backend.library.dao.model.BaseEntity;
 @Table(name = "place")
 @Where(clause = "deleted = 0")
 public class PlaceEntity extends BaseEntity {
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
@@ -29,6 +30,7 @@ public class PlaceEntity extends BaseEntity {
   /**
    * địa chỉ
    */
+  @Column(unique = true)
   private String address;
 
   /**
@@ -38,6 +40,6 @@ public class PlaceEntity extends BaseEntity {
   private Long healthFacilityId;
 
   @ManyToOne
-  @JoinColumn(name = "health_facility_id",updatable = false,insertable = false)
+  @JoinColumn(name = "health_facility_id", updatable = false, insertable = false)
   private HealthFacilityEntity healthFacility;
 }
