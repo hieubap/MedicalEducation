@@ -57,6 +57,14 @@ public class ResultServiceImpl extends
   @PreAuthorize("hasAnyRole('TEARCHER', 'ADMIN')")
   protected void beforeSave(ResultEntity entity, ResultDTO dto) {
     super.beforeSave(entity, dto);
+    if (entity.getCourse() != null) {
+      CourseEntity courseEntity = entity.getCourse();
+
+      if ((courseEntity.getStatus() == 1 || courseEntity.getStatus() == 3) && (
+              dto.getMidPoint() != null || dto.getEndPoint() != null)) {
+        throw new BaseException(200, "Khóa học chưa bắt đầu hoặc đã kết thúc");
+      }
+    }
     if (dto.getStudentId() == null || !userRepository.existsById(dto.getStudentId())) {
       throw new BaseException(400, "studentId is null or not exist");
     }
@@ -105,8 +113,6 @@ public class ResultServiceImpl extends
   @Override
   protected void specificMapToDTO(ResultEntity entity, ResultDTO dto) {
     super.specificMapToDTO(entity, dto);
-//    dto.setStudent(userService.findById(entity.getStudentId()));
-//    dto.setCourse(courseService.findById(entity.getCourseId()));
     dto.setSubjectData(subjectService.findById(entity.getSubjectId()));
     dto.setRank(applyRank(dto.getTotal()));
   }
@@ -155,14 +161,5 @@ public class ResultServiceImpl extends
     if (total > 3.0) return "E";
     return "F";
   }
-//  @Override
-//  public void delete(Long id) {
-////    CourseEntity courseEntity = courseRepository.findById(courseId).get();
-//    ResultDTO searchDTO = new ResultDTO();
-//    searchDTO.setId(id);
-//    List<ResultEntity> listResult = getRepository().search();
-//
-//    getRepository().deleteAll(listResult);
-//    super.delete(id);
-//  }
+
 }
