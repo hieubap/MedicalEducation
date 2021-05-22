@@ -72,6 +72,10 @@ public class UserServiceImpl extends
       throw new BaseException(400, "password.invalid");
     }
 
+    if (userEntity.getStatus() != 0) {
+      throw new BaseException(400, "account is invalid");
+    }
+
     List<String> roles = new ArrayList<>();
 
     String role = "";
