@@ -62,4 +62,8 @@ public class UserDTO extends BaseDTO {
   private Long subjectId;
 
   private List<SubjectDTO> subjects;
+
+  private String userCreated;
+
+  private String userUpdated;
 }

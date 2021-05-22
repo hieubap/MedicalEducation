@@ -5,16 +5,24 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import medical.education.dao.model.CourseEntity;
+import medical.education.dao.model.NotificationEntity;
+import medical.education.dao.model.RegisterEntity;
 import medical.education.dao.model.ScheduleEntity;
 import medical.education.dao.model.SubjectEntity;
+import medical.education.dao.model.UserEntity;
 import medical.education.dao.repository.CourseRepository;
 import medical.education.dao.repository.HealthFacilityRepository;
+import medical.education.dao.repository.NotificationRepository;
+import medical.education.dao.repository.RegisterRepository;
 import medical.education.dao.repository.ScheduleRepository;
 import medical.education.dao.repository.SubjectRepository;
 import medical.education.dto.CourseDTO;
 import medical.education.dto.ScheduleDTO;
 import medical.education.dto.SubjectDTO;
+import medical.education.dto.UserDTO;
 import medical.education.enums.CourseStatusEnum;
+import medical.education.enums.RegisterEnum;
+import medical.education.enums.RoleEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -47,6 +55,15 @@ public class CourseServiceImpl extends
   @Autowired
   private HealthFacilityRepository healthFacilityRepository;
 
+  @Autowired
+  private NotificationRepository notificationRepository;
+
+  @Autowired
+  private RegisterRepository registerRepository;
+
+  @Autowired
+  private UserService userService;
+
   @Override
   protected CourseRepository getRepository() {
     return repository;
@@ -57,8 +74,16 @@ public class CourseServiceImpl extends
   protected void beforeSave(CourseEntity entity, CourseDTO dto) {
     super.beforeSave(entity, dto);
 
+    UserDTO currentUser = userService.getCurrentUser();
+    if (!currentUser.getRole().equals(RoleEnum.ADMIN)) {
+      throw new BaseException(401, "Bạn không đủ quyền truy cập");
+    }
+
+    if (!Strings.isNullOrEmpty(entity.getCode()) && getRepository().existsByCode(entity.getCode(), entity.getId())) {
+      throw new BaseException(417, "Mã khóa học bị trùng");
+    }
     if (Strings.isNullOrEmpty(entity.getCode())) {
-      Long i = getRepository().count();
+      Long i = entity.getId() == null ? getRepository().count() : entity.getId();
       String newCode = "COURSE_" + String.format("%04d", i);
       dto.setCode(newCode);
       entity.setCode(newCode);
@@ -71,32 +96,30 @@ public class CourseServiceImpl extends
     if (repository.existsByCodeAndId(dto.getCode(), dto.getId())) {
       throw new BaseException(400, "Mã đã tồn tại");
     }
-
+    if (Strings.isNullOrEmpty(dto.getName())) {
+      throw new BaseException(400, "Tên khóa học rỗng hoặc null");
+    }
     if (dto.getNgayKhaiGiang() != null && dto.getNgayKetThuc() != null &&
-        dto.getNgayKhaiGiang().after(dto.getNgayKetThuc())
-    ) {
-      throw new BaseException(451, "ngayKhaiGiang after ngayKetThuc");
+        dto.getNgayKhaiGiang().after(dto.getNgayKetThuc())) {
+      throw new BaseException(451, "Ngày khai giảng phải trước ngày kết thúc khóa");
     }
-    if(dto.getSemester() == null){
-      throw new BaseException(451, "semester is null");
+    if (dto.getSemester() == null) {
+      throw new BaseException(451, "Chưa nhập kỳ học");
     }
-
     if (dto.getPrice() == null) {
-      throw new BaseException(400, "price is null");
+      throw new BaseException(400, "Chưa nhập giá");
     }
     if (dto.getNumberLesson() == null) {
-      throw new BaseException(400, "numberLesson is null");
+      throw new BaseException(400, "Chưa nhập Số tiết học");
     }
-
     if (dto.getLimitRegister() == null) {
-      throw new BaseException(400, "limitRegister is null");
+      throw new BaseException(400, "Chưa nhập giới hạn đăng ký");
     }
-
     if (dto.getHealthFacilityId() == null || !healthFacilityRepository
         .existsById(dto.getHealthFacilityId())) {
-      throw new BaseException(400, "healthFacilityId is null or not exist");
+      throw new BaseException(400, "Chưa nhập hoặc không tồn tại Cơ sở đào tạo");
     }
-    if (dto.getSubjectIds() != null) {
+    if (!Strings.isNullOrEmpty(dto.getSubjectIds())) {
       List<SubjectEntity> listSubject = new ArrayList<>();
       String[] ids = dto.getSubjectIds().substring(1, dto.getSubjectIds().length() - 1)
           .split(",");
@@ -120,6 +143,53 @@ public class CourseServiceImpl extends
       entity.setNumberRegister(0);
       scheduleRepository.deleteAll(entity.getSchedules());
     }
+//    if (dto.getNgayKhaiGiang() != null && entity.getStatus()
+//        .equals(CourseStatusEnum.DANG_HOC.getValue())) {
+//      throw new BaseException(403, "Không thể thay đổi thông tin khóa học trong thời gian học");
+//    }
+//    if (entity.getId() != null) {
+//      LocalDate ngayKhaiGiang = entity.getNgayKhaiGiang().toInstant()
+//          .atZone(ZoneId.systemDefault()).toLocalDate();
+//      Integer semester = ngayKhaiGiang.getYear()*100
+//          + ngayKhaiGiang.getMonthValue();
+//      entity.setSemester(semester);
+//      registerService.changeSemester(entity.getId(), semester);
+//    }
+
+  }
+
+  @Override
+  public void delete(Long id) {
+    if (!getRepository().existsById(id)) {
+      throw new BaseException(480, "Khóa học không tồn tại");
+    }
+    CourseEntity entity = getRepository().findById(id).get();
+    if (!entity.getStatus().equals(CourseStatusEnum.THOI_GIAN_DANG_KI.getValue())) {
+      throw new BaseException(481, "Không thể xóa khóa học trong thời gian học");
+    } else {
+      List<UserEntity> listRegister = entity.getRegisters();
+      List<NotificationEntity> notifications = new ArrayList<>();
+      List<RegisterEntity> registers = new ArrayList<>();
+
+      for (UserEntity e : listRegister) {
+        NotificationEntity notification = new NotificationEntity();
+        notification.setContent(
+            "Khóa học: " + entity.getName() + ", Kỳ học: " + entity.getSemester() + " đã bị hủy. ");
+        notification.setOwnerId(e.getId());
+        notifications.add(notification);
+
+        RegisterEntity register = registerRepository
+            .findByCourseIdAndStudentId(entity.getId(), e.getId());
+        if (register != null) {
+          register.setStatus(RegisterEnum.CANCEL);
+          registers.add(register);
+        }
+      }
+
+      registerRepository.saveAll(registers);
+      notificationRepository.saveAll(notifications);
+    }
+    super.delete(id);
   }
 
   @Override

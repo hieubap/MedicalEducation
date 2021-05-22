@@ -14,17 +14,21 @@ public class ResultDTO extends BaseDTO {
 
   private Long studentId;
 
-//  private Object student;
+  private Object studentInfo;
   /**
    * lớp học
    */
   private Long courseId;
 
-//  private Object course;
+  private Long registerId;
+
+  private Integer semester;
+
+  private Object courseInfo;
 
   private Long subjectId;
 
-  private SubjectDTO subjectData;
+  private Object subjectInfo;
 
   private Integer muster;
 

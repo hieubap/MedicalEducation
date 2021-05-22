@@ -30,6 +30,12 @@ public interface CourseRepository extends BaseRepository<CourseEntity, CourseDTO
           + " and ( :id is null or e.id <> :id ) ")
   Boolean existsByNameAndId(String name, Long id);
 
+  @Query("select case when count(e) > 0 then true else false end from CourseEntity e "
+      + "where 1=1 "
+      + "and (e.code = :#{#code})"
+      + "and (e.id <> :#{#id})" )
+  boolean existsByCode(String code,Long id);
+
   @Query("select case when count (e) > 0 then true else false end from CourseEntity e"
           + " where 1 = 1"
           + " and (e.code = :code)"

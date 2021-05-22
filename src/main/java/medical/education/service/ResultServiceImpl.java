@@ -94,6 +94,9 @@ public class ResultServiceImpl extends
 
   @Override
   @PreAuthorize("hasAnyRole('TEACHER','ADMIN','STUDENT')")
+  /** tạo bảng kết quả trống khi sinh viên đăng ký để trong quá trình học
+   * giảng viên nhập điểm vào kết quả
+   */
   public void generateResultsForStudent(Long courseId, Long studentId, Long registerId) {
     CourseEntity courseEntity = courseRepository.findById(courseId).get();
     List<ResultEntity> listResult = new ArrayList<>();
@@ -113,7 +116,10 @@ public class ResultServiceImpl extends
   @Override
   protected void specificMapToDTO(ResultEntity entity, ResultDTO dto) {
     super.specificMapToDTO(entity, dto);
-    dto.setSubjectData(subjectService.findById(entity.getSubjectId()));
+//    dto.setStudent(userService.findById(entity.getStudentId()));
+//    dto.setCourse(courseService.findById(entity.getCourseId()));
+    dto.setSubjectInfo(subjectService.findById(entity.getSubjectId()));
+    if(dto.getTotal() != null)
     dto.setRank(applyRank(dto.getTotal()));
   }
 

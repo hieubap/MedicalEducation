@@ -12,7 +12,8 @@ public interface ResultRepository extends BaseRepository<ResultEntity, ResultDTO
 
   @Override
   @Query(" select e from ResultEntity e where "
-      + " (e.studentId = :#{#dto.studentId} or :#{#dto.studentId} is null)"
+      + " (e.registerId = :#{#dto.registerId} or :#{#dto.registerId} is null) "
+      + " and (e.studentId = :#{#dto.studentId} or :#{#dto.studentId} is null)"
       + " and (e.courseId = :#{#dto.courseId} or :#{#dto.courseId} is null)")
   Page<ResultEntity> search(ResultDTO dto, Pageable pageable);
 

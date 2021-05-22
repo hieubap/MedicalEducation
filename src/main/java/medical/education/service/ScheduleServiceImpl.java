@@ -74,8 +74,6 @@ public class ScheduleServiceImpl extends
     if (dto.getTeacherId() == null || !userRepository.existsById(dto.getTeacherId())) {
       throw new BaseException(400, Message.getMessage("data.null",new Object[]{"Giảng viên"}));
     }
-
-
     if (dto.getKipHoc() == null) {
       throw new BaseException(400, Message.getMessage("data.null",new Object[]{"Kíp học"}));
     }
@@ -98,10 +96,11 @@ public class ScheduleServiceImpl extends
   }
 
   @Override
+  // sinh viên xem lịch
   public Page<ScheduleDTO> getSchedule() {
     ScheduleDTO scheduleSearch = new ScheduleDTO();
     scheduleSearch.setCourseId(userService.getCurrentUser().getCurrentCourseId());
-    return search(scheduleSearch, PageRequest.of(0, 999999));
+    return search(scheduleSearch, PageRequest.of(0, Integer.MAX_VALUE));
   }
 
   @Override

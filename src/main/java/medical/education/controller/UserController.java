@@ -58,6 +58,10 @@ public class UserController extends BaseController<UserDTO, UserService> {
   public ResponseEntity changePassword(@RequestBody UserDTO userDTO) {
     return response(getService().changePassword(userDTO));
   }
+  @PutMapping("/reset-password")
+  public ResponseEntity resetPassword(@RequestBody UserDTO userDTO) {
+    return response(getService().resetPassword(userDTO));
+  }
 
   @RequestMapping(value = "/upload-avatar", method = RequestMethod.POST, headers = "Content-Type=multipart/form-data")
   @ResponseStatus(HttpStatus.CREATED)

@@ -8,7 +8,8 @@ public enum RegisterEnum implements IEnum {
   STUDYING((short) 2, "Đang học"),
   WAIT_TEACHER((short) 3, "Chờ giảng viên nhập điểm"),
   DONED((short) 4, "Hoàn thành"),
-  FAIL((short) 5, "Không hoàn thành");
+  FAIL((short) 5, "Không hoàn thành"),
+  CANCEL((short)6, "Bị hủy");
 
 
   private Short value;

@@ -68,6 +68,7 @@ public class RegisterServiceImpl extends
     }
 
     if (currentUser.getRole().equals(RoleEnum.ADMIN)) {
+      // admin phê duyệt đỗ tốt nghiệp cho sinh viên nêu là admin
       if (dto.getSemester() == null) {
         throw new BaseException(410, "semester is null");
       }
@@ -81,6 +82,7 @@ public class RegisterServiceImpl extends
         throw new BaseException(410, "status is null");
       }
     } else {
+      // sinh viên đăng ký khóa nếu role là sinh viên
       entity.setStudentId(userService.getCurrentUserId());
 //    CourseEntity courseEntity = courseRepository.findByCode(dto.getCode());
 
@@ -105,11 +107,6 @@ public class RegisterServiceImpl extends
           throw new BaseException(431, "Chỉ có thể đăng ký khóa trong thời gian đăng ký");
         }
         entityCourse.setNumberRegister(entityCourse.getNumberRegister() + 1);
-
-//      LocalDate ngayKhaiGiang = entityCourse.getNgayKhaiGiang().toInstant()
-//          .atZone(ZoneId.systemDefault()).toLocalDate();
-//      Integer semester = ngayKhaiGiang.getYear() * 100
-//          + ngayKhaiGiang.getMonthValue();
         entity.setSemester(entityCourse.getSemester());
 
         courseRepository.save(entityCourse);
@@ -155,8 +152,7 @@ public class RegisterServiceImpl extends
     return getRepository().getListSemester(courseId);
   }
 
-  ;
-
+  // để hủy khóa học. dành cho sinh viên
   @Override
   public void delete(Long id) {
     RegisterEntity entity = getRepository().findById(id).get();
@@ -173,7 +169,7 @@ public class RegisterServiceImpl extends
     searchDTO.setStudentId(currentUser.getId());
     searchDTO.setCourseId(entity.getCourseId());
     List<ResultEntity> listResult = resultRepository
-        .search(searchDTO, PageRequest.of(0, 999999)).toList();
+        .search(searchDTO, PageRequest.of(0, Integer.MAX_VALUE)).toList();
 
     resultRepository.deleteAll(listResult);
 
@@ -183,8 +179,9 @@ public class RegisterServiceImpl extends
     super.delete(id);
   }
 
+  // Cập nhật trạng thái và tính điểm trung bình
   @Scheduled(cron = "0 0 1 * * *")
-  public void update() {
+  public void scheduleEveryDay() {
     List<RegisterEntity> allRegister = StreamSupport
         .stream(getRepository().findAll().spliterator(), false)
         .collect(Collectors.toList());
@@ -230,17 +227,4 @@ public class RegisterServiceImpl extends
     }
     return "Kém";
   }
-  //  @Scheduled(cron = "0,20,40 * * * * *")
-//  public void schedule() {
-//    List<CourseEntity> list = (List<CourseEntity>) courseRepository.findAll();
-//    for (CourseEntity c : list) {
-//      String s = Normalizer.normalize(c.getName(), Normalizer.Form.NFD);
-//      s = s.toUpperCase().replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
-//
-//      String shortName = s.charAt(0) + "" + s.charAt(1);
-//
-//      c.setCode(shortName+ String.format("_%04d", c.getId()));
-//    }
-//    courseRepository.saveAll(list);
-//  }
 }

@@ -15,6 +15,8 @@ public interface UserService extends BaseService<UserDTO> {
 
   ResponseEntity changePassword(UserDTO userDTO);
 
+  ResponseEntity resetPassword(UserDTO userDTO);
+
   ResponseEntity changeInfo(UserDTO userDTO);
 
   ResponseEntity adminApproveChange(Long id);

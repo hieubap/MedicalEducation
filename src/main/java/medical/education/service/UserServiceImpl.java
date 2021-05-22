@@ -98,38 +98,47 @@ public class UserServiceImpl extends
   @PreAuthorize("hasAnyRole('ADMIN')")
   protected void beforeSave(UserEntity entity, UserDTO dto) {
     super.beforeSave(entity, dto);
-//    if ((dto.getUsername() == null || repository.existsByUsername(dto.getUsername()))
-//        && dto.getPasswordChange() == null) {
-//      throw new BaseException(400, "username is exists or null");
-//    }
-    if (Strings.isNullOrEmpty(dto.getPassword())) {
-      throw new BaseException(400, "password is empty or null");
+    UserDTO currentUser = getCurrentUser();
+    if (!currentUser.getRole().equals(RoleEnum.ADMIN)) {
+      throw new BaseException(401, "Bạn không đủ quyền truy cập");
     }
-    if (entity.getId() == null) {
+
+    if(dto.getUsername() == null){
+      throw new BaseException(400, "username chưa nhập");
+    }
+    if(dto.getPassword() == null){
+      dto.setPassword("1");
+//      throw new BaseException(400, "password chưa nhập");
+    }
+    if (repository.existsByUsername(dto.getUsername(), entity.getId())) {
+      throw new BaseException(400, "username đã tồn tại");
+    }
+    if(entity.getId() == null){
       entity.setPassword(DigestUtil.sha256Hex(dto.getPassword()));
+      entity.setRole(RoleEnum.STUDENT);
+      entity.setStatus((short) 0);
+    }
+    else{
+      if (dto.getPasswordChange() != null) {
+        entity.setPassword(DigestUtil.sha256Hex(dto.getPassword()));
+      }
     }
   }
 
 //  @Override
 //  protected void specificMapToEntity(UserDTO dto, UserEntity entity) {
 //    super.specificMapToEntity(dto, entity);
-//    if (dto.getRole() != null) {
-//      RoleEntity roleEntity = roleRepository
-//          .findByName(dto.getRole().getName());
-//
-//      if (roleEntity != null) {
-//        entity.setRoleEntity(roleEntity);
-//      }
-//    }
 //  }
 
-//  @Override
-//  protected void specificMapToDTO(UserEntity entity, UserDTO dto) {
-//    super.specificMapToDTO(entity, dto);
-//    if (entity.getRoleEntity() != null) {
-//      dto.setRoleDTO(roleService.findById(entity.getRoleEntity().getId()));
-//    }
-//  }
+  @Override
+  protected void specificMapToDTO(UserEntity entity, UserDTO dto) {
+    super.specificMapToDTO(entity, dto);
+    UserEntity createUser = getRepository().findById(entity.getCreatedBy()).get();
+    UserEntity updateUser = getRepository().findById(entity.getUpdatedBy()).get();
+
+    dto.setUserCreated(createUser.getFullName());
+    dto.setUserUpdated(updateUser.getFullName());
+  }
 
 
   @Override
@@ -146,6 +155,17 @@ public class UserServiceImpl extends
 
     return new ResponseEntity(user);
   }
+
+  @Override
+  public ResponseEntity resetPassword(UserDTO user) {
+    user.setPassword("1");
+    user.setPasswordChange("=))");
+
+    save(user.getId(), user);
+
+    return new ResponseEntity(user);
+  }
+
 
   @Override
   public ResponseEntity register(UserDTO userDTO) {
