@@ -19,4 +19,6 @@ public interface HealthFacilityRepository extends
       + " and (e.id = :#{#dto.id} or :#{#dto.id} is null) "
   )
   Page<HealthFacilityEntity> search(HealthFacilityDTO dto, Pageable pageable);
+
+  boolean existsByName(String name);
 }

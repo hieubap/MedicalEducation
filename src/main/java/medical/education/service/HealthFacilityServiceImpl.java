@@ -40,21 +40,25 @@ public class HealthFacilityServiceImpl extends
     if (Strings.isNullOrEmpty(dto.getAddress())) {
       throw new BaseException(400, "address is null or empty");
     }
-    }
 
-    @Override
-    @PreAuthorize("hasAnyRole('ADMIN','TEACHER','STUDENT')")
-    public Page<HealthFacilityDTO> search (HealthFacilityDTO dto, Pageable pageable){
-      if (dto.getName() != null) {
-        dto.setName("%" + dto.getName().trim().replaceAll(" ", "%") + "%");
-      }
-      if (dto.getAddress() != null) {
-        dto.setAddress("%" + dto.getAddress().trim().replaceAll(" ", "%") + "%");
-      }
-      if (dto.getLevel() != null) {
-        dto.setLevel("%" + dto.getLevel().trim().replaceAll(" ", "%") + "%");
-      }
-
-      return super.search(dto, pageable);
+    if (getRepository().existsByName(dto.getName()) && dto.getId() == null) {
+      throw new BaseException(400, "tên đã tồn tại");
     }
   }
+
+  @Override
+  @PreAuthorize("hasAnyRole('ADMIN','TEACHER','STUDENT')")
+  public Page<HealthFacilityDTO> search(HealthFacilityDTO dto, Pageable pageable) {
+    if (dto.getName() != null) {
+      dto.setName("%" + dto.getName().trim().replaceAll(" ", "%") + "%");
+    }
+    if (dto.getAddress() != null) {
+      dto.setAddress("%" + dto.getAddress().trim().replaceAll(" ", "%") + "%");
+    }
+    if (dto.getLevel() != null) {
+      dto.setLevel("%" + dto.getLevel().trim().replaceAll(" ", "%") + "%");
+    }
+
+    return super.search(dto, pageable);
+  }
+}

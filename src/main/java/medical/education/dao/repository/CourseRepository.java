@@ -41,4 +41,6 @@ public interface CourseRepository extends BaseRepository<CourseEntity, CourseDTO
           + " and (e.code = :code)"
           + " and ( :id is null or e.id <> :id ) ")
   Boolean existsByCodeAndId(String code, Long id);
+
+  boolean existsByCode(String code);
 }

@@ -39,12 +39,16 @@ public class PlaceServiceImpl extends AbstractBaseService<PlaceEntity, PlaceDTO,
         .existsById(dto.getHealthFacilityId())) {
       throw new BaseException(400, "healthFacilityId is null or empty");
     }
+    if (getRepository().existsByAddress(dto.getAddress()) && dto.getId() == null) {
+      throw new BaseException(400, "địa điểm đã tồn tại");
+    }
   }
 
   @Override
   public Page<PlaceDTO> search(PlaceDTO dto, Pageable pageable) {
-    if(dto.getAddress()!=null)
-    dto.setAddress('%' + dto.getAddress().trim().toLowerCase().replace(' ', '%') + '%');
+    if (dto.getAddress() != null) {
+      dto.setAddress('%' + dto.getAddress().trim().toLowerCase().replace(' ', '%') + '%');
+    }
     return super.search(dto, pageable);
   }
 }

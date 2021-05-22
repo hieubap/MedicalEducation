@@ -79,7 +79,8 @@ public class CourseServiceImpl extends
       throw new BaseException(401, "Bạn không đủ quyền truy cập");
     }
 
-    if (!Strings.isNullOrEmpty(entity.getCode()) && getRepository().existsByCode(entity.getCode(), entity.getId())) {
+    if (!Strings.isNullOrEmpty(entity.getCode()) && getRepository()
+        .existsByCode(entity.getCode(), entity.getId())) {
       throw new BaseException(417, "Mã khóa học bị trùng");
     }
     if (Strings.isNullOrEmpty(entity.getCode())) {
@@ -155,6 +156,9 @@ public class CourseServiceImpl extends
 //      entity.setSemester(semester);
 //      registerService.changeSemester(entity.getId(), semester);
 //    }
+    if (getRepository().existsByCode(dto.getCode()) && dto.getId() == null) {
+      throw new BaseException(400, "mã code đã tồn tại");
+    }
 
   }
 
