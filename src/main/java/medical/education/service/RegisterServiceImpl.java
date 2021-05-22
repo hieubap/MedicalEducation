@@ -7,6 +7,7 @@ import java.util.stream.StreamSupport;
 import medical.education.dao.model.CourseEntity;
 import medical.education.dao.model.RegisterEntity;
 import medical.education.dao.model.ResultEntity;
+import medical.education.dao.model.UserEntity;
 import medical.education.dao.repository.CourseRepository;
 import medical.education.dao.repository.RegisterRepository;
 import medical.education.dao.repository.ResultRepository;
@@ -97,7 +98,6 @@ public class RegisterServiceImpl extends
         throw new BaseException(410,
             Message.getMessage("Has.Register.Course", new Object[]{e.getCourse().getName()}));
       } else {
-        currentUser.setCurrentCourseId(dto.getCourseId());
         CourseEntity entityCourse = courseRepository.findById(dto.getCourseId()).get();
         if (entityCourse.getNumberRegister() >= entityCourse.getLimitRegister()) {
           throw new BaseException(430, "Khóa học đã quá giới hạn đăng ký");
@@ -110,7 +110,10 @@ public class RegisterServiceImpl extends
         entity.setSemester(entityCourse.getSemester());
 
         courseRepository.save(entityCourse);
-        userService.save(currentUser.getId(), currentUser);
+
+        UserEntity userEntity = userRepository.findById(currentUser.getId()).get();
+        userEntity.setCurrentCourseId(dto.getCourseId());
+        userRepository.save(userEntity);
       }
       entity.setStatus(RegisterEnum.REGISTER_DONED);
     }
@@ -173,8 +176,9 @@ public class RegisterServiceImpl extends
 
     resultRepository.deleteAll(listResult);
 
-    currentUser.setCurrentCourseId(null);
-    userService.save(currentUser);
+    UserEntity user = userRepository.findById(currentUser.getId()).get();
+    user.setCurrentCourseId(null);
+    userRepository.save(user);
 
     super.delete(id);
   }

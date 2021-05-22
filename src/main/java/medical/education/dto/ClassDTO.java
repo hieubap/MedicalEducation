@@ -23,9 +23,9 @@ public class ClassDTO implements Serializable {
 
   private String muster;
 
-  private Long classId = -1L;
+  private Long courseId = -1L;
 
-  private Long subjectId;
+  private Long subjectId = -1L;
 
   private Integer lesson;
 

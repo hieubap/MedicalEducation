@@ -6,6 +6,7 @@ import medical.education.dao.model.CourseEntity;
 import medical.education.dao.model.ResultEntity;
 import medical.education.dao.model.SubjectEntity;
 import medical.education.dao.repository.CourseRepository;
+import medical.education.dao.repository.RegisterRepository;
 import medical.education.dao.repository.ResultRepository;
 import medical.education.dao.repository.SubjectRepository;
 import medical.education.dao.repository.UserRepository;
@@ -48,6 +49,9 @@ public class ResultServiceImpl extends
   @Autowired
   private SubjectRepository subjectRepository;
 
+  @Autowired
+  private RegisterRepository registerRepository;
+
   @Override
   protected ResultRepository getRepository() {
     return resultRepository;
@@ -73,6 +77,9 @@ public class ResultServiceImpl extends
     }
     if (dto.getSubjectId() == null || !subjectRepository.existsById(dto.getSubjectId())) {
       throw new BaseException(400, "subjectId is null or not exist");
+    }
+    if (dto.getRegisterId() == null || !registerRepository.existsById(dto.getRegisterId())) {
+      throw new BaseException(400, "registerId is null or not exist");
     }
     if (dto.getEndPoint() != null && dto.getMidPoint() < 0 && dto.getMidPoint() > 10) {
       throw new BaseException(400, "0 <= Midpoint <= 10");

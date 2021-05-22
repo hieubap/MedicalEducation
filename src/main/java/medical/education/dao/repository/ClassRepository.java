@@ -26,7 +26,11 @@ public interface ClassRepository extends CrudRepository<ClassEntity, Long> {
       + "           join results rl on u.id = rl.student_id"
       + "           join course cr on cr.id = u.current_course_id"
       + "           join subject sj on sj.id = rl.subject_id"
-      + " where (rl.subject_id = :#{#dto.classId} and :#{#dto.classId} <> -1)"
+      + "           join register rg on rg.id = rl.register_id"
+      + " where (cr.semester = rg.semester)"
+      + " and (rg.id = rl.register_id)"
+      + " and (rl.course_id = :#{#dto.courseId} and :#{#dto.courseId} <> -1)"
+      + " and (rl.subject_id = :#{#dto.subjectId} and :#{#dto.subjectId} <> -1)"
       + " and (lower(u.full_name) like :#{#dto.name} or :#{#dto.name} = '')"
       ,nativeQuery = true)
   Page<ClassEntity> search(ClassDTO dto, Pageable pageable);

@@ -236,17 +236,17 @@ public class CourseServiceImpl extends
     return super.search(dto, pageable);
   }
 
-  @Scheduled(cron = "0 0 0 * * *")
+  @Scheduled(cron = "0,30 * * * * *")
   public void update() {
     List<CourseEntity> allCourse = repository.search(new CourseDTO(),
         PageRequest.of(0, Integer.MAX_VALUE)).toList();
     List<CourseEntity> listSave = new ArrayList<>();
     for (CourseEntity e : allCourse) {
-      if (e.getNgayKhaiGiang().before(new Date())
+      if (e.getNgayKhaiGiang() != null && e.getNgayKhaiGiang().before(new Date())
           && e.getStatus().equals(CourseStatusEnum.THOI_GIAN_DANG_KI.getValue())) {
         e.setStatus(CourseStatusEnum.DANG_HOC.getValue());
         listSave.add(e);
-      } else if (e.getNgayKetThuc().before(new Date())
+      } else if (e.getNgayKetThuc() != null && e.getNgayKetThuc().before(new Date())
           && e.getStatus().equals(CourseStatusEnum.DANG_HOC.getValue())) {
         e.setStatus(CourseStatusEnum.HOAN_THANH.getValue());
         listSave.add(e);
