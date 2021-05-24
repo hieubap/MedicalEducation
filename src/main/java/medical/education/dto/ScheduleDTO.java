@@ -14,14 +14,15 @@ import spring.backend.library.dto.BaseDTO;
 @ToString(callSuper = true)
 public class ScheduleDTO extends BaseDTO {
 
-    private Short day;
-    private Long placeId;
-    private PlaceDTO place;
-    private Long subjectId;
-    private SubjectDTO subject;
-    private Long teacherId;
-    private UserDTO teacher;
-    private Long courseId;
-    private CourseDTO course;
-    private Short kipHoc;
+  private Short day;
+  private Long placeId;
+  private PlaceDTO place;
+  private Long subjectId;
+  private SubjectDTO subject;
+  private Long teacherId;
+  private String dates;
+  private UserDTO teacher;
+  private Long courseId;
+  private CourseDTO course;
+  private Short kipHoc;
 }

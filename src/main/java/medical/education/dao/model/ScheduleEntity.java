@@ -71,6 +71,8 @@ public class ScheduleEntity extends BaseEntity {
   @Column(name = "teacher_id")
   private Long teacherId;
 
+  private String dates;
+
   @ManyToOne
   @JoinColumn(name = "teacher_id",insertable = false,updatable = false)
   private UserEntity teacher;
