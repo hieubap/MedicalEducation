@@ -16,13 +16,13 @@ public class ScheduleDTO extends BaseDTO {
 
   private Short day;
   private Long placeId;
-  private PlaceDTO place;
+  private Object placeInfo;
   private Long subjectId;
-  private SubjectDTO subject;
+  private Object subjectInfo;
   private Long teacherId;
   private String dates;
-  private UserDTO teacher;
+  private Object teacher;
   private Long courseId;
-  private CourseDTO course;
+  private Object courseInfo;
   private Short kipHoc;
 }

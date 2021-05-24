@@ -41,7 +41,13 @@ public class ScheduleServiceImpl extends
   private PlaceRepository placeRepository;
 
   @Autowired
+  private PlaceService placeService;
+
+  @Autowired
   private SubjectRepository subjectRepository;
+
+  @Autowired
+  private SubjectService subjectService;
 
   @Autowired
   private CourseRepository courseRepository;
@@ -78,7 +84,7 @@ public class ScheduleServiceImpl extends
       throw new BaseException(400, Message.getMessage("data.null",new Object[]{"Kíp học"}));
     }
 
-    kiemTraLopHoc(dto.getKipHoc(), dto.getDay(), dto.getCourseId());
+//    kiemTraLopHoc(dto.getKipHoc(), dto.getDay(), dto.getCourseId());
   }
 
   private void kiemTraLopHoc(Short kipHoc, Short day, Long courseId) {
@@ -93,6 +99,15 @@ public class ScheduleServiceImpl extends
     entity.setSubject(subjectRepository.findById(entity.getSubjectId()).get());
     entity.setPlace(placeRepository.findById(entity.getPlaceId()).get());
     entity.setTeacher(userRepository.findById(entity.getTeacherId()).get());
+  }
+
+  @Override
+  protected void specificMapToDTO(ScheduleEntity entity, ScheduleDTO dto) {
+    super.specificMapToDTO(entity, dto);
+
+    dto.setSubjectInfo(subjectService.findById(entity.getSubjectId()));
+    dto.setPlaceInfo(placeService.findById(entity.getPlaceId()));
+    dto.setTeacher(userService.findById(entity.getTeacherId()));
   }
 
   @Override
