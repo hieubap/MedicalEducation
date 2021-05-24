@@ -24,6 +24,7 @@ import spring.backend.library.dao.model.BaseEntity;
 @Table(name = "schedule")
 @Where(clause = "deleted=0")
 public class ScheduleEntity extends BaseEntity {
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
@@ -42,7 +43,7 @@ public class ScheduleEntity extends BaseEntity {
   private Long placeId;
 
   @ManyToOne()
-  @JoinColumn(name = "place_id",insertable = false,updatable = false)
+  @JoinColumn(name = "place_id", insertable = false, updatable = false)
   private PlaceEntity place;
 
   /**
@@ -52,7 +53,7 @@ public class ScheduleEntity extends BaseEntity {
   private Long subjectId;
 
   @OneToOne
-  @JoinColumn(name = "subject_id",insertable = false,updatable = false)
+  @JoinColumn(name = "subject_id", insertable = false, updatable = false)
   private SubjectEntity subject;
 
   /**
@@ -62,7 +63,7 @@ public class ScheduleEntity extends BaseEntity {
   private Long courseId;
 
   @ManyToOne
-  @JoinColumn(name = "course_id",updatable = false,insertable = false)
+  @JoinColumn(name = "course_id", updatable = false, insertable = false)
   private CourseEntity course;
 
   /**
@@ -71,9 +72,10 @@ public class ScheduleEntity extends BaseEntity {
   @Column(name = "teacher_id")
   private Long teacherId;
 
+  @Column(length = 1000)
   private String dates;
 
   @ManyToOne
-  @JoinColumn(name = "teacher_id",insertable = false,updatable = false)
+  @JoinColumn(name = "teacher_id", insertable = false, updatable = false)
   private UserEntity teacher;
 }
