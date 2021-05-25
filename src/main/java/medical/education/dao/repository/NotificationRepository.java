@@ -18,11 +18,13 @@ public interface NotificationRepository extends
       + " and (e.content like :#{#dto.content} or :#{#dto.content} is null)"
       + " and (e.isRead = :#{#dto.isRead} or :#{#dto.isRead} is null)"
       + " and (e.ownerId = :#{#dto.ownerId} or :#{#dto.ownerId} is null)"
+      + " and (e.role = :#{#dto.role} or :#{#dto.role} is null)"
       , countQuery = "select count(e) from NotificationEntity e"
       + " where e.deleted = 0 "
       + " and (e.id = :#{#dto.id} or :#{#dto.id} is null) "
       + " and (e.content like :#{#dto.content} or :#{#dto.content} is null)"
       + " and (e.isRead = :#{#dto.isRead} or :#{#dto.isRead} is null)"
+      + " and (e.role = :#{#dto.role} or :#{#dto.role} is null)"
       + " and (e.ownerId = :#{#dto.ownerId} or :#{#dto.ownerId} is null)")
   Page<NotificationEntity> search(NotificationDTO dto, Pageable page);
 
@@ -34,6 +36,6 @@ public interface NotificationRepository extends
   void deleteById(Long id);
 
   @Query("select count(e) from NotificationEntity e"
-      + " where e.deleted = 0 and e.isRead = medical.education.enums.NotificationEnum.DA_DOC")
+      + " where e.deleted = 0 and e.isRead = 0")
   Integer countRead();
 }

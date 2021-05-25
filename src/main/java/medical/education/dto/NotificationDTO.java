@@ -14,4 +14,5 @@ public class NotificationDTO extends BaseDTO {
   private String content;
   private NotificationEnum isRead;
   private Long ownerId;
+  private Short role;
 }

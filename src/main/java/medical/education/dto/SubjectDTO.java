@@ -19,4 +19,6 @@ public class SubjectDTO extends BaseDTO {
   private String type;
 
   private Integer lesson;
+
+  private Long price;
 }

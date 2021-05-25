@@ -26,12 +26,13 @@ public class NotificationEntity extends BaseEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
+  @Column(length = 2000)
   private String content;
 
-  /** 1: chưa đọc
-   *  2: đã đọc
+  /** 0: chưa đọc
+   *  1: đã đọc
    */
-  private NotificationEnum isRead;
+  private Short isRead;
 
   @Column(name = "owner_id")
   private Long ownerId;
@@ -39,4 +40,7 @@ public class NotificationEntity extends BaseEntity {
   @ManyToOne
   @JoinColumn(name = "owner_id",updatable = false,insertable = false)
   private UserEntity owner;
+
+  @Column(name = "role")
+  private Short role;
 }

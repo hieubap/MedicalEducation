@@ -3,6 +3,7 @@ package medical.education.dao.model;
 import io.swagger.models.auth.In;
 import java.util.List;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -12,7 +13,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -34,6 +37,19 @@ public class ProgramEntity extends BaseEntity {
   private String name;
 
   private String code;
+
+  @Transient
+  private Integer lesson;
+
+  /**
+   * khóa học hiện tại
+   */
+  @Column(name = "current_course_id")
+  private Long currentCourseId;
+
+  @OneToOne
+  @JoinColumn(name = "current_course_id",insertable = false,updatable = false)
+  private CourseEntity currentCourse;
 
   @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   @JoinTable(

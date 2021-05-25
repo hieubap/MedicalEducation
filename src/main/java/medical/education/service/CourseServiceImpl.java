@@ -1,6 +1,7 @@
 package medical.education.service;
 
 import com.google.common.base.Strings;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -8,7 +9,6 @@ import medical.education.dao.model.CourseEntity;
 import medical.education.dao.model.NotificationEntity;
 import medical.education.dao.model.RegisterEntity;
 import medical.education.dao.model.ScheduleEntity;
-import medical.education.dao.model.SubjectEntity;
 import medical.education.dao.model.UserEntity;
 import medical.education.dao.repository.CourseRepository;
 import medical.education.dao.repository.HealthFacilityRepository;
@@ -18,7 +18,6 @@ import medical.education.dao.repository.ScheduleRepository;
 import medical.education.dao.repository.SubjectRepository;
 import medical.education.dto.CourseDTO;
 import medical.education.dto.ScheduleDTO;
-import medical.education.dto.SubjectDTO;
 import medical.education.dto.UserDTO;
 import medical.education.enums.CourseStatusEnum;
 import medical.education.enums.RegisterEnum;
@@ -81,11 +80,6 @@ public class CourseServiceImpl extends
     if (!currentUser.getRole().equals(RoleEnum.ADMIN)) {
       throw new BaseException(401, "Bạn không đủ quyền truy cập");
     }
-
-    if (!Strings.isNullOrEmpty(entity.getCode()) && getRepository()
-        .existsByCode(entity.getCode(), entity.getId())) {
-      throw new BaseException(417, "Mã khóa học bị trùng");
-    }
     if (Strings.isNullOrEmpty(entity.getCode())) {
       Long i = entity.getId() == null ? getRepository().count() : entity.getId();
       String newCode = "COURSE_" + String.format("%04d", i);
@@ -93,29 +87,15 @@ public class CourseServiceImpl extends
       entity.setCode(newCode);
     }
 
-    if (dto.getName() == null) {
-      throw new BaseException(400, "name is null");
-    }
-
-    if (repository.existsByCodeAndId(dto.getCode(), dto.getId())) {
-      throw new BaseException(400, "Mã đã tồn tại");
-    }
-    if (Strings.isNullOrEmpty(dto.getName())) {
-      throw new BaseException(400, "Tên khóa học rỗng hoặc null");
-    }
-    if (dto.getNgayKhaiGiang() != null && dto.getNgayKetThuc() != null &&
-        dto.getNgayKhaiGiang().after(dto.getNgayKetThuc())) {
-      throw new BaseException(451, "Ngày khai giảng phải trước ngày kết thúc khóa");
-    }
-    if (dto.getSemester() == null) {
-      throw new BaseException(451, "Chưa nhập kỳ học");
-    }
-    if (dto.getPrice() == null) {
-      throw new BaseException(400, "Chưa nhập giá");
-    }
-    if (dto.getNumberLesson() == null) {
-      throw new BaseException(400, "Chưa nhập Số tiết học");
-    }
+//    if (dto.getSemester() == null) {
+//      throw new BaseException(451, "Chưa nhập kỳ học");
+//    }
+//    if (dto.getPrice() == null) {
+//      throw new BaseException(400, "Chưa nhập giá");
+//    }
+//    if (dto.getNumberLesson() == null) {
+//      throw new BaseException(400, "Chưa nhập Số tiết học");
+//    }
     if (dto.getLimitRegister() == null) {
       throw new BaseException(400, "Chưa nhập giới hạn đăng ký");
     }
@@ -130,8 +110,16 @@ public class CourseServiceImpl extends
     if (entity.getNumberRegister() == null) {
       entity.setNumberRegister(0);
     }
-    if (dto.getNgayKhaiGiang() != null
-        && entity.getStatus().equals(CourseStatusEnum.HOAN_THANH.getValue())
+    if (dto.getNgayKhaiGiang() == null) {
+      throw new BaseException(410, "Bạn chưa nhập ngày khai giảng");
+    }
+    if (dto.getNgayKetThuc() == null) {
+      throw new BaseException(410, "Bạn chưa nhập ngày kết thúc học kỳ");
+    }
+    if (dto.getNgayKhaiGiang().after(dto.getNgayKetThuc())) {
+      throw new BaseException(451, "Ngày khai giảng phải trước ngày kết thúc khóa");
+    }
+    if (entity.getStatus().equals(CourseStatusEnum.HOAN_THANH.getValue())
         && entity.getNgayKhaiGiang().after(new Date())) {
       entity.setStatus(CourseStatusEnum.THOI_GIAN_DANG_KI.getValue());
       entity.setNumberRegister(0);
@@ -149,9 +137,6 @@ public class CourseServiceImpl extends
 //      entity.setSemester(semester);
 //      registerService.changeSemester(entity.getId(), semester);
 //    }
-    if (getRepository().existsByCode(dto.getCode()) && dto.getId() == null) {
-      throw new BaseException(400, "mã code đã tồn tại");
-    }
 
   }
 
@@ -192,16 +177,20 @@ public class CourseServiceImpl extends
   @Override
   protected void specificMapToDTO(CourseEntity entity, CourseDTO dto) {
     super.specificMapToDTO(entity, dto);
-    if (entity.getSchedules() != null) {
-      List<ScheduleDTO> scheduleDTOS = new ArrayList<>();
-      for (ScheduleEntity e : entity.getSchedules()) {
-        scheduleDTOS.add(scheduleService.findById(e.getId()));
+    if (entity.getMapAllProperties()) {
+      if (entity.getSchedules() != null) {
+        List<ScheduleDTO> scheduleDTOS = new ArrayList<>();
+        for (ScheduleEntity e : entity.getSchedules()) {
+          scheduleDTOS.add(scheduleService.findById(e.getId()));
+        }
+        dto.setListSchedules(scheduleDTOS);
       }
-      dto.setListSchedules(scheduleDTOS);
     }
+
     if (entity.getProgramEntity() != null) {
-      dto.setProgramDTO(programService.findById(entity.getProgramEntity().getId()));
+      dto.setProgramInfo(programService.findById(entity.getProgramId()));
     }
+
   }
 
   @Override
@@ -223,12 +212,17 @@ public class CourseServiceImpl extends
     return super.search(dto, pageable);
   }
 
-  @Scheduled(cron = "0,30 * * * * *")
+  @Scheduled(cron = "0 * * * * *")
   public void update() {
     List<CourseEntity> allCourse = repository.search(new CourseDTO(),
         PageRequest.of(0, Integer.MAX_VALUE)).toList();
     List<CourseEntity> listSave = new ArrayList<>();
+    List<CourseEntity> courseEntities = new ArrayList<>();
     for (CourseEntity e : allCourse) {
+      if (e.getStatus().equals(CourseStatusEnum.THOI_GIAN_DANG_KI.getValue()) &&
+          e.getSchedules().size() == 0) {
+        courseEntities.add(e);
+      }
       if (e.getNgayKhaiGiang() != null && e.getNgayKhaiGiang().before(new Date())
           && e.getStatus().equals(CourseStatusEnum.THOI_GIAN_DANG_KI.getValue())) {
         e.setStatus(CourseStatusEnum.DANG_HOC.getValue());
@@ -240,6 +234,36 @@ public class CourseServiceImpl extends
       }
     }
 
+    if (courseEntities.size() > 0) {
+      NotificationEntity noti = new NotificationEntity();
+      noti.setRole(RoleEnum.ADMIN.value);
+      noti.setContent(createContentNotification(courseEntities));
+      noti.setIsRead((short) 0);
+      noti.setAuditProperties(ZonedDateTime.now(), 1L, ZonedDateTime.now(), 1L);
+      notificationRepository.save(noti);
+    }
     getRepository().saveAll(listSave);
+
+  }
+
+  public String createContentNotification(List<CourseEntity> listCourse) {
+    StringBuilder str = new StringBuilder();
+    str.append("HỆ THỐNG XIN THÔNG BÁO");
+    int index = 1;
+    for (CourseEntity course : listCourse) {
+      str.append("\n")
+          .append(index++)
+          .append(". Chương trình đào tạo: ")
+          .append(course.getProgramEntity().getName())
+          .append(", Khóa học: ")
+          .append(course.getSemester())
+          .append(", Ngày khai giảng: ")
+          .append(course.getNgayKhaiGiang());
+    }
+    str.append(
+        "\n chưa được xếp lịch giảng dạy. yêu cầu các quản trị xếp lịch trước ngày khai giảng");
+
+    return str.toString();
+
   }
 }

@@ -38,7 +38,7 @@ public class CourseEntity extends BaseEntity {
 
   private String name;
 
-  @Column(unique = true)
+//  @Column(unique = true)
   private String code;
 
   /**
