@@ -17,5 +17,9 @@ public interface ProgramRepository extends BaseRepository<ProgramEntity, Program
       + "   or :#{#dto.name} is null)")
   Page<ProgramEntity> search(ProgramDTO dto, Pageable pageable);
 
-  boolean existsByCodeAndId(String code,Long id);
+  @Query("select case when count (e) > 0 then true else false end from ProgramEntity e"
+      + " where 1 = 1"
+      + " and (e.code = :code)"
+      + " and ( :id is null or e.id <> :id ) ")
+  Boolean existsByCodeAndId(String code, Long id);
 }
