@@ -108,7 +108,7 @@ public class ResultServiceImpl extends
     CourseEntity courseEntity = courseRepository.findById(courseId).get();
     List<ResultEntity> listResult = new ArrayList<>();
 
-    for (SubjectEntity subjectEntity : courseEntity.getSubjects()) {
+    for (SubjectEntity subjectEntity : courseEntity.getProgramEntity().getSubjects()) {
       ResultEntity result = new ResultEntity();
       result.setRegisterId(registerId);
       result.setStudentId(studentId);

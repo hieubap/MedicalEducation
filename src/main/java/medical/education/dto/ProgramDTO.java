@@ -23,6 +23,8 @@ public class ProgramDTO extends BaseDTO {
 
   private String code;
 
+  private String subjectIds;
+
   private List<Long> subjectsIds;
 
   private List<SubjectDTO> listSubjects;

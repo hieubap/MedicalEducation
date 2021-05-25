@@ -64,6 +64,9 @@ public class CourseServiceImpl extends
   @Autowired
   private UserService userService;
 
+  @Autowired
+  private ProgramService programService;
+
   @Override
   protected CourseRepository getRepository() {
     return repository;
@@ -120,17 +123,7 @@ public class CourseServiceImpl extends
         .existsById(dto.getHealthFacilityId())) {
       throw new BaseException(400, "Chưa nhập hoặc không tồn tại Cơ sở đào tạo");
     }
-    if (!Strings.isNullOrEmpty(dto.getSubjectIds())) {
-      List<SubjectEntity> listSubject = new ArrayList<>();
-      String[] ids = dto.getSubjectIds().substring(1, dto.getSubjectIds().length() - 1)
-          .split(",");
-      for (String idStr : ids) {
-        Long id = Long.valueOf(idStr);
-        SubjectEntity e = subjectRepository.findById(id).get();
-        listSubject.add(e);
-      }
-      entity.setSubjects(listSubject);
-    }
+
     if (entity.getStatus() == null) {
       entity.setStatus(CourseStatusEnum.THOI_GIAN_DANG_KI.getValue());
     }
@@ -199,21 +192,15 @@ public class CourseServiceImpl extends
   @Override
   protected void specificMapToDTO(CourseEntity entity, CourseDTO dto) {
     super.specificMapToDTO(entity, dto);
-    if (entity.getMapAllProperties()) {
-      if (entity.getSubjects() != null) {
-        List<SubjectDTO> subjectDTOS = new ArrayList<>();
-        for (SubjectEntity e : entity.getSubjects()) {
-          subjectDTOS.add(subjectService.findById(e.getId()));
-        }
-        dto.setListSubject(subjectDTOS);
+    if (entity.getSchedules() != null) {
+      List<ScheduleDTO> scheduleDTOS = new ArrayList<>();
+      for (ScheduleEntity e : entity.getSchedules()) {
+        scheduleDTOS.add(scheduleService.findById(e.getId()));
       }
-      if (entity.getSchedules() != null) {
-        List<ScheduleDTO> scheduleDTOS = new ArrayList<>();
-        for (ScheduleEntity e : entity.getSchedules()) {
-          scheduleDTOS.add(scheduleService.findById(e.getId()));
-        }
-        dto.setListSchedules(scheduleDTOS);
-      }
+      dto.setListSchedules(scheduleDTOS);
+    }
+    if (entity.getProgramEntity() != null) {
+      dto.setProgramDTO(programService.findById(entity.getProgramEntity().getId()));
     }
   }
 

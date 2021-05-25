@@ -61,4 +61,8 @@ public class CourseDTO extends BaseDTO {
   private List<ScheduleDTO> listSchedules;
 
   private CourseStatusEnum courseStatusEnum;
+
+  private Long programId;
+
+  private ProgramDTO programDTO;
 }

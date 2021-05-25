@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -34,10 +35,13 @@ public class ProgramEntity extends BaseEntity {
 
   private String code;
 
-  @ManyToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+  @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   @JoinTable(
       name = "program_subject",
       joinColumns = @JoinColumn(name = "program_id", referencedColumnName = "id"),
       inverseJoinColumns = @JoinColumn(name = "subject_id", referencedColumnName = "id"))
   private List<SubjectEntity> subjects;
+
+  @OneToMany(mappedBy = "programEntity")
+  private List<CourseEntity> courseEntities;
 }

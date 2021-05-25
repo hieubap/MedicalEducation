@@ -2,6 +2,7 @@ package medical.education.dao.model;
 
 import java.util.Date;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -30,6 +31,7 @@ import spring.backend.library.dao.model.BaseEntity;
 @Setter
 @NoArgsConstructor
 public class CourseEntity extends BaseEntity {
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
@@ -40,9 +42,7 @@ public class CourseEntity extends BaseEntity {
   private String code;
 
   /**
-   * 1: Thời gian đăng ký
-   * 2: đang học
-   * 3: hoàn thành
+   * 1: Thời gian đăng ký 2: đang học 3: hoàn thành
    */
   private Short status;
 
@@ -59,8 +59,7 @@ public class CourseEntity extends BaseEntity {
   private Date ngayKetThuc;
 
   /**
-   * Kỳ học
-   * = năm khai giảng + tháng khai giảng + ngày khai giảng
+   * Kỳ học = năm khai giảng + tháng khai giảng + ngày khai giảng
    */
   private Integer semester;
 
@@ -91,22 +90,25 @@ public class CourseEntity extends BaseEntity {
   private Long healthFacilityId;
 
   @OneToOne
-  @JoinColumn(name = "health_facility_id",insertable = false,updatable = false)
+  @JoinColumn(name = "health_facility_id", insertable = false, updatable = false)
   private HealthFacilityEntity healthFacility;
+
+  @Column(name = "programId")
+  private Long programId;
 
 //  /**
 //   * các môn trong chương trình
 //   */
 //  private String subjectIds;
 
-  @ManyToMany(fetch = FetchType.LAZY)
-  @JoinTable(
-      name = "course_subject",
-      joinColumns = @JoinColumn(name = "course_id", referencedColumnName = "id"),
-      inverseJoinColumns = @JoinColumn(name = "subject_id", referencedColumnName = "id"))
-  private List<SubjectEntity> subjects;
+//  @ManyToMany(fetch = FetchType.LAZY)
+//  @JoinTable(
+//      name = "course_subject",
+//      joinColumns = @JoinColumn(name = "course_id", referencedColumnName = "id"),
+//      inverseJoinColumns = @JoinColumn(name = "subject_id", referencedColumnName = "id"))
+//  private List<SubjectEntity> subjects;
 
-  @OneToMany(fetch = FetchType.LAZY,mappedBy = "course")
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "course")
   private List<ScheduleEntity> schedules;
 
 
@@ -117,4 +119,7 @@ public class CourseEntity extends BaseEntity {
       inverseJoinColumns = @JoinColumn(name = "student_id", referencedColumnName = "id"))
   private List<UserEntity> registers;
 
+  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @JoinColumn(name = "programId", insertable = false, updatable = false)
+  private ProgramEntity programEntity;
 }
