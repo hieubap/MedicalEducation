@@ -27,6 +27,8 @@ public interface UserService extends BaseService<UserDTO> {
 
   String uploadAvatar(MultipartFile file);
 
+  String uploadAvatar(MultipartFile file,Long id);
+
   UserDTO approveTeacher(Long id,UserDTO dto);
 
   UserDTO profile();

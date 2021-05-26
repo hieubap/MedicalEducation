@@ -246,6 +246,16 @@ public class UserServiceImpl extends
   }
 
   @Override
+  @PreAuthorize("hasAnyRole('ADMIN')")
+  public String uploadAvatar(MultipartFile file,Long id) {
+    storageService.save(file);
+    UserEntity u = getRepository().findById(id).get();
+    u.setAvatar(file.getOriginalFilename());
+    getRepository().save(u);
+    return file.getOriginalFilename();
+  }
+
+  @Override
   @PreAuthorize("permitAll()")
   public ResponseEntity changeInfo(UserDTO userDTO) {
     UserEntity entity = getRepository().findById(getCurrentUserId()).get();

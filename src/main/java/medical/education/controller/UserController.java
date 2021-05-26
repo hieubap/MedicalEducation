@@ -69,6 +69,12 @@ public class UserController extends BaseController<UserDTO, UserService> {
     return response(getService().uploadAvatar(file));
   }
 
+  @RequestMapping(value = "/upload-avatar/{id}", method = RequestMethod.POST, headers = "Content-Type=multipart/form-data")
+  @ResponseStatus(HttpStatus.CREATED)
+  public ResponseEntity avatar(@PathVariable(name = "id") Long id,@RequestParam MultipartFile file) {
+    return response(getService().uploadAvatar(file,id));
+  }
+
   @PutMapping(value = "/change-info")
   public ResponseEntity changeInfo(@RequestBody UserDTO userDTO) {
     return response(getService().changeInfo(userDTO));
