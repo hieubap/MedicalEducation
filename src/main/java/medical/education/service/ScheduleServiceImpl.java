@@ -106,7 +106,7 @@ public class ScheduleServiceImpl extends
   protected void specificMapToDTO(ScheduleEntity entity, ScheduleDTO dto) {
     super.specificMapToDTO(entity, dto);
 
-    dto.setCourseInfo(courseService.findById(entity.getCourseId()));
+//    dto.setCourseInfo(courseService.findById(entity.getCourseId()));
     dto.setSubjectInfo(subjectService.findById(entity.getSubjectId()));
     dto.setPlaceInfo(placeService.findById(entity.getPlaceId()));
     dto.setTeacher(userService.findById(entity.getTeacherId()));
