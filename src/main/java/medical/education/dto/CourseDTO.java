@@ -64,5 +64,7 @@ public class CourseDTO extends BaseDTO {
 
   private Long programId;
 
-  private ProgramDTO programDTO;
+  private ProgramDTO programInfo;
+
+  private Integer scheduled = 0;
 }

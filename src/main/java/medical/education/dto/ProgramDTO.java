@@ -29,4 +29,15 @@ public class ProgramDTO extends BaseDTO {
 
   private List<SubjectDTO> listSubjects;
 
+  private Integer numberTurn;
+
+  private Long price;
+
+  private Integer done;
+
+  private Integer fail;
+
+  private Integer lesson;
+
+  private Object currentCourse;
 }

@@ -3,20 +3,18 @@ package medical.education.service;
 import com.google.common.base.Strings;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
-import medical.education.dao.model.CourseEntity;
 import medical.education.dao.model.ProgramEntity;
-import medical.education.dao.model.ScheduleEntity;
 import medical.education.dao.model.SubjectEntity;
+import medical.education.dao.repository.CourseRepository;
 import medical.education.dao.repository.ProgramRepository;
 import medical.education.dao.repository.SubjectRepository;
-import medical.education.dto.CourseDTO;
 import medical.education.dto.ProgramDTO;
-import medical.education.dto.ScheduleDTO;
 import medical.education.dto.SubjectDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import spring.backend.library.exception.BaseException;
 import spring.backend.library.service.AbstractBaseService;
 
 @Service
@@ -32,6 +30,9 @@ public class ProgramServiceImpl extends
   @Autowired
   private SubjectService subjectService;
 
+  @Autowired
+  private CourseRepository courseRepository;
+
   @Override
   protected ProgramRepository getRepository() {
     return programRepository;
@@ -40,6 +41,9 @@ public class ProgramServiceImpl extends
   @Override
   protected void beforeSave(ProgramEntity entity, ProgramDTO dto) {
     super.beforeSave(entity, dto);
+    if (getRepository().existsByCodeAndId(entity.getCode(), entity.getId())) {
+      throw new BaseException(410, "Mã chương trình đã tồn tại");
+    }
     if (!Strings.isNullOrEmpty(dto.getSubjectIds())) {
       List<SubjectEntity> listSubject = new ArrayList<>();
       String[] ids = dto.getSubjectIds().substring(1, dto.getSubjectIds().length() - 1)
@@ -54,21 +58,45 @@ public class ProgramServiceImpl extends
   }
 
   @Override
-  protected void specificMapToEntity(ProgramDTO dto, ProgramEntity entity) {
-    super.specificMapToEntity(dto, entity);
-    List<SubjectEntity> subjectEntities = dto.getSubjectsIds().stream().map(e -> {
-      return subjectRepository.findById(e).get();
-    }).collect(Collectors.toList());
-    entity.setSubjects(subjectEntities);
+  public Page<ProgramDTO> search(ProgramDTO dto, Pageable pageable) {
+    if (!Strings.isNullOrEmpty(dto.getName())) {
+      dto.setName("%" + dto.getName().trim().replaceAll(" ", "%") + "%");
+    }
+    return super.search(dto, pageable);
   }
+
+  //  @Override
+//  protected void specificMapToEntity(ProgramDTO dto, ProgramEntity entity) {
+//    super.specificMapToEntity(dto, entity);
+//    List<SubjectEntity> subjectEntities = dto.getSubjectsIds().stream().map(e -> {
+//      return subjectRepository.findById(e).get();
+//    }).collect(Collectors.toList());
+//    entity.setSubjects(subjectEntities);
+//  }
 
   @Override
   protected void specificMapToDTO(ProgramEntity entity, ProgramDTO dto) {
     super.specificMapToDTO(entity, dto);
-    if (entity.getSubjects() != null) {
-      dto.setListSubjects(
-          entity.getSubjects().stream().map(e -> subjectService.findById(e.getId())).collect(
-              Collectors.toList()));
+    List<SubjectDTO> listSubjects = new ArrayList<>();
+    long price = 0;
+    int totalLesson = 0;
+    for (SubjectEntity e : entity.getSubjects()) {
+      price += e.getPrice();
+      totalLesson += e.getLesson();
+      listSubjects.add(subjectService.findById(e.getId()));
     }
+    dto.setNumberTurn(courseRepository.countByProgramId(entity.getId()));
+    dto.setPrice(price);
+    dto.setLesson(totalLesson);
+    dto.setListSubjects(listSubjects);
+
+
+
+//    if (entity.getSubjects() != null) {
+//      dto.setListSubjects(
+//          entity.getSubjects().stream().map(e -> subjectService.findById(e.getId())).collect(
+//              Collectors.toList()));
+//
+//    }
   }
 }

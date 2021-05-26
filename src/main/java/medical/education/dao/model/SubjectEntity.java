@@ -55,6 +55,11 @@ public class SubjectEntity extends BaseEntity {
    */
   private Integer lesson;
 
+  /**
+   * giá
+   */
+  private Long price;
+
   @ManyToMany(fetch = FetchType.LAZY)
   @JoinTable(
       name = "course_subject",

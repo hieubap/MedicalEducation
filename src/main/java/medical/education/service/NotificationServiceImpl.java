@@ -14,13 +14,16 @@ import spring.backend.library.msg.Message;
 import spring.backend.library.service.AbstractBaseService;
 
 @Service
-@PreAuthorize("hasAnyRole('ADMIN')")
+//@PreAuthorize("hasAnyRole('ADMIN')")
 public class NotificationServiceImpl extends
     AbstractBaseService<NotificationEntity, NotificationDTO, NotificationRepository> implements
     NotificationService {
 
   @Autowired
   private NotificationRepository notificationRepository;
+
+  @Autowired
+  private CourseService courseService;
 
   @Override
   protected NotificationRepository getRepository() {
@@ -35,27 +38,13 @@ public class NotificationServiceImpl extends
       throw new BaseException(400, Message.getMessage("content.null"),
           null);//"content or ownerId is null or empty"
     }
-    entity.setIsRead(NotificationEnum.CHUA_DOC);
-  }
-
-  @Scheduled(cron = "0 0 0,6,12,18 * * *")
-  public void updateOnDay() {
-    NotificationEntity notificationEntity = new NotificationEntity();
-    notificationEntity.setOwnerId((long) 2);
-    notificationEntity.setAuditProperties(null, (long) 0, null, (long) 0);
-    StringBuilder str = new StringBuilder();
-    str.append("hôm nay có ")
-//        .append(billRepository.numberBillOnDay(LocalDate.now()))
-        .append(" đơn trong ngày");
-    notificationEntity.setContent(str.toString());
-    notificationRepository.save(notificationEntity);
-
+    entity.setIsRead((short) 0);
   }
 
   @Override
   public NotificationDTO read(Long id) {
     NotificationEntity entity = notificationRepository.findById(id).get();
-    entity.setIsRead(NotificationEnum.DA_DOC);
+    entity.setIsRead((short) 1);
     notificationRepository.save(entity);
     return mapToDTO(entity);
   }
