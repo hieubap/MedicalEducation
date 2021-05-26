@@ -14,6 +14,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import medical.education.enums.KipHocEnum;
+import org.checkerframework.checker.units.qual.C;
 import org.hibernate.annotations.Where;
 import spring.backend.library.dao.model.BaseEntity;
 
@@ -55,6 +56,10 @@ public class ScheduleEntity extends BaseEntity {
   @OneToOne
   @JoinColumn(name = "subject_id", insertable = false, updatable = false)
   private SubjectEntity subject;
+
+  /* 1 la oke, 2 la teacher bi ban*
+   */
+  private Short status = 1;
 
   /**
    * khóa học

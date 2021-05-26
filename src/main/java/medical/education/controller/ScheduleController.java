@@ -17,6 +17,7 @@ import spring.backend.library.dto.ResponseEntity;
 @RestController
 @RequestMapping("/schedule")
 public class ScheduleController extends BaseController<ScheduleDTO, ScheduleService> {
+
   @Autowired
   private ScheduleService scheduleService;
 
@@ -26,12 +27,17 @@ public class ScheduleController extends BaseController<ScheduleDTO, ScheduleServ
   }
 
   @GetMapping("/get")
-  public ResponseEntity get(){
+  public ResponseEntity get() {
     return response(getService().getSchedule());
   }
 
   @GetMapping("/get-class")
-  public ResponseEntity getListClass(ScheduleDTO dto, Pageable page){
-    return response(scheduleService.getListClass(dto,page));
+  public ResponseEntity getListClass(ScheduleDTO dto, Pageable page) {
+    return response(scheduleService.getListClass(dto, page));
+  }
+
+  @GetMapping("/get-busy")
+  public ResponseEntity getScheduleBusy(ScheduleDTO dto, Pageable page) {
+    return response(scheduleService.getSchedulebBusy());
   }
 }

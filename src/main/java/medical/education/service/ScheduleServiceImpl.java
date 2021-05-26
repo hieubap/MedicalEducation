@@ -128,4 +128,11 @@ public class ScheduleServiceImpl extends
     dto.setTeacherId(currentUser.getId());
     return super.search(dto, page);
   }
+
+  @Override
+  public Page<ScheduleDTO> getSchedulebBusy() {
+    ScheduleDTO scheduleSearch = new ScheduleDTO();
+    scheduleSearch.setStatus((short) 2);
+    return search(scheduleSearch, PageRequest.of(0, Integer.MAX_VALUE));
+  }
 }

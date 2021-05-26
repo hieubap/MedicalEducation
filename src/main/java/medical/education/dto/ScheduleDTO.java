@@ -25,4 +25,5 @@ public class ScheduleDTO extends BaseDTO {
   private Long courseId;
   private Object courseInfo;
   private Short kipHoc;
+  private short status;
 }

@@ -8,8 +8,11 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import spring.backend.library.service.BaseService;
 
 public interface ScheduleService extends BaseService<ScheduleDTO> {
+
   @PreAuthorize("hasAnyRole('ADMIN','STUDENT','TEACHER')")
   Page<ScheduleDTO> getSchedule();
 
   Page<ScheduleDTO> getListClass(ScheduleDTO dto, Pageable page);
+
+  public Page<ScheduleDTO> getSchedulebBusy();
 }
