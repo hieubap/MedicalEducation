@@ -3,6 +3,7 @@ package medical.education.controller;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import medical.education.dto.ImportExcelDTO;
 import medical.education.dto.LoginDTO;
 import medical.education.dto.UserDTO;
 import medical.education.service.UserService;
@@ -58,6 +59,7 @@ public class UserController extends BaseController<UserDTO, UserService> {
   public ResponseEntity changePassword(@RequestBody UserDTO userDTO) {
     return response(getService().changePassword(userDTO));
   }
+
   @PutMapping("/reset-password")
   public ResponseEntity resetPassword(@RequestBody UserDTO userDTO) {
     return response(getService().resetPassword(userDTO));
@@ -86,8 +88,14 @@ public class UserController extends BaseController<UserDTO, UserService> {
   }
 
   @PutMapping(value = "/admin-approve-teacher/{id}")
-  public ResponseEntity approveTeacher(@PathVariable Long id,@RequestBody UserDTO dto) {
-    return response(getService().approveTeacher(id,dto));
+  public ResponseEntity approveTeacher(@PathVariable Long id, @RequestBody UserDTO dto) {
+    return response(getService().approveTeacher(id, dto));
+  }
+
+  @RequestMapping(value = "/import", method = RequestMethod.POST, consumes = {
+      "multipart/form-data"})
+  public ResponseEntity importExcel(ImportExcelDTO dto) {
+    return response(getService().importData(dto.getFile(), dto.getSheet(), dto.getNo()));
   }
 
 }

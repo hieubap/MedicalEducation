@@ -32,4 +32,6 @@ public interface UserService extends BaseService<UserDTO> {
   UserDTO approveTeacher(Long id,UserDTO dto);
 
   UserDTO profile();
+
+  String importData(MultipartFile file, int sheet, int no);
 }

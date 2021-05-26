@@ -2,9 +2,15 @@ package medical.education.service;
 
 import com.google.common.base.Strings;
 import io.jsonwebtoken.Jwts;
+import java.lang.reflect.Field;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.text.Normalizer;
+import java.text.ParsePosition;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import javax.crypto.SecretKey;
 import javax.servlet.http.HttpServletRequest;
 import medical.education.dao.model.SubjectEntity;
@@ -13,7 +19,9 @@ import medical.education.dao.repository.SubjectRepository;
 import medical.education.dao.repository.UserRepository;
 import medical.education.dto.LoginDTO;
 import medical.education.dto.UserDTO;
+import medical.education.enums.GenderEnum;
 import medical.education.enums.RoleEnum;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -35,6 +43,7 @@ import spring.backend.library.msg.Message;
 import spring.backend.library.service.AbstractBaseService;
 import spring.backend.library.storage.StorageService;
 import spring.backend.library.utils.DigestUtil;
+import spring.backend.library.utils.ExcelUtil;
 
 @Service
 public class UserServiceImpl extends
@@ -129,10 +138,6 @@ public class UserServiceImpl extends
     }
   }
 
-//  @Override
-//  protected void specificMapToEntity(UserDTO dto, UserEntity entity) {
-//    super.specificMapToEntity(dto, entity);
-//  }
 
   @Override
   protected void specificMapToDTO(UserEntity entity, UserDTO dto) {
@@ -182,9 +187,6 @@ public class UserServiceImpl extends
 
   @Override
   public UserDTO getCurrentUser() {
-//<<<<<<< HEAD
-//    return repository.findById(getCurrentUserId()).map(this::mapToDTO).get();
-//=======
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     if (authentication == null || !authentication.isAuthenticated()
         || authentication instanceof AnonymousAuthenticationToken) {
@@ -320,4 +322,51 @@ public class UserServiceImpl extends
   public UserDTO profile() {
     return getCurrentUser();
   }
+
+  @Override
+  public String importData(MultipartFile file, int sheetNo, int startLineNo) {
+
+    storageService.save(file);
+
+    Path path = Paths.get("/uploads/" + file.getOriginalFilename());
+
+    List<List<String>> data = ExcelUtil.readFile(path, sheetNo, startLineNo);
+
+    int objCount = data.size();
+
+    for (int i = 1; i < objCount; i++) {
+      UserDTO userDTO = new UserDTO();
+      List<String> useConvert = data.get(i);
+      String name = useConvert.get(0);
+      String username = StringUtils.stripAccents(name.replace(" ", "").toLowerCase());
+
+      int j = 1;
+      while (repository.findByUsername(username).isPresent()) {
+        username = username + j;
+        j++;
+      }
+      String age = useConvert.get(1);
+      if (age != null) {
+        userDTO.setAge(Long.parseLong(age));
+      }
+
+      userDTO.setCmnd(useConvert.get(2));
+
+      if (useConvert.get(3) != null) {
+        if (useConvert.get(3).equals(0)) {
+          userDTO.setGender(GenderEnum.NAM);
+        } else {
+          userDTO.setGender(GenderEnum.NU);
+        }
+      }
+      userDTO.setAddress(useConvert.get(4));
+      userDTO.setEmail(useConvert.get(5));
+      userDTO.setPhoneNumber(useConvert.get(6));
+      userDTO.setFullName(name);
+      userDTO.setUsername(username);
+      save(userDTO);
+    }
+    return "Import successful";
+  }
+
 }
