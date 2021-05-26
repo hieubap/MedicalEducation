@@ -40,4 +40,8 @@ public class ProgramDTO extends BaseDTO {
   private Integer lesson;
 
   private Object currentCourse;
+
+  private Long totNghiep;
+
+  private Long truot;
 }

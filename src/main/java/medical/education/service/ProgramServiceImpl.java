@@ -3,8 +3,11 @@ package medical.education.service;
 import com.google.common.base.Strings;
 import java.util.ArrayList;
 import java.util.List;
+import medical.education.dao.model.CourseEntity;
 import medical.education.dao.model.ProgramEntity;
+import medical.education.dao.model.RegisterEntity;
 import medical.education.dao.model.SubjectEntity;
+import medical.education.dao.model.UserEntity;
 import medical.education.dao.repository.CourseRepository;
 import medical.education.dao.repository.ProgramRepository;
 import medical.education.dao.repository.SubjectRepository;
@@ -89,9 +92,8 @@ public class ProgramServiceImpl extends
     dto.setPrice(price);
     dto.setLesson(totalLesson);
     dto.setListSubjects(listSubjects);
-
-
-
+    dto.setTotNghiep(getRepository().getTongSoTotNghiep(entity.getId()));
+    dto.setTruot((getRepository().getTongSoTruot(entity.getId())));
 //    if (entity.getSubjects() != null) {
 //      dto.setListSubjects(
 //          entity.getSubjects().stream().map(e -> subjectService.findById(e.getId())).collect(

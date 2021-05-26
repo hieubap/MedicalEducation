@@ -83,8 +83,6 @@ public class ScheduleServiceImpl extends
     if (dto.getKipHoc() == null) {
       throw new BaseException(400, Message.getMessage("data.null",new Object[]{"Kíp học"}));
     }
-
-//    kiemTraLopHoc(dto.getKipHoc(), dto.getDay(), dto.getCourseId());
   }
 
   private void kiemTraLopHoc(Short kipHoc, Short day, Long courseId) {

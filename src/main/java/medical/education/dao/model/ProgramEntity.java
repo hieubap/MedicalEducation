@@ -47,8 +47,8 @@ public class ProgramEntity extends BaseEntity {
   @Column(name = "current_course_id")
   private Long currentCourseId;
 
-  @OneToOne
-  @JoinColumn(name = "current_course_id",insertable = false,updatable = false)
+  @OneToOne(fetch = FetchType.EAGER)
+  @JoinColumn(name = "current_course_id", insertable = false, updatable = false)
   private CourseEntity currentCourse;
 
   @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
