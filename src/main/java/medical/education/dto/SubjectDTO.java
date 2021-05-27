@@ -21,4 +21,6 @@ public class SubjectDTO extends BaseDTO {
   private Integer lesson;
 
   private Long price;
+
+  private Boolean hasScheduled = false;
 }

@@ -9,6 +9,7 @@ import medical.education.dao.model.CourseEntity;
 import medical.education.dao.model.NotificationEntity;
 import medical.education.dao.model.RegisterEntity;
 import medical.education.dao.model.ScheduleEntity;
+import medical.education.dao.model.SubjectEntity;
 import medical.education.dao.model.UserEntity;
 import medical.education.dao.repository.CourseRepository;
 import medical.education.dao.repository.HealthFacilityRepository;
@@ -18,6 +19,7 @@ import medical.education.dao.repository.ScheduleRepository;
 import medical.education.dao.repository.SubjectRepository;
 import medical.education.dto.CourseDTO;
 import medical.education.dto.ScheduleDTO;
+import medical.education.dto.SubjectDTO;
 import medical.education.dto.UserDTO;
 import medical.education.enums.CourseStatusEnum;
 import medical.education.enums.RegisterEnum;
@@ -177,6 +179,9 @@ public class CourseServiceImpl extends
   @Override
   protected void specificMapToDTO(CourseEntity entity, CourseDTO dto) {
     super.specificMapToDTO(entity, dto);
+    if (entity.getProgramEntity() != null) {
+      dto.setProgramInfo(programService.findById(entity.getProgramId()));
+    }
     if (entity.getMapAllProperties()) {
       if (entity.getSchedules() != null) {
         List<ScheduleDTO> scheduleDTOS = new ArrayList<>();
@@ -185,10 +190,19 @@ public class CourseServiceImpl extends
         }
         dto.setListSchedules(scheduleDTOS);
       }
-    }
+      if (entity.getProgramEntity().getSubjects() != null) {
+        List<SubjectDTO> subjects = new ArrayList<>();
+        for (SubjectEntity e : entity.getProgramEntity().getSubjects()) {
+          SubjectDTO sj = subjectService.findById(e.getId());
+          if(scheduleRepository.existsByCourseIdAndSubjectId(entity.getId(), e.getId()))
+          {
+            sj.setHasScheduled(true);
+          }
+          subjects.add(sj);
+        }
+        dto.getProgramInfo().setListSubjects(subjects);
+      }
 
-    if (entity.getProgramEntity() != null) {
-      dto.setProgramInfo(programService.findById(entity.getProgramId()));
     }
 
   }
@@ -219,8 +233,9 @@ public class CourseServiceImpl extends
     List<CourseEntity> listSave = new ArrayList<>();
     List<CourseEntity> courseEntities = new ArrayList<>();
     for (CourseEntity e : allCourse) {
+      List<ScheduleEntity> listSchedule = e.getSchedules();
       if (e.getStatus().equals(CourseStatusEnum.THOI_GIAN_DANG_KI.getValue()) &&
-          e.getSchedules().size() == 0) {
+          listSchedule.size() == 0) {
         courseEntities.add(e);
       }
       if (e.getNgayKhaiGiang() != null && e.getNgayKhaiGiang().before(new Date())

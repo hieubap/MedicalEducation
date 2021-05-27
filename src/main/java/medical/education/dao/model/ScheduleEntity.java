@@ -1,6 +1,7 @@
 package medical.education.dao.model;
 
 import java.time.LocalDateTime;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -57,7 +58,7 @@ public class ScheduleEntity extends BaseEntity {
   @JoinColumn(name = "subject_id", insertable = false, updatable = false)
   private SubjectEntity subject;
 
-  /* 1 la oke, 2 la teacher bi ban*
+  /** 1 la oke, 2 la teacher bi ban
    */
   private Short status = 1;
 
@@ -83,4 +84,22 @@ public class ScheduleEntity extends BaseEntity {
   @ManyToOne
   @JoinColumn(name = "teacher_id", insertable = false, updatable = false)
   private UserEntity teacher;
+
+  /**
+   * thay đổi lịch
+   */
+  @Column(name = "change_schedule_id")
+  private Long changeScheduleId;
+
+  @OneToOne
+  @JoinColumn(name = "change_schedule_id",updatable = false,insertable = false)
+  private ScheduleEntity changeSchedule;
+
+  @OneToOne(mappedBy = "changeSchedule")
+  private ScheduleEntity changeInformation;
+
+  /**
+   * lý do hủy lịch
+   */
+  private String reason;
 }

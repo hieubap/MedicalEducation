@@ -146,8 +146,8 @@ public class RegisterServiceImpl extends
   @Override
   protected void specificMapToDTO(RegisterEntity entity, RegisterDTO dto) {
     super.specificMapToDTO(entity, dto);
-    dto.setStudentInfo(userService.findById(entity.getStudentId()));
-    dto.setCourseInfo(courseService.findById(entity.getCourseId()));
+    dto.setStudentInfo(userService.findDetailById(entity.getStudentId()));
+    dto.setCourseInfo(courseService.findDetailById(entity.getCourseId()));
   }
 
   @Override

@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import medical.education.dao.model.ScheduleEntity;
 import medical.education.enums.KipHocEnum;
 import spring.backend.library.dto.BaseDTO;
 
@@ -26,4 +27,7 @@ public class ScheduleDTO extends BaseDTO {
   private Object courseInfo;
   private Short kipHoc;
   private short status;
+  private Long changeScheduleId;
+  private Object changeInfo;
+  private String reason;
 }

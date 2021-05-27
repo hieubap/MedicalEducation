@@ -14,7 +14,7 @@ import spring.backend.library.exception.BaseException;
 import spring.backend.library.service.AbstractBaseService;
 
 @Service
-@PreAuthorize("hasAnyRole('ADMIN')")
+//@PreAuthorize("hasAnyRole('ADMIN')")
 public class PlaceServiceImpl extends AbstractBaseService<PlaceEntity, PlaceDTO, PlaceRepository>
     implements PlaceService {
 

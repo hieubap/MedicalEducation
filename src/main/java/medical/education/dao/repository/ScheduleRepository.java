@@ -13,6 +13,8 @@ public interface ScheduleRepository extends BaseRepository<ScheduleEntity, Sched
   @Query("select e from ScheduleEntity e "
       + " where (e.id = :#{#dto.id} or :#{#dto.id} is null) "
       + " and (e.courseId = :#{#dto.courseId} or :#{#dto.courseId} is null) "
+      + " and (e.changeScheduleId = :#{#dto.changeScheduleId} "
+      + "   or (:#{#dto.changeScheduleId} is null and e.changeScheduleId is null)) "
       + " and (e.teacherId = :#{#dto.teacherId} or :#{#dto.teacherId} is null) ")
   Page<ScheduleEntity> search(ScheduleDTO dto, Pageable pageable);
 
@@ -23,6 +25,10 @@ public interface ScheduleRepository extends BaseRepository<ScheduleEntity, Sched
       + "and (e.day = :day)")
   Boolean checkExistByDayAndKipHoc(Short kipHoc, Short day, Long id);
 
+//  @Query("select case when count(e) > 0 then true else false end from ScheduleEntity e "
+//      + "where 1=1 "
+//      + " and (e.courseId = :#{#dto.courseId} or :#{#dto.courseId} is null) ")
+  Boolean existsByCourseIdAndSubjectId(Long courseId, Long subjectId);
 //  @Query("select case when count(e) > 0 then true else false end from ScheduleEntity e "
 //      + "where (e.kipHoc = :#{#kipHoc})"
 //      + " and (e.day = :#{#day})"

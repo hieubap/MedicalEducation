@@ -8,7 +8,6 @@ import medical.education.dao.repository.SubjectRepository;
 import medical.education.dao.repository.UserRepository;
 import medical.education.dto.ScheduleDTO;
 import medical.education.dto.UserDTO;
-import medical.education.enums.KipHocEnum;
 import medical.education.enums.RoleEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -65,26 +64,26 @@ public class ScheduleServiceImpl extends
   protected void beforeSave(ScheduleEntity entity, ScheduleDTO dto) {
     super.beforeSave(entity, dto);
     if (dto.getDay() == null) {
-      throw new BaseException(400, Message.getMessage("data.null",new Object[]{"Thứ"}));
+      throw new BaseException(400, Message.getMessage("data.null", new Object[]{"Thứ"}));
     }
 
     if (dto.getPlaceId() == null || !placeRepository.existsById(dto.getPlaceId())) {
-      throw new BaseException(400, Message.getMessage("data.null",new Object[]{"Địa điểm"}));
+      throw new BaseException(400, Message.getMessage("data.null", new Object[]{"Địa điểm"}));
     }
 
     if (dto.getSubjectId() == null || !subjectRepository.existsById(dto.getSubjectId())) {
-      throw new BaseException(400, Message.getMessage("data.null",new Object[]{"Môn học"}));
+      throw new BaseException(400, Message.getMessage("data.null", new Object[]{"Môn học"}));
     }
 
     if (dto.getCourseId() == null || !courseRepository.existsById(dto.getCourseId())) {
-      throw new BaseException(400, Message.getMessage("data.null",new Object[]{"Khóa học"}));
+      throw new BaseException(400, Message.getMessage("data.null", new Object[]{"Khóa học"}));
     }
 
     if (dto.getTeacherId() == null || !userRepository.existsById(dto.getTeacherId())) {
-      throw new BaseException(400, Message.getMessage("data.null",new Object[]{"Giảng viên"}));
+      throw new BaseException(400, Message.getMessage("data.null", new Object[]{"Giảng viên"}));
     }
     if (dto.getKipHoc() == null) {
-      throw new BaseException(400, Message.getMessage("data.null",new Object[]{"Kíp học"}));
+      throw new BaseException(400, Message.getMessage("data.null", new Object[]{"Kíp học"}));
     }
   }
 
@@ -106,7 +105,10 @@ public class ScheduleServiceImpl extends
   protected void specificMapToDTO(ScheduleEntity entity, ScheduleDTO dto) {
     super.specificMapToDTO(entity, dto);
 
-//    dto.setCourseInfo(courseService.findById(entity.getCourseId()));
+    if (entity.getChangeInformation() != null) {
+      dto.setChangeInfo(scheduleService.findDetailById(entity.getChangeInformation().getId()));
+    }
+    dto.setCourseInfo(courseService.findById(entity.getCourseId()));
     dto.setSubjectInfo(subjectService.findById(entity.getSubjectId()));
     dto.setPlaceInfo(placeService.findById(entity.getPlaceId()));
     dto.setTeacher(userService.findById(entity.getTeacherId()));

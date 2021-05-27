@@ -125,7 +125,7 @@ public class ResultServiceImpl extends
     super.specificMapToDTO(entity, dto);
 //    dto.setStudent(userService.findById(entity.getStudentId()));
 //    dto.setCourse(courseService.findById(entity.getCourseId()));
-    dto.setSubjectInfo(subjectService.findById(entity.getSubjectId()));
+    dto.setSubjectInfo(subjectService.findDetailById(entity.getSubjectId()));
     if(dto.getTotal() != null)
     dto.setRank(applyRank(dto.getTotal()));
   }
