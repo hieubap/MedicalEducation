@@ -103,7 +103,6 @@ public class UserServiceImpl extends
   }
 
   @Override
-  @PreAuthorize("hasAnyRole('ADMIN')")
   protected void beforeSave(UserEntity entity, UserDTO dto) {
     super.beforeSave(entity, dto);
     UserDTO currentUser = getCurrentUser();
