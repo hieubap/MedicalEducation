@@ -106,7 +106,7 @@ public class UserServiceImpl extends
   protected void beforeSave(UserEntity entity, UserDTO dto) {
     super.beforeSave(entity, dto);
     UserDTO currentUser = getCurrentUser();
-    if (!currentUser.getRole().equals(RoleEnum.ADMIN) || currentUser.getId() == dto.getId()) {
+    if (!currentUser.getRole().equals(RoleEnum.ADMIN) && currentUser.getId() != entity.getId()) {
       throw new BaseException(401, "Bạn không đủ quyền truy cập");
     }
 
@@ -115,7 +115,6 @@ public class UserServiceImpl extends
     }
     if(dto.getPassword() == null){
       dto.setPassword("1");
-//      throw new BaseException(400, "password chưa nhập");
     }
     if (repository.existsByUsername(dto.getUsername(), entity.getId())) {
       throw new BaseException(400, "username đã tồn tại");
