@@ -107,7 +107,7 @@ public class UserServiceImpl extends
   protected void beforeSave(UserEntity entity, UserDTO dto) {
     super.beforeSave(entity, dto);
     UserDTO currentUser = getCurrentUser();
-    if (!currentUser.getRole().equals(RoleEnum.ADMIN)) {
+    if (!currentUser.getRole().equals(RoleEnum.ADMIN) || currentUser.getId() == dto.getId()) {
       throw new BaseException(401, "Bạn không đủ quyền truy cập");
     }
 
