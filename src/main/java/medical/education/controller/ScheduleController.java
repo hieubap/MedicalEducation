@@ -3,11 +3,12 @@ package medical.education.controller;
 import medical.education.dto.ScheduleDTO;
 import medical.education.service.ScheduleService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import spring.backend.library.controller.BaseController;
@@ -40,4 +41,10 @@ public class ScheduleController extends BaseController<ScheduleDTO, ScheduleServ
   public ResponseEntity getScheduleBusy(ScheduleDTO dto, Pageable page) {
     return response(scheduleService.getSchedulebBusy());
   }
+
+  @PutMapping("/handle-change-schedule/{id}")
+  public ResponseEntity handleChange(@PathVariable(name = "id") Long id,@RequestBody ScheduleDTO dto){
+    return response(scheduleService.handleChangeSchedule(id,dto));
+  }
+
 }

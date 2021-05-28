@@ -186,7 +186,9 @@ public class CourseServiceImpl extends
       if (entity.getSchedules() != null) {
         List<ScheduleDTO> scheduleDTOS = new ArrayList<>();
         for (ScheduleEntity e : entity.getSchedules()) {
-          scheduleDTOS.add(scheduleService.findById(e.getId()));
+          ScheduleDTO scheduleDTO = scheduleService.findById(e.getId());
+          if (scheduleDTO.getChangeScheduleId() == null)
+          scheduleDTOS.add(scheduleDTO);
         }
         dto.setListSchedules(scheduleDTOS);
       }

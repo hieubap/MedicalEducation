@@ -1,5 +1,6 @@
 package medical.education.service;
 
+import medical.education.dao.model.CourseEntity;
 import medical.education.dao.model.ScheduleEntity;
 import medical.education.dao.repository.CourseRepository;
 import medical.education.dao.repository.PlaceRepository;
@@ -108,7 +109,12 @@ public class ScheduleServiceImpl extends
     if (entity.getChangeInformation() != null) {
       dto.setChangeInfo(scheduleService.findDetailById(entity.getChangeInformation().getId()));
     }
-    dto.setCourseInfo(courseService.findById(entity.getCourseId()));
+//    dto.setCourseInfo(courseService.findById(entity.getCourseId()));
+    if (entity.getCourseId() != null) {
+      CourseEntity course = courseRepository.findById(entity.getCourseId()).get();
+      dto.setNameCourse(course.getProgramEntity().getName());
+      dto.setCodeCourse(course.getProgramEntity().getCode());
+    }
     dto.setSubjectInfo(subjectService.findById(entity.getSubjectId()));
     dto.setPlaceInfo(placeService.findById(entity.getPlaceId()));
     dto.setTeacher(userService.findById(entity.getTeacherId()));
@@ -138,5 +144,12 @@ public class ScheduleServiceImpl extends
     ScheduleDTO scheduleSearch = new ScheduleDTO();
     scheduleSearch.setStatus((short) 2);
     return search(scheduleSearch, PageRequest.of(0, Integer.MAX_VALUE));
+  }
+
+  @Override
+  public ScheduleDTO handleChangeSchedule(Long id, ScheduleDTO dto) {
+    save(id, dto);
+    delete(dto.getDeleteId());
+    return dto;
   }
 }

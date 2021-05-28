@@ -1,7 +1,6 @@
 package medical.education.service;
 
 import medical.education.dto.ScheduleDTO;
-import medical.education.dto.SubjectDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -15,4 +14,6 @@ public interface ScheduleService extends BaseService<ScheduleDTO> {
   Page<ScheduleDTO> getListClass(ScheduleDTO dto, Pageable page);
 
   public Page<ScheduleDTO> getSchedulebBusy();
+
+  public ScheduleDTO handleChangeSchedule(Long id,ScheduleDTO dto);
 }

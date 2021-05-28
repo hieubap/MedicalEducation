@@ -24,10 +24,13 @@ public class ScheduleDTO extends BaseDTO {
   private String dates;
   private Object teacher;
   private Long courseId;
-  private Object courseInfo;
+//  private Object courseInfo;
+  private String nameCourse;
+  private String codeCourse;
   private Short kipHoc;
   private short status;
   private Long changeScheduleId;
   private Object changeInfo;
   private String reason;
+  private Long deleteId;
 }

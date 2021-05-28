@@ -103,11 +103,12 @@ public class UserServiceImpl extends
   }
 
   @Override
-  @PreAuthorize("hasAnyRole('ADMIN')")
+//  @PreAuthorize("hasAnyRole('ADMIN')")
   protected void beforeSave(UserEntity entity, UserDTO dto) {
     super.beforeSave(entity, dto);
     UserDTO currentUser = getCurrentUser();
-    if (!currentUser.getRole().equals(RoleEnum.ADMIN)) {
+    if (!currentUser.getRole().equals(RoleEnum.ADMIN)
+    && currentUser.getPasswordChange() == null) {
       throw new BaseException(401, "Bạn không đủ quyền truy cập");
     }
 
