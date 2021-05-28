@@ -117,7 +117,6 @@ public class UserServiceImpl extends
     }
     if(dto.getPassword() == null){
       dto.setPassword("1");
-//      throw new BaseException(400, "password chưa nhập");
     }
     if (repository.existsByUsername(dto.getUsername(), entity.getId())) {
       throw new BaseException(400, "username đã tồn tại");
