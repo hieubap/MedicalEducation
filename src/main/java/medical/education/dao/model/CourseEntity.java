@@ -74,11 +74,6 @@ public class CourseEntity extends BaseEntity {
   private Integer numberLesson;
 
   /**
-   * số lượng đăng ký
-   */
-  private Integer numberRegister;
-
-  /**
    * giới hạn đăng ký
    */
   private Integer limitRegister;
