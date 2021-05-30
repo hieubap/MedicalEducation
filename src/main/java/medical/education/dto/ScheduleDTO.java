@@ -28,7 +28,7 @@ public class ScheduleDTO extends BaseDTO {
   private String nameCourse;
   private String codeCourse;
   private Short kipHoc;
-  private short status;
+  private Integer status;
   private Long changeScheduleId;
   private Object changeInfo;
   private String reason;

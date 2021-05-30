@@ -13,10 +13,22 @@ public interface ScheduleRepository extends BaseRepository<ScheduleEntity, Sched
   @Query("select e from ScheduleEntity e "
       + " where (e.id = :#{#dto.id} or :#{#dto.id} is null) "
       + " and (e.courseId = :#{#dto.courseId} or :#{#dto.courseId} is null) "
-      + " and (e.changeScheduleId = :#{#dto.changeScheduleId} "
-      + "   or (:#{#dto.changeScheduleId} is null and e.changeScheduleId is null)) "
+      + " and (e.status = 0) "
+//      + " and (e.changeScheduleId = :#{#dto.changeScheduleId} "
+//      + "   or (:#{#dto.changeScheduleId} is null and e.changeScheduleId is null)) "
       + " and (e.teacherId = :#{#dto.teacherId} or :#{#dto.teacherId} is null) ")
   Page<ScheduleEntity> search(ScheduleDTO dto, Pageable pageable);
+
+  @Query("select e from ScheduleEntity e"
+      + " where 1 = 1"
+      + " and (e.changeScheduleId is not null or e.reason is not null)")
+  Page<ScheduleEntity> findAllChange(Pageable page);
+
+  @Query("select count(e) from ScheduleEntity e"
+      + " where 1 = 1"
+      + " and (e.changeScheduleId is not null or e.reason is not null)")
+  Integer countChange();
+
 
   @Query("select case when count(e) > 0 then true else false end from ScheduleEntity e "
       + "where 1=1 "

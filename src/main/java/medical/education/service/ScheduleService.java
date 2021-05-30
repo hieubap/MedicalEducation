@@ -13,7 +13,13 @@ public interface ScheduleService extends BaseService<ScheduleDTO> {
 
   Page<ScheduleDTO> getListClass(ScheduleDTO dto, Pageable page);
 
-  public Page<ScheduleDTO> getSchedulebBusy();
+//  public Page<ScheduleDTO> getSchedulebBusy();
 
   public ScheduleDTO handleChangeSchedule(Long id,ScheduleDTO dto);
+
+  public Integer countChange();
+
+  public Page<ScheduleDTO> findAllChange(Pageable page);
+
+  public ScheduleDTO changeSchedule(Long id,ScheduleDTO dto);
 }

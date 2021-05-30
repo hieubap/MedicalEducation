@@ -139,17 +139,39 @@ public class ScheduleServiceImpl extends
     return super.search(dto, page);
   }
 
-  @Override
-  public Page<ScheduleDTO> getSchedulebBusy() {
-    ScheduleDTO scheduleSearch = new ScheduleDTO();
-    scheduleSearch.setStatus((short) 2);
-    return search(scheduleSearch, PageRequest.of(0, Integer.MAX_VALUE));
-  }
+//  @Override
+//  public Page<ScheduleDTO> getSchedulebBusy() {
+//    ScheduleDTO scheduleSearch = new ScheduleDTO();
+//    scheduleSearch.setStatus(2);
+//    return search(scheduleSearch, PageRequest.of(0, Integer.MAX_VALUE));
+//  }
 
   @Override
   public ScheduleDTO handleChangeSchedule(Long id, ScheduleDTO dto) {
     save(id, dto);
     delete(dto.getDeleteId());
     return dto;
+  }
+
+  @Override
+  public Integer countChange() {
+    return getRepository().countChange();
+  }
+
+  @Override
+  public Page<ScheduleDTO> findAllChange(Pageable page) {
+    return getRepository().findAllChange(page).map(this::mapToDTO);
+  }
+
+  @Override
+  public ScheduleDTO changeSchedule(Long id, ScheduleDTO dto) {
+    ScheduleEntity entity = getRepository().findById(id).get();
+    dto.setId(null);
+    dto.setStatus(1);
+    dto.setChangeScheduleId(null);
+    ScheduleDTO changeDTO = save(dto);
+    entity.setChangeScheduleId(changeDTO.getId());
+    getRepository().save(entity);
+    return mapToDTO(entity);
   }
 }

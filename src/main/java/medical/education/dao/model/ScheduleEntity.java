@@ -58,7 +58,9 @@ public class ScheduleEntity extends BaseEntity {
   @JoinColumn(name = "subject_id", insertable = false, updatable = false)
   private SubjectEntity subject;
 
-  /** 1 la oke, 2 la teacher bi ban
+  /**
+   * 0 bản ghi thường
+   * 1 bản ghi giả chứa thông tin thay đổi
    */
   private Short status = 1;
 
@@ -93,10 +95,10 @@ public class ScheduleEntity extends BaseEntity {
 
   @OneToOne
   @JoinColumn(name = "change_schedule_id",updatable = false,insertable = false)
-  private ScheduleEntity changeSchedule;
-
-  @OneToOne(mappedBy = "changeSchedule")
   private ScheduleEntity changeInformation;
+
+//  @OneToOne(mappedBy = "changeSchedule")
+//  private ScheduleEntity changeInformation;
 
   /**
    * lý do hủy lịch
