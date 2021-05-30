@@ -37,4 +37,6 @@ public interface RegisterRepository extends
       + " group by e.semester "
       + " order by e.semester desc ")
   List<Integer> getListSemester(Long courseId);
+
+  Integer countByCourseId(Long id);
 }

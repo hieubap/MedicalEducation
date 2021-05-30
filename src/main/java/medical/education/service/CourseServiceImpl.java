@@ -175,6 +175,7 @@ public class CourseServiceImpl extends
   @Override
   protected void specificMapToDTO(CourseEntity entity, CourseDTO dto) {
     super.specificMapToDTO(entity, dto);
+    dto.setNumberRegister(registerRepository.countByCourseId(entity.getId()));
     if (entity.getProgramEntity() != null) {
       dto.setProgramInfo(programService.findById(entity.getProgramId()));
     }
@@ -202,9 +203,9 @@ public class CourseServiceImpl extends
       }
 
     }
-    if (entity.getRegisters() != null) {
-      dto.setNumberRegister(entity.getRegisters().size());
-    }
+//    if (entity.getRegisters() != null) {
+//      dto.setNumberRegister(entity.getRegisters().size());
+//    }
 
   }
 
