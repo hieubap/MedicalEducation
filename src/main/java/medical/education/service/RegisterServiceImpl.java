@@ -99,14 +99,15 @@ public class RegisterServiceImpl extends
             Message.getMessage("Has.Register.Course", new Object[]{e.getCourse().getName()}));
       } else {
         CourseEntity entityCourse = courseRepository.findById(dto.getCourseId()).get();
-        if (entityCourse.getNumberRegister() >= entityCourse.getLimitRegister()) {
-          throw new BaseException(430, "Khóa học đã quá giới hạn đăng ký");
+        if (entityCourse.getRegisters() != null) {
+          if (entityCourse.getRegisters().size() >= entityCourse.getLimitRegister()) {
+            throw new BaseException(430, "Khóa học đã quá giới hạn đăng ký");
+          }
         }
         if (entity.getStatus() == null && !entityCourse.getStatus()
             .equals(CourseStatusEnum.THOI_GIAN_DANG_KI.getValue())) {
           throw new BaseException(431, "Chỉ có thể đăng ký khóa trong thời gian đăng ký");
         }
-        entityCourse.setNumberRegister(entityCourse.getNumberRegister() + 1);
         entity.setSemester(entityCourse.getSemester());
 
         courseRepository.save(entityCourse);
@@ -165,7 +166,6 @@ public class RegisterServiceImpl extends
     UserDTO currentUser = userService.getCurrentUser();
 
     CourseEntity courseEntity = courseRepository.findById(entity.getCourseId()).get();
-    courseEntity.setNumberRegister(courseEntity.getNumberRegister() - 1);
     courseRepository.save(courseEntity);
 
     ResultDTO searchDTO = new ResultDTO();
