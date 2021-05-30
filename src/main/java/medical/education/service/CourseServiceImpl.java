@@ -206,6 +206,9 @@ public class CourseServiceImpl extends
       }
 
     }
+    if (entity.getRegisters() != null) {
+      dto.setNumberRegister(entity.getRegisters().size());
+    }
 
   }
 
