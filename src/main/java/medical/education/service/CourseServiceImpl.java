@@ -109,9 +109,6 @@ public class CourseServiceImpl extends
     if (entity.getStatus() == null) {
       entity.setStatus(CourseStatusEnum.THOI_GIAN_DANG_KI.getValue());
     }
-    if (entity.getNumberRegister() == null) {
-      entity.setNumberRegister(0);
-    }
     if (dto.getNgayKhaiGiang() == null) {
       throw new BaseException(410, "Bạn chưa nhập ngày khai giảng");
     }
@@ -124,7 +121,6 @@ public class CourseServiceImpl extends
     if (entity.getStatus().equals(CourseStatusEnum.HOAN_THANH.getValue())
         && entity.getNgayKhaiGiang().after(new Date())) {
       entity.setStatus(CourseStatusEnum.THOI_GIAN_DANG_KI.getValue());
-      entity.setNumberRegister(0);
       scheduleRepository.deleteAll(entity.getSchedules());
     }
 //    if (dto.getNgayKhaiGiang() != null && entity.getStatus()
