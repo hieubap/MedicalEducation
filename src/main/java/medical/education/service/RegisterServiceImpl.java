@@ -96,7 +96,7 @@ public class RegisterServiceImpl extends
           currentUser.getCurrentCourseId(), userService.getCurrentUserId());
       if (currentUser.getCurrentCourseId() != null) {
         throw new BaseException(410,
-            Message.getMessage("Has.Register.Course", new Object[]{e.getCourse().getName()}));
+            Message.getMessage("Has.Register.Course", new Object[]{e.getCourse().getProgramEntity().getName()}));
       } else {
         CourseEntity entityCourse = courseRepository.findById(dto.getCourseId()).get();
         if (entityCourse.getRegisters() != null) {
