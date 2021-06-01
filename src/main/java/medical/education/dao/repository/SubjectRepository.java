@@ -19,4 +19,6 @@ public interface SubjectRepository extends BaseRepository<SubjectEntity, Subject
 
   @Query(" select count(e) from SubjectEntity e where e.deleted = 0 ")
   Integer countAll();
+
+  boolean existsByNameAndTypeAndLesson(String name, String type, Integer lesson);
 }

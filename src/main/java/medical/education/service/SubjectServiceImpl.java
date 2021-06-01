@@ -36,7 +36,9 @@ public class SubjectServiceImpl extends
     if (Strings.isNullOrEmpty(dto.getType())) {
       throw new BaseException("type is null");
     }
-
+    if (repository.existsByNameAndTypeAndLesson(dto.getName(), dto.getType(), dto.getLesson())) {
+      throw new BaseException("trùng môn học");
+    }
     if (Strings.isNullOrEmpty(dto.getCode())) {
       String s = Normalizer.normalize(dto.getName(), Normalizer.Form.NFD);
       s = s.toUpperCase().replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
