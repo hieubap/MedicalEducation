@@ -10,9 +10,10 @@ import medical.education.dto.CourseDTO;
 public interface CourseRepository extends BaseRepository<CourseEntity, CourseDTO,Long> {
   @Override
   @Query("select e from CourseEntity e "
-      + " where (lower(e.name) like :#{#dto.name} or :#{#dto.name} is null) "
+      + "   join ProgramEntity p on p.id = e.programId"
+      + " where (lower(p.name) like :#{#dto.name} or :#{#dto.name} is null) "
       + " and (e.id = :#{#dto.id} or :#{#dto.id} is null) "
-      + " and (lower(e.code) like :#{#dto.code} or :#{#dto.code} is null) "
+      + " and (lower(p.code) like :#{#dto.code} or :#{#dto.code} is null) "
       + " and (e.price = :#{#dto.price} or :#{#dto.price} is null) "
       + " and (e.status <> 3 or :#{#dto.scheduled} <> 1) "
       + " and (e.status = :#{#dto.status} or :#{#dto.status} is null) "

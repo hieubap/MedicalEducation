@@ -60,7 +60,7 @@ public class ProgramServiceImpl extends
   @Override
   public Page<ProgramDTO> search(ProgramDTO dto, Pageable pageable) {
     if (!Strings.isNullOrEmpty(dto.getName())) {
-      dto.setName("%" + dto.getName().trim().replaceAll(" ", "%") + "%");
+      dto.setName("%" + dto.getName().toLowerCase().trim().replaceAll(" ", "%") + "%");
     }
     return super.search(dto, pageable);
   }

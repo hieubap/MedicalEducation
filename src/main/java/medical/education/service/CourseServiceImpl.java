@@ -213,14 +213,16 @@ public class CourseServiceImpl extends
   @PreAuthorize("hasAnyRole('ADMIN','TEACHER','STUDENT')")
   public Page<CourseDTO> search(CourseDTO dto, Pageable pageable) {
     if (dto.getName() != null) {
-      dto.setName("%" + dto.getName().trim().replaceAll(" ", "%") + "%");
+      dto.setName("%" + dto.getName().trim()
+          .replaceAll(" ", "%") + "%");
     }
     if (dto.getCode() != null) {
-      dto.setCode("%" + dto.getCode().trim().replaceAll(" ", "%") + "%");
+      dto.setCode("%" + dto.getCode().trim()
+          .replaceAll(" ", "%") + "%");
     }
     if (dto.getNameHealthFacility() != null) {
-      dto.setNameHealthFacility(
-          "%" + dto.getNameHealthFacility().trim().replaceAll(" ", "%") + "%");
+      dto.setNameHealthFacility("%" + dto.getNameHealthFacility()
+          .trim().replaceAll(" ", "%") + "%");
     }
     if (dto.getNameUserCreated() != null) {
       dto.setNameUserCreated("%" + dto.getNameUserCreated().trim().replaceAll(" ", "%") + "%");
@@ -228,7 +230,7 @@ public class CourseServiceImpl extends
     return super.search(dto, pageable);
   }
 
-  @Scheduled(cron = "0 0,15,30,45 * * * *")
+  @Scheduled(cron = "0 0 0 * * *")
   public void update() {
     List<CourseEntity> allCourse = repository.search(new CourseDTO(),
         PageRequest.of(0, Integer.MAX_VALUE)).toList();
@@ -250,7 +252,6 @@ public class CourseServiceImpl extends
         listSave.add(e);
       }
     }
-
     if (courseEntities.size() > 0) {
       NotificationEntity noti = new NotificationEntity();
       noti.setRole(RoleEnum.ADMIN.value);
@@ -260,7 +261,6 @@ public class CourseServiceImpl extends
       notificationRepository.save(noti);
     }
     getRepository().saveAll(listSave);
-
   }
 
   public String createContentNotification(List<CourseEntity> listCourse) {

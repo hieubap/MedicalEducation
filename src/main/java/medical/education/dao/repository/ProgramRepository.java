@@ -15,7 +15,7 @@ public interface ProgramRepository extends BaseRepository<ProgramEntity, Program
       + " where (e.id = :#{#dto.id} or :#{#dto.id} is null)"
       + " and (lower(e.name) like :#{#dto.name} or :#{#dto.name} is null)"
       + " and (:#{#dto.numberTurn} = (select count(c) from CourseEntity c where (c.id = e.id))"
-      + "   or :#{#dto.name} is null)")
+      + "   or :#{#dto.numberTurn} is null)")
   Page<ProgramEntity> search(ProgramDTO dto, Pageable pageable);
 
   @Query("select case when count (e) > 0 then true else false end from ProgramEntity e"

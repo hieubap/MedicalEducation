@@ -65,7 +65,8 @@ public class RegisterServiceImpl extends
     super.beforeSave(entity, dto);
     UserDTO currentUser = userService.getCurrentUser();
     if (dto.getCourseId() == null || !courseRepository.existsById(dto.getCourseId())) {
-      throw new BaseException(400, Message.getMessage("Null.Or.Not.Exist", new Object[]{"code"}));
+      throw new BaseException(400,
+          Message.getMessage("Null.Or.Not.Exist", new Object[]{"code"}));
     }
 
     if (currentUser.getRole().equals(RoleEnum.ADMIN)) {
@@ -85,18 +86,13 @@ public class RegisterServiceImpl extends
     } else {
       // sinh viên đăng ký khóa nếu role là sinh viên
       entity.setStudentId(userService.getCurrentUserId());
-//    CourseEntity courseEntity = courseRepository.findByCode(dto.getCode());
-
-//    if (e != null && !e.getStatus().equals(RegisterEnum.DONED)) {
-//      throw new BaseException(400,
-//          Message.getMessage("Has.Register.Course", new Object[]{e.getCourse().getName()}));
-//    }
 
       RegisterEntity e = registerRepository.findByCourseIdAndStudentId(
           currentUser.getCurrentCourseId(), userService.getCurrentUserId());
       if (currentUser.getCurrentCourseId() != null) {
         throw new BaseException(410,
-            Message.getMessage("Has.Register.Course", new Object[]{e.getCourse().getProgramEntity().getName()}));
+            Message.getMessage("Has.Register.Course",
+                new Object[]{e.getCourse().getProgramEntity().getName()}));
       } else {
         CourseEntity entityCourse = courseRepository.findById(dto.getCourseId()).get();
         if (entityCourse.getRegisters() != null) {
@@ -164,9 +160,6 @@ public class RegisterServiceImpl extends
       throw new BaseException(411, Message.getMessage("Cant.cancel.course"));
     }
     UserDTO currentUser = userService.getCurrentUser();
-
-    CourseEntity courseEntity = courseRepository.findById(entity.getCourseId()).get();
-    courseRepository.save(courseEntity);
 
     ResultDTO searchDTO = new ResultDTO();
     searchDTO.setStudentId(currentUser.getId());
