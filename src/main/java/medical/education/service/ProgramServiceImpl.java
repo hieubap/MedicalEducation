@@ -62,6 +62,9 @@ public class ProgramServiceImpl extends
     if (!Strings.isNullOrEmpty(dto.getName())) {
       dto.setName("%" + dto.getName().toLowerCase().trim().replaceAll(" ", "%") + "%");
     }
+    if (!Strings.isNullOrEmpty(dto.getCode())) {
+      dto.setCode("%" + dto.getCode().toLowerCase().trim().replaceAll(" ", "%") + "%");
+    }
     return super.search(dto, pageable);
   }
 
