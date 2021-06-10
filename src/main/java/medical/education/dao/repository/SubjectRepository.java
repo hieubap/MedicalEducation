@@ -1,5 +1,6 @@
 package medical.education.dao.repository;
 
+import java.util.List;
 import medical.education.dao.model.SubjectEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,4 +22,7 @@ public interface SubjectRepository extends BaseRepository<SubjectEntity, Subject
   Integer countAll();
 
   boolean existsByNameAndTypeAndLesson(String name, String type, Integer lesson);
+
+  @Query(" select distinct e.name from SubjectEntity e where e.deleted = 0")
+  List<String> getDistinctSubject();
 }

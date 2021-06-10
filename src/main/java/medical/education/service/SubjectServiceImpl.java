@@ -2,6 +2,7 @@ package medical.education.service;
 
 import com.google.common.base.Strings;
 import java.text.Normalizer;
+import java.util.List;
 import medical.education.dao.model.SubjectEntity;
 import medical.education.dao.repository.SubjectRepository;
 import medical.education.dto.SubjectDTO;
@@ -60,13 +61,8 @@ public class SubjectServiceImpl extends
     return super.search(dto, pageable);
   }
 
-  //  @Scheduled(cron = "0,20,40 * * * * *")
-//  public void schedule(){
-//    List<SubjectEntity> list = (List<SubjectEntity>) repository.findAll();
-//    for (SubjectEntity c : list){
-//      String code = c.getShortName() + String.format("_%04d",c.getId());
-//      c.setCode(code);
-//    }
-//    repository.saveAll(list);
-//  }
+  @Override
+  public List<String> getDistinctSubject() {
+    return repository.getDistinctSubject();
+  }
 }
