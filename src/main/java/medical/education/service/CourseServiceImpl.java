@@ -227,7 +227,8 @@ public class CourseServiceImpl extends
     if (dto.getNameUserCreated() != null) {
       dto.setNameUserCreated("%" + dto.getNameUserCreated().trim().replaceAll(" ", "%") + "%");
     }
-    return super.search(dto, pageable);
+    Page<CourseDTO> courseDTOS = repository.search(dto,pageable).map(entity -> getModelMapper().map(entity,CourseDTO.class));
+    return courseDTOS;
   }
 
   @Scheduled(cron = "0 0 0 * * *")
