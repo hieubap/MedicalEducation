@@ -28,4 +28,6 @@ public class RegisterDTO extends BaseDTO {
   private String kind;
 
   private Integer semester;
+
+  private Object programInfo;
 }

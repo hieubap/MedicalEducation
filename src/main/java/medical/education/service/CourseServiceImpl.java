@@ -203,10 +203,6 @@ public class CourseServiceImpl extends
       }
 
     }
-//    if (entity.getRegisters() != null) {
-//      dto.setNumberRegister(entity.getRegisters().size());
-//    }
-
   }
 
   @Override
@@ -227,8 +223,7 @@ public class CourseServiceImpl extends
     if (dto.getNameUserCreated() != null) {
       dto.setNameUserCreated("%" + dto.getNameUserCreated().trim().replaceAll(" ", "%") + "%");
     }
-    Page<CourseDTO> courseDTOS = repository.search(dto,pageable).map(entity -> getModelMapper().map(entity,CourseDTO.class));
-    return courseDTOS;
+    return super.search(dto,pageable);
   }
 
   @Scheduled(cron = "0 0 0 * * *")

@@ -9,9 +9,11 @@ import medical.education.dao.model.RegisterEntity;
 import medical.education.dao.model.ResultEntity;
 import medical.education.dao.model.UserEntity;
 import medical.education.dao.repository.CourseRepository;
+import medical.education.dao.repository.ProgramRepository;
 import medical.education.dao.repository.RegisterRepository;
 import medical.education.dao.repository.ResultRepository;
 import medical.education.dao.repository.UserRepository;
+import medical.education.dto.ProgramDTO;
 import medical.education.dto.RegisterDTO;
 import medical.education.dto.ResultDTO;
 import medical.education.dto.UserDTO;
@@ -54,6 +56,9 @@ public class RegisterServiceImpl extends
 
   @Autowired
   private ResultRepository resultRepository;
+
+  @Autowired
+  private ProgramRepository programRepository;
 
   @Override
   protected RegisterRepository getRepository() {
@@ -136,8 +141,8 @@ public class RegisterServiceImpl extends
 
   @Override
   public Page<RegisterDTO> search(RegisterDTO dto, Pageable pageable) {
-//    dto.setStudentId(userService.getCurrentUserId());
-    return super.search(dto, pageable);
+    Page<RegisterDTO> registerDTOS = registerRepository.search(dto,pageable).map(entity -> getModelMapper().map(entity,RegisterDTO.class));
+    return registerDTOS;
   }
 
   @Override
@@ -145,6 +150,7 @@ public class RegisterServiceImpl extends
     super.specificMapToDTO(entity, dto);
     dto.setStudentInfo(userService.findDetailById(entity.getStudentId()));
     dto.setCourseInfo(courseService.findDetailById(entity.getCourseId()));
+    dto.setProgramInfo(programRepository.findById(entity.getCourseId()));
   }
 
   @Override
