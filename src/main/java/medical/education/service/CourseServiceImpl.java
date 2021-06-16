@@ -179,7 +179,7 @@ public class CourseServiceImpl extends
     if (entity.getProgramEntity() != null) {
       dto.setProgramInfo(programService.findById(entity.getProgramId()));
     }
-    if (entity.getMapAllProperties()) {
+
       if (entity.getSchedules() != null) {
         List<ScheduleDTO> scheduleDTOS = new ArrayList<>();
         for (ScheduleEntity e : entity.getSchedules()) {
@@ -191,7 +191,11 @@ public class CourseServiceImpl extends
       }
       if (entity.getProgramEntity().getSubjects() != null) {
         List<SubjectDTO> subjects = new ArrayList<>();
+        Integer countLesson = 0;
         for (SubjectEntity e : entity.getProgramEntity().getSubjects()) {
+          if(e.getLesson()!=null) {
+            countLesson += e.getLesson();
+          }
           SubjectDTO sj = subjectService.findById(e.getId());
           if(scheduleRepository.existsByCourseIdAndSubjectId(entity.getId(), e.getId()))
           {
@@ -200,9 +204,8 @@ public class CourseServiceImpl extends
           subjects.add(sj);
         }
         dto.getProgramInfo().setListSubjects(subjects);
+        dto.setNumberLesson(countLesson);
       }
-
-    }
   }
 
   @Override
