@@ -140,12 +140,6 @@ public class RegisterServiceImpl extends
   }
 
   @Override
-  public Page<RegisterDTO> search(RegisterDTO dto, Pageable pageable) {
-    Page<RegisterDTO> registerDTOS = registerRepository.search(dto,pageable).map(entity -> getModelMapper().map(entity,RegisterDTO.class));
-    return registerDTOS;
-  }
-
-  @Override
   protected void specificMapToDTO(RegisterEntity entity, RegisterDTO dto) {
     super.specificMapToDTO(entity, dto);
     dto.setStudentInfo(userService.findDetailById(entity.getStudentId()));
