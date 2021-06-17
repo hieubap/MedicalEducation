@@ -32,6 +32,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import spring.backend.library.exception.BaseException;
+import spring.backend.library.exception.DataException.NotFoundEntityById;
 import spring.backend.library.service.AbstractBaseService;
 
 @Service
@@ -177,35 +178,40 @@ public class CourseServiceImpl extends
     super.specificMapToDTO(entity, dto);
     dto.setNumberRegister(registerRepository.countByCourseId(entity.getId()));
     if (entity.getProgramEntity() != null) {
-      dto.setProgramInfo(programService.findById(entity.getProgramId()));
+        dto.setProgramInfo(programService.findById(entity.getProgramEntity().getId()));
     }
 
-      if (entity.getSchedules() != null) {
-        List<ScheduleDTO> scheduleDTOS = new ArrayList<>();
-        for (ScheduleEntity e : entity.getSchedules()) {
-          ScheduleDTO scheduleDTO = scheduleService.findById(e.getId());
-          if (scheduleDTO.getChangeScheduleId() == null)
-          scheduleDTOS.add(scheduleDTO);
-        }
-        dto.setListSchedules(scheduleDTOS);
-      }
-      if (entity.getProgramEntity().getSubjects() != null) {
-        List<SubjectDTO> subjects = new ArrayList<>();
-        Integer countLesson = 0;
-        for (SubjectEntity e : entity.getProgramEntity().getSubjects()) {
-          if(e.getLesson()!=null) {
-            countLesson += e.getLesson();
+    if (entity.getSchedules() != null) {
+      List<ScheduleDTO> scheduleDTOS = new ArrayList<>();
+      for (ScheduleEntity e : entity.getSchedules()) {
+        ScheduleDTO scheduleDTO = scheduleService.findById(e.getId());
+        if (scheduleDTO != null) {
+          if (scheduleDTO.getChangeScheduleId() == null) {
+            scheduleDTOS.add(scheduleDTO);
           }
-          SubjectDTO sj = subjectService.findById(e.getId());
-          if(scheduleRepository.existsByCourseIdAndSubjectId(entity.getId(), e.getId()))
-          {
+        }
+      }
+      dto.setListSchedules(scheduleDTOS);
+    }
+    if (entity.getProgramEntity().getSubjects() != null) {
+      List<SubjectDTO> subjects = new ArrayList<>();
+      Integer countLesson = 0;
+      for (SubjectEntity e : entity.getProgramEntity().getSubjects()) {
+        if (e.getLesson() != null) {
+          countLesson += e.getLesson();
+        }
+        SubjectDTO sj = subjectService.findById(e.getId());
+        if (sj != null) {
+          if (scheduleRepository.existsByCourseIdAndSubjectId(entity.getId(), e.getId())) {
             sj.setHasScheduled(true);
           }
           subjects.add(sj);
         }
-        dto.getProgramInfo().setListSubjects(subjects);
-        dto.setNumberLesson(countLesson);
+
       }
+      dto.getProgramInfo().setListSubjects(subjects);
+      dto.setNumberLesson(countLesson);
+    }
   }
 
   @Override
@@ -226,7 +232,7 @@ public class CourseServiceImpl extends
     if (dto.getNameUserCreated() != null) {
       dto.setNameUserCreated("%" + dto.getNameUserCreated().trim().replaceAll(" ", "%") + "%");
     }
-    return super.search(dto,pageable);
+    return super.search(dto, pageable);
   }
 
   @Scheduled(cron = "0 0 0 * * *")

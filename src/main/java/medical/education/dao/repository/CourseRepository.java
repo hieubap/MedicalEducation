@@ -1,6 +1,9 @@
 package medical.education.dao.repository;
 
+import java.util.List;
+import java.util.Optional;
 import medical.education.dao.model.CourseEntity;
+import medical.education.dao.model.ProgramEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
@@ -46,4 +49,6 @@ public interface CourseRepository extends BaseRepository<CourseEntity, CourseDTO
   boolean existsByCode(String code);
 
   Integer countByProgramId(Long programId);
+
+  Optional<List<CourseEntity>> findByProgramId(Long id);
 }

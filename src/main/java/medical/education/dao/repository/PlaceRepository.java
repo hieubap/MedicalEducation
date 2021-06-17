@@ -1,5 +1,7 @@
 package medical.education.dao.repository;
 
+import java.util.List;
+import java.util.Optional;
 import medical.education.dao.model.PlaceEntity;
 import medical.education.dto.PlaceDTO;
 import org.springframework.data.domain.Page;
@@ -16,4 +18,6 @@ public interface PlaceRepository extends BaseRepository<PlaceEntity, PlaceDTO, L
   Page<PlaceEntity> search(PlaceDTO dto, Pageable pageable);
 
   boolean existsByAddress(String address);
+
+  Optional<List<PlaceEntity>> findByHealthFacilityId(Long id);
 }

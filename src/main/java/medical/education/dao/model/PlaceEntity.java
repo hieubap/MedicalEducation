@@ -21,7 +21,7 @@ import spring.backend.library.dao.model.BaseEntity;
 @Entity
 @Table(name = "place")
 @Where(clause = "deleted = 0")
-public class PlaceEntity extends BaseEntity {
+public class  PlaceEntity extends BaseEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

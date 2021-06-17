@@ -1,9 +1,13 @@
 package medical.education.service;
 
 import com.google.common.base.Strings;
+import java.util.List;
 import medical.education.dao.model.HealthFacilityEntity;
+import medical.education.dao.model.PlaceEntity;
 import medical.education.dao.repository.HealthFacilityRepository;
+import medical.education.dao.repository.PlaceRepository;
 import medical.education.dto.HealthFacilityDTO;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,6 +24,9 @@ public class HealthFacilityServiceImpl extends
 
   @Autowired
   private HealthFacilityRepository healthFacilityRepository;
+
+  @Autowired
+  private PlaceRepository placeRepository;
 
   @Override
   protected HealthFacilityRepository getRepository() {
@@ -60,5 +67,14 @@ public class HealthFacilityServiceImpl extends
     }
 
     return super.search(dto, pageable);
+  }
+
+  @Override
+  protected void beforeDelete(Long id) {
+    super.beforeDelete(id);
+    List<PlaceEntity> placeEntities = placeRepository.findByHealthFacilityId(id).orElse(null);
+    if (placeEntities != null) {
+      placeEntities.forEach(placeEntity -> placeRepository.deleteById(placeEntity.getId()));
+    }
   }
 }
