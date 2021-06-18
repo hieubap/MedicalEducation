@@ -184,27 +184,29 @@ public class CourseServiceImpl extends
       List<ScheduleDTO> scheduleDTOS = new ArrayList<>();
       for (ScheduleEntity e : entity.getSchedules()) {
         ScheduleDTO scheduleDTO = scheduleService.findById(e.getId());
-        if (scheduleDTO.getChangeScheduleId() == null)
+        if (scheduleDTO.getChangeScheduleId() == null) {
           scheduleDTOS.add(scheduleDTO);
+        }
       }
       dto.setListSchedules(scheduleDTOS);
     }
-    if (entity.getProgramEntity().getSubjects() != null) {
-      List<SubjectDTO> subjects = new ArrayList<>();
-      Integer countLesson = 0;
-      for (SubjectEntity e : entity.getProgramEntity().getSubjects()) {
-        if(e.getLesson()!=null) {
-          countLesson += e.getLesson();
+    if (entity.getProgramEntity() != null) {
+      if (entity.getProgramEntity().getSubjects() != null) {
+        List<SubjectDTO> subjects = new ArrayList<>();
+        Integer countLesson = 0;
+        for (SubjectEntity e : entity.getProgramEntity().getSubjects()) {
+          if (e.getLesson() != null) {
+            countLesson += e.getLesson();
+          }
+          SubjectDTO sj = subjectService.findById(e.getId());
+          if (scheduleRepository.existsByCourseIdAndSubjectId(entity.getId(), e.getId())) {
+            sj.setHasScheduled(true);
+          }
+          subjects.add(sj);
         }
-        SubjectDTO sj = subjectService.findById(e.getId());
-        if(scheduleRepository.existsByCourseIdAndSubjectId(entity.getId(), e.getId()))
-        {
-          sj.setHasScheduled(true);
-        }
-        subjects.add(sj);
+        dto.getProgramInfo().setListSubjects(subjects);
+        dto.setNumberLesson(countLesson);
       }
-      dto.getProgramInfo().setListSubjects(subjects);
-      dto.setNumberLesson(countLesson);
     }
   }
 
@@ -226,7 +228,7 @@ public class CourseServiceImpl extends
     if (dto.getNameUserCreated() != null) {
       dto.setNameUserCreated("%" + dto.getNameUserCreated().trim().replaceAll(" ", "%") + "%");
     }
-    return super.search(dto,pageable);
+    return super.search(dto, pageable);
   }
 
   @Scheduled(cron = "0 0 0 * * *")
