@@ -68,5 +68,5 @@ public class CourseDTO extends BaseDTO {
 
   private Integer scheduled = 0;
 
-  private java.sql.Date date;
+  private String date;
 }

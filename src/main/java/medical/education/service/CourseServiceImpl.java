@@ -229,7 +229,7 @@ public class CourseServiceImpl extends
       dto.setNameUserCreated("%" + dto.getNameUserCreated().trim().replaceAll(" ", "%") + "%");
     }
     if (dto.getStatus() == 1) {
-      dto.setDate(new java.sql.Date(System.currentTimeMillis()));
+      dto.setDate(new java.sql.Date(System.currentTimeMillis()).toString());
     }
     return super.search(dto, pageable);
   }
