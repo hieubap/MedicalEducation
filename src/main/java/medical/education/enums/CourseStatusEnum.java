@@ -4,9 +4,10 @@ import spring.backend.library.enums.IEnum;
 
 public enum CourseStatusEnum implements IEnum {
 
-  THOI_GIAN_DANG_KI((short)1,"Thời gian đăng kí"),
-  DANG_HOC((short) 2,"Đang học"),
-  HOAN_THANH((short) 3,"Hoàn Thành");
+  THOI_GIAN_DANG_KI((short) 1, "Thời gian đăng kí"),
+  DANG_HOC((short) 2, "Đang học"),
+  HOAN_THANH((short) 3, "Hoàn Thành"),
+  HUY_KHOA((short) 4, "Hủy");
 
   private short value;
   private String name;

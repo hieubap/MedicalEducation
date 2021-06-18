@@ -245,8 +245,13 @@ public class CourseServiceImpl extends
       }
       if (e.getNgayKhaiGiang() != null && e.getNgayKhaiGiang().before(new Date())
           && e.getStatus().equals(CourseStatusEnum.THOI_GIAN_DANG_KI.getValue())) {
-        e.setStatus(CourseStatusEnum.DANG_HOC.getValue());
-        listSave.add(e);
+        if (e.getRegisters() == null ){
+//            e.setStatus(CourseStatusEnum.HUY_KHOA.getValue());
+//            listSave.add(e);
+        }else {
+          e.setStatus(CourseStatusEnum.DANG_HOC.getValue());
+          listSave.add(e);
+        }
       } else if (e.getNgayKetThuc() != null && e.getNgayKetThuc().before(new Date())
           && e.getStatus().equals(CourseStatusEnum.DANG_HOC.getValue())) {
         e.setStatus(CourseStatusEnum.HOAN_THANH.getValue());
