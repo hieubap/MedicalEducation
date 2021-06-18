@@ -19,7 +19,7 @@ public interface CourseRepository extends BaseRepository<CourseEntity, CourseDTO
       + " and (lower(p.code) like :#{#dto.code} or :#{#dto.code} is null) "
       + " and (e.programId = :#{#dto.programId} or :#{#dto.programId} is null)"
       + " and (e.price = :#{#dto.price} or :#{#dto.price} is null) "
-      + " and ((e.status = :#{#dto.status} or :#{#dto.status} is null) and (e.ngayKhaiGiang >= current_date))"
+      + " and ((e.status = :#{#dto.status} or :#{#dto.status} is null or (:#{#dto.status.intValue()} = 1 and e.ngayKhaiGiang >= current_date)))"
       + " and (e.semester = :#{#dto.semester} or :#{#dto.semester} is null) "
       + " and (e.numberLesson = :#{#dto.numberLesson} or :#{#dto.numberLesson} is null) "
       + " and (e.limitRegister = :#{#dto.limitRegister} or :#{#dto.limitRegister} is null) "
