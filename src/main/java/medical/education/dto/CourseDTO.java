@@ -67,4 +67,6 @@ public class CourseDTO extends BaseDTO {
   private ProgramDTO programInfo;
 
   private Integer scheduled = 0;
+
+  private java.sql.Date date;
 }

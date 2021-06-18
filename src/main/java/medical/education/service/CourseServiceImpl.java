@@ -228,6 +228,9 @@ public class CourseServiceImpl extends
     if (dto.getNameUserCreated() != null) {
       dto.setNameUserCreated("%" + dto.getNameUserCreated().trim().replaceAll(" ", "%") + "%");
     }
+    if (dto.getStatus() == 1) {
+      dto.setDate(new java.sql.Date(System.currentTimeMillis()));
+    }
     return super.search(dto, pageable);
   }
 
@@ -245,10 +248,10 @@ public class CourseServiceImpl extends
       }
       if (e.getNgayKhaiGiang() != null && e.getNgayKhaiGiang().before(new Date())
           && e.getStatus().equals(CourseStatusEnum.THOI_GIAN_DANG_KI.getValue())) {
-        if (e.getRegisters() == null ){
+        if (e.getRegisters() == null) {
 //            e.setStatus(CourseStatusEnum.HUY_KHOA.getValue());
 //            listSave.add(e);
-        }else {
+        } else {
           e.setStatus(CourseStatusEnum.DANG_HOC.getValue());
           listSave.add(e);
         }
