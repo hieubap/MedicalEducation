@@ -144,7 +144,7 @@ public class CourseServiceImpl extends
       throw new BaseException(480, "Khóa học không tồn tại");
     }
     CourseEntity entity = getRepository().findById(id).get();
-    if (entity.getStatus().equals(CourseStatusEnum.DANG_HOC.getValue()) ) {
+    if (entity.getStatus().equals(CourseStatusEnum.DANG_HOC.getValue())) {
       throw new BaseException(481, "Không thể xóa khóa học trong thời gian học");
     } else {
       List<UserEntity> listRegister = entity.getRegisters();
@@ -228,7 +228,7 @@ public class CourseServiceImpl extends
     if (dto.getNameUserCreated() != null) {
       dto.setNameUserCreated("%" + dto.getNameUserCreated().trim().replaceAll(" ", "%") + "%");
     }
-    if (dto.getStatus() == 1) {
+    if (dto.getStatus() != null && dto.getStatus() == 1) {
       dto.setDate(new java.sql.Date(System.currentTimeMillis()).toString());
     }
     return super.search(dto, pageable);
@@ -249,8 +249,8 @@ public class CourseServiceImpl extends
       if (e.getNgayKhaiGiang() != null && e.getNgayKhaiGiang().before(new Date())
           && e.getStatus().equals(CourseStatusEnum.THOI_GIAN_DANG_KI.getValue())) {
         if (e.getRegisters() == null) {
-            e.setStatus(CourseStatusEnum.HUY_KHOA.getValue());
-            listSave.add(e);
+          e.setStatus(CourseStatusEnum.HUY_KHOA.getValue());
+          listSave.add(e);
         } else {
           e.setStatus(CourseStatusEnum.DANG_HOC.getValue());
           listSave.add(e);
