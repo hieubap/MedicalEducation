@@ -74,7 +74,10 @@ public class HealthFacilityServiceImpl extends
     super.beforeDelete(id);
     List<PlaceEntity> placeEntities = placeRepository.findByHealthFacilityId(id).orElse(null);
     if (placeEntities != null) {
-      placeEntities.forEach(placeEntity -> placeRepository.deleteById(placeEntity.getId()));
+      placeEntities.forEach(placeEntity -> {
+        placeEntity.setHealthFacilityId(null);
+        placeRepository.save(placeEntity);
+      });
     }
   }
 }

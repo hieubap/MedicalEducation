@@ -101,9 +101,11 @@ public class ProgramServiceImpl extends
   protected void beforeDelete(Long id) {
     super.beforeDelete(id);
     List<CourseEntity> courseEntities = courseRepository.findByProgramId(id).orElse(null);
-
     if (courseEntities != null) {
-      courseEntities.forEach(e -> courseRepository.deleteById(e.getId()));
+      courseEntities.forEach(e -> {
+        e.setProgramId(null);
+        courseRepository.save(e);
+      });
     }
   }
 }
