@@ -88,9 +88,11 @@ public class CourseServiceImpl extends
       dto.setCode(newCode);
       entity.setCode(newCode);
     }
-
-    if (!getRepository().choPhepMoKhoaMoi(dto.getProgramId(), dto.getHealthFacilityId())) {
-      throw new BaseException("Khóa đang trong trạng thái đăng kí k thể mở");
+    if (getRepository().existsByProgramIdAndHealthFacilityId(dto.getProgramId(),
+        dto.getHealthFacilityId())) {
+      if (!getRepository().choPhepMoKhoaMoi(dto.getProgramId(), dto.getHealthFacilityId())) {
+        throw new BaseException("Khóa đang trong trạng thái đăng kí k thể mở");
+      }
     }
 
 //    if (dto.getSemester() == null) {

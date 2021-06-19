@@ -61,5 +61,7 @@ public interface CourseRepository extends BaseRepository<CourseEntity, CourseDTO
           + " where 1 = 1 "
           + " and (p.id = ?1)"
           + " and (h.id = ?2)")
-  boolean choPhepMoKhoaMoi(Long id1, Long id2);
+  Boolean choPhepMoKhoaMoi(Long id1, Long id2);
+
+  boolean existsByProgramIdAndHealthFacilityId(Long id1, Long id2);
 }
