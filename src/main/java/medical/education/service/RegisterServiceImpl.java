@@ -147,7 +147,7 @@ public class RegisterServiceImpl extends
     super.specificMapToDTO(entity, dto);
     dto.setStudentInfo(userService.findDetailById(entity.getStudentId()));
     dto.setCourseInfo(courseService.findDetailById(entity.getCourseId()));
-    dto.setProgramInfo(programService.findDetailById(entity.getCourseId()));
+    dto.setProgramInfo(programService.findDetailById(entity.getCourse().getProgramId()));
   }
 
   @Override
