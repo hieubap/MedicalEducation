@@ -60,6 +60,9 @@ public class RegisterServiceImpl extends
   @Autowired
   private ProgramRepository programRepository;
 
+  @Autowired
+  private ProgramService programService;
+
   @Override
   protected RegisterRepository getRepository() {
     return registerRepository;
@@ -144,7 +147,7 @@ public class RegisterServiceImpl extends
     super.specificMapToDTO(entity, dto);
     dto.setStudentInfo(userService.findDetailById(entity.getStudentId()));
     dto.setCourseInfo(courseService.findDetailById(entity.getCourseId()));
-    dto.setProgramInfo(programRepository.findById(entity.getCourseId()));
+    dto.setProgramInfo(programService.findDetailById(entity.getCourseId()));
   }
 
   @Override
