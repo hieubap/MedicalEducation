@@ -79,6 +79,11 @@ public class CourseEntity extends BaseEntity {
   private Integer limitRegister;
 
   /**
+   * giới hạn tối thiểu cho phép đăng kí
+   */
+  private Integer minRegister;
+
+  /**
    * cơ sở y tế
    */
   @Column(name = "health_facility_id")

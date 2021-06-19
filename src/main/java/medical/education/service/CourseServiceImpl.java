@@ -89,6 +89,10 @@ public class CourseServiceImpl extends
       entity.setCode(newCode);
     }
 
+    if (!getRepository().choPhepMoKhoaMoi(dto.getProgramId())) {
+      throw new BaseException("Khóa đang trong trạng thái đăng kí k thể mở");
+    }
+
 //    if (dto.getSemester() == null) {
 //      throw new BaseException(451, "Chưa nhập kỳ học");
 //    }
@@ -248,7 +252,7 @@ public class CourseServiceImpl extends
       }
       if (e.getNgayKhaiGiang() != null && e.getNgayKhaiGiang().before(new Date())
           && e.getStatus().equals(CourseStatusEnum.THOI_GIAN_DANG_KI.getValue())) {
-        if (e.getRegisters() == null) {
+        if (e.getRegisters() == null || e.getRegisters().size() < e.getMinRegister()) {
           e.setStatus(CourseStatusEnum.HUY_KHOA.getValue());
           listSave.add(e);
         } else {

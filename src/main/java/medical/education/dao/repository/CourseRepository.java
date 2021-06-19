@@ -10,7 +10,8 @@ import org.springframework.data.jpa.repository.Query;
 import spring.backend.library.dao.repository.BaseRepository;
 import medical.education.dto.CourseDTO;
 
-public interface CourseRepository extends BaseRepository<CourseEntity, CourseDTO,Long> {
+public interface CourseRepository extends BaseRepository<CourseEntity, CourseDTO, Long> {
+
   @Override
   @Query("select e from CourseEntity e "
       + "   join ProgramEntity p on p.id = e.programId"
@@ -30,21 +31,21 @@ public interface CourseRepository extends BaseRepository<CourseEntity, CourseDTO
   Page<CourseEntity> search(CourseDTO dto, Pageable pageable);
 
   @Query("select case when count (e) > 0 then true else false end from CourseEntity e"
-          + " where 1 = 1"
-          + " and (e.name = :name)"
-          + " and ( :id is null or e.id <> :id ) ")
+      + " where 1 = 1"
+      + " and (e.name = :name)"
+      + " and ( :id is null or e.id <> :id ) ")
   Boolean existsByNameAndId(String name, Long id);
 
   @Query("select case when count(e) > 0 then true else false end from CourseEntity e "
       + "where 1=1 "
       + "and (e.code = :#{#code})"
-      + "and (e.id <> :#{#id})" )
-  boolean existsByCode(String code,Long id);
+      + "and (e.id <> :#{#id})")
+  boolean existsByCode(String code, Long id);
 
   @Query("select case when count (e) > 0 then true else false end from CourseEntity e"
-          + " where 1 = 1"
-          + " and (e.code = :code)"
-          + " and ( :id is null or e.id <> :id ) ")
+      + " where 1 = 1"
+      + " and (e.code = :code)"
+      + " and ( :id is null or e.id <> :id ) ")
   Boolean existsByCodeAndId(String code, Long id);
 
   boolean existsByCode(String code);
@@ -52,4 +53,11 @@ public interface CourseRepository extends BaseRepository<CourseEntity, CourseDTO
   Integer countByProgramId(Long programId);
 
   Optional<List<CourseEntity>> findByProgramId(Long id);
+
+  @Query(
+      "select case when e.status = 1 then false else true end from CourseEntity e "
+          + "inner join e.programEntity p"
+          + " where 1 = 1 "
+          + " and (p.id = ?1)")
+  boolean choPhepMoKhoaMoi(Long id);
 }
