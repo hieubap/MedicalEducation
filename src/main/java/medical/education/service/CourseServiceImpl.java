@@ -89,7 +89,7 @@ public class CourseServiceImpl extends
       entity.setCode(newCode);
     }
 
-    if (!getRepository().choPhepMoKhoaMoi(dto.getProgramId())) {
+    if (!getRepository().choPhepMoKhoaMoi(dto.getProgramId(), dto.getHealthFacilityId())) {
       throw new BaseException("Khóa đang trong trạng thái đăng kí k thể mở");
     }
 

@@ -56,8 +56,10 @@ public interface CourseRepository extends BaseRepository<CourseEntity, CourseDTO
 
   @Query(
       "select case when e.status = 1 then false else true end from CourseEntity e "
-          + "inner join e.programEntity p"
+          + "left join e.programEntity p "
+          + "left join e.healthFacility h"
           + " where 1 = 1 "
-          + " and (p.id = ?1)")
-  boolean choPhepMoKhoaMoi(Long id);
+          + " and (p.id = ?1)"
+          + " and (h.id = ?2)")
+  boolean choPhepMoKhoaMoi(Long id1, Long id2);
 }
