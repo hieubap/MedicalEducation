@@ -62,7 +62,7 @@ public class ScheduleEntity extends BaseEntity {
    * 0 bản ghi thường
    * 1 bản ghi giả chứa thông tin thay đổi
    */
-  private Short status = 1;
+  private Short status = 0;
 
   /**
    * khóa học
