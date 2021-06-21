@@ -138,9 +138,11 @@ public class ScheduleServiceImpl extends
     }
 //    dto.setCourseInfo(courseService.findById(entity.getCourseId()));
     if (entity.getCourseId() != null) {
-      CourseEntity course = courseRepository.findById(entity.getCourseId()).get();
-      dto.setNameCourse(course.getProgramEntity().getName());
-      dto.setCodeCourse(course.getProgramEntity().getCode());
+      CourseEntity course = courseRepository.findById(entity.getCourseId()).orElse(null);
+      if(course!=null) {
+        dto.setNameCourse(course.getProgramEntity().getName());
+        dto.setCodeCourse(course.getProgramEntity().getCode());
+      }
     }
     dto.setSubjectInfo(subjectService.findById(entity.getSubjectId()));
     dto.setPlaceInfo(placeService.findById(entity.getPlaceId()));
