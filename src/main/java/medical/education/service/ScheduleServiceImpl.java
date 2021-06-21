@@ -1,5 +1,10 @@
 package medical.education.service;
 
+import java.sql.Date;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import medical.education.dao.model.CourseEntity;
 import medical.education.dao.model.ScheduleEntity;
 import medical.education.dao.repository.CourseRepository;
@@ -19,6 +24,8 @@ import org.springframework.stereotype.Service;
 import spring.backend.library.exception.BaseException;
 import spring.backend.library.msg.Message;
 import spring.backend.library.service.AbstractBaseService;
+import spring.backend.library.util.DateUtil;
+import spring.backend.library.utils.DateUtils;
 
 @Service
 public class ScheduleServiceImpl extends
@@ -86,12 +93,32 @@ public class ScheduleServiceImpl extends
     if (dto.getKipHoc() == null) {
       throw new BaseException(400, Message.getMessage("data.null", new Object[]{"Kíp học"}));
     }
+    kiemTraLopHoc(dto.getTeacherId(),dto.getDates(),dto.getKipHoc());
   }
 
-  private void kiemTraLopHoc(Short kipHoc, Short day, Long courseId) {
-    if (getRepository().checkExistByDayAndKipHoc(kipHoc, day, courseId)) {
-      throw new BaseException(400, "Trùng lịch");
+  private void kiemTraLopHoc(Long id, String dtoDate, Short kipHoc) {
+    List<ScheduleEntity> scheduleEntityList = getRepository().findByTeacherId(id).orElse(null);
+    if (scheduleEntityList == null) {
+      return;
+    } else {
+
+      String[] dateCheck = dtoDate.replace("[", "").replace("]", "").replace("\"", "").split(",");
+
+      for (ScheduleEntity s : scheduleEntityList) {
+        String date = s.getDates().replace("[", "").replace("]", "").replace("\"", "");
+        String[] datess = date.split(",");
+        int kip = s.getKipHoc();
+        for (int i = 0; i < dateCheck.length; i++) {
+          for (int j = 0; j < datess.length; j++) {
+              if(dateCheck[i].equals(datess[j]) && kip == kipHoc){
+                throw new BaseException("Trùng lịch");
+              }
+          }
+        }
+      }
     }
+
+    return;
   }
 
   @Override

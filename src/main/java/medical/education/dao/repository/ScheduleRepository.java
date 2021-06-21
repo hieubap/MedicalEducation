@@ -1,7 +1,10 @@
 package medical.education.dao.repository;
 
+import java.util.List;
+import java.util.Optional;
 import medical.education.dao.model.ScheduleEntity;
 import medical.education.dto.ScheduleDTO;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
@@ -37,14 +40,10 @@ public interface ScheduleRepository extends BaseRepository<ScheduleEntity, Sched
       + "and (e.day = :day)")
   Boolean checkExistByDayAndKipHoc(Short kipHoc, Short day, Long id);
 
-//  @Query("select case when count(e) > 0 then true else false end from ScheduleEntity e "
+  //  @Query("select case when count(e) > 0 then true else false end from ScheduleEntity e "
 //      + "where 1=1 "
 //      + " and (e.courseId = :#{#dto.courseId} or :#{#dto.courseId} is null) ")
   Boolean existsByCourseIdAndSubjectId(Long courseId, Long subjectId);
-//  @Query("select case when count(e) > 0 then true else false end from ScheduleEntity e "
-//      + "where (e.kipHoc = :#{#kipHoc})"
-//      + " and (e.day = :#{#day})"
-//      + " and (e.teacherId = :#{#teacherId})")
-//  Boolean checkSchedule(Short kipHoc, Short day, Long placeId, Long courseId, Long subjectId,
-//      Long teacherId, Long id);
+
+  Optional<List<ScheduleEntity>> findByTeacherId(Long id);
 }
