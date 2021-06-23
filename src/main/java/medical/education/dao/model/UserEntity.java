@@ -75,6 +75,16 @@ public class UserEntity extends BaseEntity {
    */
   private RoleEnum role;
 
+  /**
+   * KHóa đang học hiện tại
+   */
+  @JoinColumn(name = "current_course")
+  private Long currentCourseId;
+
+  @OneToOne
+  @JoinColumn(name = "current_course",updatable = false,insertable = false)
+  private CourseEntity currentCourse;
+
 //  @Column(name = "role_id")
 //  private Long roleId;
 //

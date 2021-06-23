@@ -195,29 +195,21 @@ public class RegisterServiceImpl extends
           e.getStatus().equals(RegisterEnum.STUDYING)) {
         e.setStatus(RegisterEnum.WAIT_TEACHER);
         listSave.add(e);
-        boolean check = false;
-        for(ResultEntity f :  e.getResults()){
-          if(f.getMidPoint() == null || f.getEndPoint() == null){
-            check = true;
-          }
-        }
-        if(!check){
+      }
 
-          // tính điểm trung bình
-          Double total = 0.0;
-          int count = 0;
-          for (ResultEntity r : e.getResults()) {
-            if (r.getTotal() != null) {
-              total += r.getTotal();
-              count++;
-            }
-          }
-          if (count > 0) {
-            total = total / count;
-            e.setTotal(total);
-            e.setKind(applyKind(total));
-          }
+      // tính điểm trung bình
+      Double total = 0.0;
+      int count = 0;
+      for (ResultEntity r : e.getResults()) {
+        if (r.getTotal() != null) {
+          total += r.getTotal();
+          count++;
         }
+      }
+      if (count > 0) {
+        total = total / count;
+        e.setTotal(total);
+        e.setKind(applyKind(total));
       }
     }
     registerRepository.saveAll(listSave);
