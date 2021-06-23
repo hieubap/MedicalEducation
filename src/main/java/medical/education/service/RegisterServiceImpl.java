@@ -180,7 +180,7 @@ public class RegisterServiceImpl extends
   }
 
   // Cập nhật trạng thái và tính điểm trung bình
-  @Scheduled(cron = "0 0 1 * * *")
+  @Scheduled(fixedDelay = 30000)
   public void scheduleEveryDay() {
     List<RegisterEntity> allRegister = StreamSupport
         .stream(getRepository().findAll().spliterator(), false)
@@ -194,23 +194,39 @@ public class RegisterServiceImpl extends
       } else if (e.getCourse().getStatus().equals(CourseStatusEnum.HOAN_THANH.getValue()) &&
           e.getStatus().equals(RegisterEnum.STUDYING)) {
         e.setStatus(RegisterEnum.WAIT_TEACHER);
+
+        boolean daNhapHetDiem = true;
+
+        for (ResultEntity resultEntity : e.getResults()) {
+          if (resultEntity.getTotal() == null) {
+            daNhapHetDiem = false;
+          }
+        }
+        if (daNhapHetDiem) {
+          Double total = 0.0;
+          int count = 0;
+          for (ResultEntity r : e.getResults()) {
+            if (r.getTotal() != null) {
+              total += r.getTotal();
+              count++;
+            }
+          }
+          if (count > 0) {
+            total = total / count;
+            e.setTotal(total);
+            e.setKind(applyKind(total));
+          }
+          if (total >= 4) {
+            e.setStatus(RegisterEnum.DONED);
+          } else {
+            e.setStatus(RegisterEnum.FAIL);
+          }
+        }
         listSave.add(e);
       }
 
       // tính điểm trung bình
-      Double total = 0.0;
-      int count = 0;
-      for (ResultEntity r : e.getResults()) {
-        if (r.getTotal() != null) {
-          total += r.getTotal();
-          count++;
-        }
-      }
-      if (count > 0) {
-        total = total / count;
-        e.setTotal(total);
-        e.setKind(applyKind(total));
-      }
+
     }
     registerRepository.saveAll(listSave);
   }
