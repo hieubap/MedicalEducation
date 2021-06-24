@@ -66,7 +66,7 @@ public class ResultServiceImpl extends
 
       if ((courseEntity.getStatus() == 1 || courseEntity.getStatus() == 3) && (
               dto.getMidPoint() != null || dto.getEndPoint() != null)) {
-        throw new BaseException(200, "Khóa học chưa bắt đầu hoặc đã kết thúc");
+        throw new BaseException(400, "Khóa học chưa bắt đầu hoặc đã kết thúc");
       }
     }
     if (dto.getStudentId() == null || !userRepository.existsById(dto.getStudentId())) {
