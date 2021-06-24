@@ -16,53 +16,56 @@ import spring.backend.library.service.AbstractBaseService;
 
 @Service
 public class SubjectServiceImpl extends
-    AbstractBaseService<SubjectEntity, SubjectDTO, SubjectRepository> implements SubjectService {
+        AbstractBaseService<SubjectEntity, SubjectDTO, SubjectRepository> implements
+        SubjectService {
 
-  @Autowired
-  private SubjectRepository repository;
+    @Autowired
+    private SubjectRepository repository;
 
-  @Override
-  protected SubjectRepository getRepository() {
-    return repository;
-  }
-
-  @Override
-  @PreAuthorize("hasAnyRole('ADMIN')")
-  protected void beforeSave(SubjectEntity entity, SubjectDTO dto) {
-    super.beforeSave(entity, dto);
-
-    if (Strings.isNullOrEmpty(dto.getName())) {
-      throw new BaseException("name is null");
+    @Override
+    protected SubjectRepository getRepository() {
+        return repository;
     }
-    if (Strings.isNullOrEmpty(dto.getType())) {
-      throw new BaseException("type is null");
-    }
-    if (repository.existsByNameAndTypeAndLesson(dto.getName(), dto.getType(), dto.getLesson())) {
-      throw new BaseException("trùng môn học");
-    }
-    if (Strings.isNullOrEmpty(dto.getCode())) {
-      String s = Normalizer.normalize(dto.getName(), Normalizer.Form.NFD);
-      s = s.toUpperCase().replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
 
-      String shortName = s.charAt(0) + "" + s.charAt(1);
+    @Override
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    protected void beforeSave(SubjectEntity entity, SubjectDTO dto) {
+        super.beforeSave(entity, dto);
 
-      entity.setCode(shortName + String.format("_%04d", repository.countAll()));
-      entity.setShortName(shortName);
-    }
-  }
-  @Override
-  public Page<SubjectDTO> search(SubjectDTO dto, Pageable pageable) {
-    if (dto.getName() != null) {
-      dto.setName("%" + dto.getName().toLowerCase().trim().replaceAll(" ", "%") + "%");
-    }
-    if (dto.getCode() != null) {
-      dto.setCode("%" + dto.getCode().toLowerCase().trim().replaceAll(" ", "%") + "%");
-    }
-    return super.search(dto, pageable);
-  }
+        if (Strings.isNullOrEmpty(dto.getName())) {
+            throw new BaseException("name is null");
+        }
+        if (Strings.isNullOrEmpty(dto.getType())) {
+            throw new BaseException("type is null");
+        }
+        if (repository.existsByNameAndTypeAndLesson(dto.getName(), dto.getType(), dto.getLesson())
+                && dto.getId() == null) {
+            throw new BaseException("trùng môn học");
+        }
+        if (Strings.isNullOrEmpty(dto.getCode())) {
+            String s = Normalizer.normalize(dto.getName(), Normalizer.Form.NFD);
+            s = s.toUpperCase().replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
 
-  @Override
-  public List<String> getDistinctSubject() {
-    return repository.getDistinctSubject();
-  }
+            String shortName = s.charAt(0) + "" + s.charAt(1);
+
+            entity.setCode(shortName + String.format("_%04d", repository.countAll()));
+            entity.setShortName(shortName);
+        }
+    }
+
+    @Override
+    public Page<SubjectDTO> search(SubjectDTO dto, Pageable pageable) {
+        if (dto.getName() != null) {
+            dto.setName("%" + dto.getName().toLowerCase().trim().replaceAll(" ", "%") + "%");
+        }
+        if (dto.getCode() != null) {
+            dto.setCode("%" + dto.getCode().toLowerCase().trim().replaceAll(" ", "%") + "%");
+        }
+        return super.search(dto, pageable);
+    }
+
+    @Override
+    public List<String> getDistinctSubject() {
+        return repository.getDistinctSubject();
+    }
 }
