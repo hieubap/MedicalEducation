@@ -63,7 +63,7 @@ public class ScheduleEntity extends BaseEntity {
    * 1 bản ghi giả chứa thông tin thay đổi
    */
   @Column(columnDefinition = "tinyint default 0")
-  private Short status = 0;
+  private short status = 0;
 
   /**
    * khóa học
