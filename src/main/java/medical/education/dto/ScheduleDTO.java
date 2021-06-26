@@ -33,4 +33,5 @@ public class ScheduleDTO extends BaseDTO {
   private Object changeInfo;
   private String reason;
   private Long deleteId;
+  private Integer numberRegister;
 }

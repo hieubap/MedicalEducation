@@ -142,6 +142,9 @@ public class ScheduleServiceImpl extends
       if(course!=null) {
         dto.setNameCourse(course.getProgramEntity().getName());
         dto.setCodeCourse(course.getProgramEntity().getCode());
+        if (course.getRegisters()!=null){
+          dto.setNumberRegister(course.getRegisters().size());
+        }
         dto.setStatus((int) course.getStatus());
       }
     }
