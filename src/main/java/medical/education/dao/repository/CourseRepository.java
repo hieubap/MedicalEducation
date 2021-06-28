@@ -27,7 +27,7 @@ public interface CourseRepository extends BaseRepository<CourseEntity, CourseDTO
             + " and (e.limitRegister = :#{#dto.limitRegister} or :#{#dto.limitRegister} is null) "
             + " and (e.healthFacilityId = :#{#dto.healthFacilityId} or :#{#dto.healthFacilityId} is null) "
             + " and (lower(e.healthFacility.name) like :#{#dto.nameHealthFacility} or :#{#dto.nameHealthFacility} is null) "
-            + " order by e.createdAt")
+            + " order by e.ngayKhaiGiang")
     Page<CourseEntity> search(CourseDTO dto, Pageable pageable);
 
     @Query("select case when count (e) > 0 then true else false end from CourseEntity e"
