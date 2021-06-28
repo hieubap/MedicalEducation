@@ -6,6 +6,7 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import medical.education.dao.model.CourseEntity;
+import medical.education.dao.model.RegisterEntity;
 import medical.education.dao.model.ScheduleEntity;
 import medical.education.dao.repository.CourseRepository;
 import medical.education.dao.repository.PlaceRepository;
@@ -146,7 +147,11 @@ public class ScheduleServiceImpl extends
                 dto.setNameCourse(course.getProgramEntity().getName());
                 dto.setCodeCourse(course.getProgramEntity().getCode());
                 if (course.getRegisterEntities() != null) {
-
+                    int count =0;
+                    for (RegisterEntity e:course.getRegisterEntities()
+                    ) {
+//                        if()
+                    }
                     dto.setNumberRegister(course.getRegisterEntities().size());
                 }
                 dto.setStatus((int) course.getStatus());

@@ -29,5 +29,4 @@ public class ClassDTO implements Serializable {
 
   private Integer lesson;
 
-  private Long resultId;
 }
