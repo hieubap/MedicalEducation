@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import lombok.Getter;
@@ -26,44 +27,48 @@ import spring.backend.library.dao.model.BaseEntity;
 @NoArgsConstructor
 public class SubjectEntity extends BaseEntity {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-  @Column(nullable = false)
-  private String code;
+    @Column(nullable = false)
+    private String code;
 
-  /**
-   * tên môn học
-   */
-  @Column(nullable = false)
-  private String name;
+    /**
+     * tên môn học
+     */
+    @Column(nullable = false)
+    private String name;
 
-  /**
-   * tên viết tắt
-   */
-  private String shortName;
+    /**
+     * tên viết tắt
+     */
+    private String shortName;
 
-  /**
-   * loại môn học
-   */
+    /**
+     * loại môn học
+     */
 //  @Column(columnDefinition = "VARCHAR(60) CHECK (status in ('LT + BT','TH'))", nullable = false)
-  private String type;
+    private String type;
 
-  /**
-   * số tiết
-   */
-  private Integer lesson;
+    /**
+     * số tiết
+     */
+    private Integer lesson;
 
-  /**
-   * giá
-   */
-  private Long price;
+    /**
+     * giá
+     */
+    private Long price;
 
-  @ManyToMany(fetch = FetchType.LAZY)
-  @JoinTable(
-      name = "course_subject",
-      joinColumns = @JoinColumn(name = "subject_id", referencedColumnName = "id"),
-      inverseJoinColumns = @JoinColumn(name = "course_id", referencedColumnName = "id"))
-  private List<CourseEntity> courseEntities;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "course_subject",
+            joinColumns = @JoinColumn(name = "subject_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "course_id", referencedColumnName = "id"))
+    private List<CourseEntity> courseEntities;
+
+    @ManyToOne
+    @JoinColumn(name = "class_point_id", updatable = false, insertable = false, nullable = false)
+    private ClassPointEntity classPointEntity;
 }
