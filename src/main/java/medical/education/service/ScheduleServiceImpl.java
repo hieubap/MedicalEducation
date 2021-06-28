@@ -29,148 +29,152 @@ import spring.backend.library.utils.DateUtils;
 
 @Service
 public class ScheduleServiceImpl extends
-    AbstractBaseService<ScheduleEntity, ScheduleDTO, ScheduleRepository>
-    implements ScheduleService {
+        AbstractBaseService<ScheduleEntity, ScheduleDTO, ScheduleRepository>
+        implements ScheduleService {
 
-  @Autowired
-  private ScheduleService scheduleService;
+    @Autowired
+    private ScheduleService scheduleService;
 
-  @Autowired
-  private UserService userService;
+    @Autowired
+    private UserService userService;
 
-  @Autowired
-  private UserRepository userRepository;
+    @Autowired
+    private UserRepository userRepository;
 
-  @Autowired
-  private ScheduleRepository scheduleRepository;
+    @Autowired
+    private ScheduleRepository scheduleRepository;
 
-  @Autowired
-  private PlaceRepository placeRepository;
+    @Autowired
+    private PlaceRepository placeRepository;
 
-  @Autowired
-  private PlaceService placeService;
+    @Autowired
+    private PlaceService placeService;
 
-  @Autowired
-  private SubjectRepository subjectRepository;
+    @Autowired
+    private SubjectRepository subjectRepository;
 
-  @Autowired
-  private SubjectService subjectService;
+    @Autowired
+    private SubjectService subjectService;
 
-  @Autowired
-  private CourseRepository courseRepository;
+    @Autowired
+    private CourseRepository courseRepository;
 
-  @Autowired
-  private CourseService courseService;
+    @Autowired
+    private CourseService courseService;
 
-  @Override
-  protected ScheduleRepository getRepository() {
-    return scheduleRepository;
-  }
-
-  @Override
-  @PreAuthorize("hasAnyRole('ADMIN')")
-  protected void beforeSave(ScheduleEntity entity, ScheduleDTO dto) {
-    super.beforeSave(entity, dto);
-    if (dto.getDay() == null) {
-      throw new BaseException(400, Message.getMessage("data.null", new Object[]{"Thứ"}));
+    @Override
+    protected ScheduleRepository getRepository() {
+        return scheduleRepository;
     }
 
-    if (dto.getPlaceId() == null || !placeRepository.existsById(dto.getPlaceId())) {
-      throw new BaseException(400, Message.getMessage("data.null", new Object[]{"Địa điểm"}));
-    }
-
-    if (dto.getSubjectId() == null || !subjectRepository.existsById(dto.getSubjectId())) {
-      throw new BaseException(400, Message.getMessage("data.null", new Object[]{"Môn học"}));
-    }
-
-    if (dto.getCourseId() == null || !courseRepository.existsById(dto.getCourseId())) {
-      throw new BaseException(400, Message.getMessage("data.null", new Object[]{"Khóa học"}));
-    }
-
-    if (dto.getTeacherId() == null || !userRepository.existsById(dto.getTeacherId())) {
-      throw new BaseException(400, Message.getMessage("data.null", new Object[]{"Giảng viên"}));
-    }
-    if (dto.getKipHoc() == null) {
-      throw new BaseException(400, Message.getMessage("data.null", new Object[]{"Kíp học"}));
-    }
-    kiemTraLopHoc(dto.getTeacherId(),dto.getDates(),dto.getKipHoc());
-  }
-
-  private void kiemTraLopHoc(Long id, String dtoDate, Short kipHoc) {
-    List<ScheduleEntity> scheduleEntityList = getRepository().findByTeacherId(id).orElse(null);
-    if (scheduleEntityList == null) {
-      return;
-    } else {
-
-      String[] dateCheck = dtoDate.replace("[", "").replace("]", "").replace("\"", "").split(",");
-
-      for (ScheduleEntity s : scheduleEntityList) {
-        String date = s.getDates().replace("[", "").replace("]", "").replace("\"", "");
-        String[] datess = date.split(",");
-        int kip = s.getKipHoc();
-        for (int i = 0; i < dateCheck.length; i++) {
-          for (int j = 0; j < datess.length; j++) {
-              if(dateCheck[i].equals(datess[j]) && kip == kipHoc){
-                throw new BaseException("Trùng lịch");
-              }
-          }
+    @Override
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    protected void beforeSave(ScheduleEntity entity, ScheduleDTO dto) {
+        super.beforeSave(entity, dto);
+        if (dto.getDay() == null) {
+            throw new BaseException(400, Message.getMessage("data.null", new Object[]{"Thứ"}));
         }
-      }
+
+        if (dto.getPlaceId() == null || !placeRepository.existsById(dto.getPlaceId())) {
+            throw new BaseException(400, Message.getMessage("data.null", new Object[]{"Địa điểm"}));
+        }
+
+        if (dto.getSubjectId() == null || !subjectRepository.existsById(dto.getSubjectId())) {
+            throw new BaseException(400, Message.getMessage("data.null", new Object[]{"Môn học"}));
+        }
+
+        if (dto.getCourseId() == null || !courseRepository.existsById(dto.getCourseId())) {
+            throw new BaseException(400, Message.getMessage("data.null", new Object[]{"Khóa học"}));
+        }
+
+        if (dto.getTeacherId() == null || !userRepository.existsById(dto.getTeacherId())) {
+            throw new BaseException(400,
+                    Message.getMessage("data.null", new Object[]{"Giảng viên"}));
+        }
+        if (dto.getKipHoc() == null) {
+            throw new BaseException(400, Message.getMessage("data.null", new Object[]{"Kíp học"}));
+        }
+        kiemTraLopHoc(dto.getTeacherId(), dto.getDates(), dto.getKipHoc());
     }
 
-    return;
-  }
+    private void kiemTraLopHoc(Long id, String dtoDate, Short kipHoc) {
+        List<ScheduleEntity> scheduleEntityList = getRepository().findByTeacherId(id).orElse(null);
+        if (scheduleEntityList == null) {
+            return;
+        } else {
 
-  @Override
-  protected void afterSave(ScheduleEntity entity, ScheduleDTO dto) {
-    super.afterSave(entity, dto);
-    entity.setSubject(subjectRepository.findById(entity.getSubjectId()).get());
-    entity.setPlace(placeRepository.findById(entity.getPlaceId()).get());
-    entity.setTeacher(userRepository.findById(entity.getTeacherId()).get());
-  }
+            String[] dateCheck = dtoDate.replace("[", "").replace("]", "").replace("\"", "")
+                    .split(",");
 
-  @Override
-  protected void specificMapToDTO(ScheduleEntity entity, ScheduleDTO dto) {
-    super.specificMapToDTO(entity, dto);
+            for (ScheduleEntity s : scheduleEntityList) {
+                String date = s.getDates().replace("[", "").replace("]", "").replace("\"", "");
+                String[] datess = date.split(",");
+                int kip = s.getKipHoc();
+                for (int i = 0; i < dateCheck.length; i++) {
+                    for (int j = 0; j < datess.length; j++) {
+                        if (dateCheck[i].equals(datess[j]) && kip == kipHoc) {
+                            throw new BaseException("Trùng lịch");
+                        }
+                    }
+                }
+            }
+        }
 
-    if (entity.getChangeInformation() != null) {
-      dto.setChangeInfo(scheduleService.findDetailById(entity.getChangeInformation().getId()));
+        return;
     }
+
+    @Override
+    protected void afterSave(ScheduleEntity entity, ScheduleDTO dto) {
+        super.afterSave(entity, dto);
+        entity.setSubject(subjectRepository.findById(entity.getSubjectId()).get());
+        entity.setPlace(placeRepository.findById(entity.getPlaceId()).get());
+        entity.setTeacher(userRepository.findById(entity.getTeacherId()).get());
+    }
+
+    @Override
+    protected void specificMapToDTO(ScheduleEntity entity, ScheduleDTO dto) {
+        super.specificMapToDTO(entity, dto);
+
+        if (entity.getChangeInformation() != null) {
+            dto.setChangeInfo(
+                    scheduleService.findDetailById(entity.getChangeInformation().getId()));
+        }
 //    dto.setCourseInfo(courseService.findById(entity.getCourseId()));
-    if (entity.getCourseId() != null) {
-      CourseEntity course = courseRepository.findById(entity.getCourseId()).orElse(null);
-      if(course!=null) {
-        dto.setNameCourse(course.getProgramEntity().getName());
-        dto.setCodeCourse(course.getProgramEntity().getCode());
-        if (course.getRegisters()!=null){
-          dto.setNumberRegister(course.getRegisters().size());
+        if (entity.getCourseId() != null) {
+            CourseEntity course = courseRepository.findById(entity.getCourseId()).orElse(null);
+            if (course != null) {
+                dto.setNameCourse(course.getProgramEntity().getName());
+                dto.setCodeCourse(course.getProgramEntity().getCode());
+                if (course.getRegisterEntities() != null) {
+
+                    dto.setNumberRegister(course.getRegisterEntities().size());
+                }
+                dto.setStatus((int) course.getStatus());
+            }
         }
-        dto.setStatus((int) course.getStatus());
-      }
-    }
-    dto.setSubjectInfo(subjectService.findById(entity.getSubjectId()));
-    dto.setPlaceInfo(placeService.findById(entity.getPlaceId()));
-    dto.setTeacher(userService.findById(entity.getTeacherId()));
-  }
-
-  @Override
-  // sinh viên xem lịch
-  public Page<ScheduleDTO> getSchedule() {
-    ScheduleDTO scheduleSearch = new ScheduleDTO();
-    scheduleSearch.setCourseId(userService.getCurrentUser().getCurrentCourseId());
-    return search(scheduleSearch, PageRequest.of(0, Integer.MAX_VALUE));
-  }
-
-  @Override
-  public Page<ScheduleDTO> getListClass(ScheduleDTO dto, Pageable page) {
-    UserDTO currentUser = userService.getCurrentUser();
-    if (!currentUser.getRole().equals(RoleEnum.TEACHER)) {
-      throw new BaseException(400, Message.getMessage("not.teacher"));
+        dto.setSubjectInfo(subjectService.findById(entity.getSubjectId()));
+        dto.setPlaceInfo(placeService.findById(entity.getPlaceId()));
+        dto.setTeacher(userService.findById(entity.getTeacherId()));
     }
 
-    dto.setTeacherId(currentUser.getId());
-    return super.search(dto, page);
-  }
+    @Override
+    // sinh viên xem lịch
+    public Page<ScheduleDTO> getSchedule() {
+        ScheduleDTO scheduleSearch = new ScheduleDTO();
+        scheduleSearch.setCourseId(userService.getCurrentUser().getCurrentCourseId());
+        return search(scheduleSearch, PageRequest.of(0, Integer.MAX_VALUE));
+    }
+
+    @Override
+    public Page<ScheduleDTO> getListClass(ScheduleDTO dto, Pageable page) {
+        UserDTO currentUser = userService.getCurrentUser();
+        if (!currentUser.getRole().equals(RoleEnum.TEACHER)) {
+            throw new BaseException(400, Message.getMessage("not.teacher"));
+        }
+
+        dto.setTeacherId(currentUser.getId());
+        return super.search(dto, page);
+    }
 
 //  @Override
 //  public Page<ScheduleDTO> getSchedulebBusy() {
@@ -179,32 +183,32 @@ public class ScheduleServiceImpl extends
 //    return search(scheduleSearch, PageRequest.of(0, Integer.MAX_VALUE));
 //  }
 
-  @Override
-  public ScheduleDTO handleChangeSchedule(Long id, ScheduleDTO dto) {
-    save(id, dto);
-    delete(dto.getDeleteId());
-    return dto;
-  }
+    @Override
+    public ScheduleDTO handleChangeSchedule(Long id, ScheduleDTO dto) {
+        save(id, dto);
+        delete(dto.getDeleteId());
+        return dto;
+    }
 
-  @Override
-  public Integer countChange() {
-    return getRepository().countChange();
-  }
+    @Override
+    public Integer countChange() {
+        return getRepository().countChange();
+    }
 
-  @Override
-  public Page<ScheduleDTO> findAllChange(Pageable page) {
-    return getRepository().findAllChange(page).map(this::mapToDTO);
-  }
+    @Override
+    public Page<ScheduleDTO> findAllChange(Pageable page) {
+        return getRepository().findAllChange(page).map(this::mapToDTO);
+    }
 
-  @Override
-  public ScheduleDTO changeSchedule(Long id, ScheduleDTO dto) {
-    ScheduleEntity entity = getRepository().findById(id).get();
-    dto.setId(null);
-    dto.setStatus(1);
-    dto.setChangeScheduleId(null);
-    ScheduleDTO changeDTO = save(dto);
-    entity.setChangeScheduleId(changeDTO.getId());
-    getRepository().save(entity);
-    return mapToDTO(entity);
-  }
+    @Override
+    public ScheduleDTO changeSchedule(Long id, ScheduleDTO dto) {
+        ScheduleEntity entity = getRepository().findById(id).get();
+        dto.setId(null);
+        dto.setStatus(1);
+        dto.setChangeScheduleId(null);
+        ScheduleDTO changeDTO = save(dto);
+        entity.setChangeScheduleId(changeDTO.getId());
+        getRepository().save(entity);
+        return mapToDTO(entity);
+    }
 }

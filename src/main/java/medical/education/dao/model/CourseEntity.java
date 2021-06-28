@@ -32,69 +32,69 @@ import spring.backend.library.dao.model.BaseEntity;
 @NoArgsConstructor
 public class CourseEntity extends BaseEntity {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-  private String name;
+    private String name;
 
-//  @Column(unique = true)
-  private String code;
+    //  @Column(unique = true)
+    private String code;
 
-  /**
-   * 1: Thời gian đăng ký 2: đang học 3: hoàn thành
-   */
-  private Short status;
+    /**
+     * 1: Thời gian đăng ký 2: đang học 3: hoàn thành
+     */
+    private Short status;
 
 //  private CourseStatusEnum courseStatusEnum;
 
-  /**
-   * thời gian bắt đầu
-   */
-  private Date ngayKhaiGiang;
+    /**
+     * thời gian bắt đầu
+     */
+    private Date ngayKhaiGiang;
 
-  /**
-   * thời gian kết thúc
-   */
-  private Date ngayKetThuc;
+    /**
+     * thời gian kết thúc
+     */
+    private Date ngayKetThuc;
 
-  /**
-   * Kỳ học = năm khai giảng + tháng khai giảng + ngày khai giảng
-   */
-  private Integer semester;
+    /**
+     * Kỳ học = năm khai giảng + tháng khai giảng + ngày khai giảng
+     */
+    private Integer semester;
 
-  /**
-   * giá
-   */
-  private Long price;
+    /**
+     * giá
+     */
+    private Long price;
 
-  /**
-   * số tiết học
-   */
-  private Integer numberLesson;
+    /**
+     * số tiết học
+     */
+    private Integer numberLesson;
 
-  /**
-   * giới hạn đăng ký
-   */
-  private Integer limitRegister;
+    /**
+     * giới hạn đăng ký
+     */
+    private Integer limitRegister;
 
-  /**
-   * giới hạn tối thiểu cho phép đăng kí
-   */
-  private Integer minRegister;
+    /**
+     * giới hạn tối thiểu cho phép đăng kí
+     */
+    private Integer minRegister;
 
-  /**
-   * cơ sở y tế
-   */
-  @Column(name = "health_facility_id")
-  private Long healthFacilityId;
+    /**
+     * cơ sở y tế
+     */
+    @Column(name = "health_facility_id")
+    private Long healthFacilityId;
 
-  @OneToOne
-  @JoinColumn(name = "health_facility_id", insertable = false, updatable = false)
-  private HealthFacilityEntity healthFacility;
+    @OneToOne
+    @JoinColumn(name = "health_facility_id", insertable = false, updatable = false)
+    private HealthFacilityEntity healthFacility;
 
-  @Column(name = "programId")
-  private Long programId;
+    @Column(name = "programId")
+    private Long programId;
 
 //  /**
 //   * các môn trong chương trình
@@ -108,18 +108,13 @@ public class CourseEntity extends BaseEntity {
 //      inverseJoinColumns = @JoinColumn(name = "subject_id", referencedColumnName = "id"))
 //  private List<SubjectEntity> subjects;
 
-  @OneToMany(fetch = FetchType.LAZY, mappedBy = "course")
-  private List<ScheduleEntity> schedules;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "course")
+    private List<ScheduleEntity> schedules;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "course")
+    private List<RegisterEntity> registerEntities;
 
-  @ManyToMany(fetch = FetchType.LAZY)
-  @JoinTable(
-      name = "course_register",
-      joinColumns = @JoinColumn(name = "course_id", referencedColumnName = "id"),
-      inverseJoinColumns = @JoinColumn(name = "student_id", referencedColumnName = "id"))
-  private List<UserEntity> registers;
-
-  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-  @JoinColumn(name = "programId", insertable = false, updatable = false)
-  private ProgramEntity programEntity;
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "programId", insertable = false, updatable = false)
+    private ProgramEntity programEntity;
 }

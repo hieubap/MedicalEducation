@@ -46,9 +46,9 @@ public class RegisterEntity extends BaseEntity {
   @Column(name = "course_id")
   private Long courseId;
 
-  @ManyToOne
-  @JoinColumn(name = "course_id",insertable = false,updatable = false)
-  private CourseEntity course;
+    @ManyToOne
+    @JoinColumn(name = "course_id",insertable = false,updatable = false)
+    private CourseEntity course;
 
   /**
    * danh sách kết quả

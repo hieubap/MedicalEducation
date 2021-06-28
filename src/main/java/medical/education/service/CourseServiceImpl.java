@@ -154,7 +154,15 @@ public class CourseServiceImpl extends
         if (entity.getStatus().equals(CourseStatusEnum.DANG_HOC.getValue())) {
             throw new BaseException(481, "Không thể xóa khóa học trong thời gian học");
         } else {
-            List<UserEntity> listRegister = entity.getRegisters();
+            List<UserEntity> listRegister = new ArrayList<>();
+            if (entity.getRegisterEntities() != null) {
+                for (RegisterEntity e : entity.getRegisterEntities()
+                ) {
+                    if (e.getStudent() != null) {
+                        listRegister.add(e.getStudent());
+                    }
+                }
+            }
             List<NotificationEntity> notifications = new ArrayList<>();
             List<RegisterEntity> registers = new ArrayList<>();
 
@@ -258,7 +266,7 @@ public class CourseServiceImpl extends
             }
             if (e.getNgayKhaiGiang() != null && e.getNgayKhaiGiang().before(new Date())
                     && e.getStatus().equals(CourseStatusEnum.THOI_GIAN_DANG_KI.getValue())) {
-                if (e.getRegisters() == null || e.getRegisters().size() < e.getMinRegister()) {
+                if (e.getRegisterEntities() == null || e.getRegisterEntities().size() < e.getMinRegister()) {
                     e.setStatus(CourseStatusEnum.HUY_KHOA.getValue());
                     listSave.add(e);
                 } else {

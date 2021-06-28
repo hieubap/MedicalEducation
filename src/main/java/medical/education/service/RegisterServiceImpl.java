@@ -103,8 +103,8 @@ public class RegisterServiceImpl extends
                 new Object[]{e.getCourse().getProgramEntity().getName()}));
       } else {
         CourseEntity entityCourse = courseRepository.findById(dto.getCourseId()).get();
-        if (entityCourse.getRegisters() != null) {
-          if (entityCourse.getRegisters().size() >= entityCourse.getLimitRegister()) {
+        if (entityCourse.getRegisterEntities() != null) {
+          if (entityCourse.getRegisterEntities().size() >= entityCourse.getLimitRegister()) {
             throw new BaseException(430, "Khóa học đã quá giới hạn đăng ký");
           }
         }
