@@ -32,6 +32,12 @@ public class SubjectServiceImpl extends
     protected void beforeSave(SubjectEntity entity, SubjectDTO dto) {
         super.beforeSave(entity, dto);
 
+        if(dto.getIsUsePoint()){
+            entity.setType("LT + BT");
+        }
+        else{
+            entity.setType("Thực hành");
+        }
         if (Strings.isNullOrEmpty(dto.getName())) {
             throw new BaseException("name is null");
         }
