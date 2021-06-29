@@ -35,9 +35,7 @@ public class SubjectServiceImpl extends
         if (Strings.isNullOrEmpty(dto.getName())) {
             throw new BaseException("name is null");
         }
-        if (Strings.isNullOrEmpty(dto.getType())) {
-            throw new BaseException("type is null");
-        }
+
         if (repository.existsByNameAndTypeAndLesson(dto.getName(), dto.getType(), dto.getLesson())
                 && dto.getId() == null) {
             throw new BaseException("trùng môn học");
