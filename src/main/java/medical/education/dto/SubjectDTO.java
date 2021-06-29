@@ -23,4 +23,12 @@ public class SubjectDTO extends BaseDTO {
   private Long price;
 
   private Boolean hasScheduled = false;
+
+  private Long midtermScore;
+
+  private Long finalScore;
+
+  private Boolean isUsePoint;
+
+  private Boolean isPass;
 }
