@@ -2,6 +2,7 @@ package medical.education.dao.model;
 
 import java.util.List;
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -68,7 +69,11 @@ public class SubjectEntity extends BaseEntity {
             inverseJoinColumns = @JoinColumn(name = "course_id", referencedColumnName = "id"))
     private List<CourseEntity> courseEntities;
 
-    @ManyToOne
-    @JoinColumn(name = "class_point_id", updatable = false, insertable = false, nullable = false)
-    private ClassPointEntity classPointEntity;
+    private Long midtermScore;
+
+    private Long finalScore;
+
+    private Boolean isUsePoint;
+
+    private Boolean isPass;
 }
