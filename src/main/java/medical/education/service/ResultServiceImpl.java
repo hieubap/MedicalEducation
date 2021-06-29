@@ -89,7 +89,9 @@ public class ResultServiceImpl extends
         }
         if (entity.getSubject() != null) {
             SubjectEntity subjectEntity = entity.getSubject();
-            if (dto.getEndPoint() != null && dto.getMidPoint() != null) {
+            if (dto.getEndPoint() != null && dto.getMidPoint() != null
+                    && subjectEntity.getMidtermScore() != null
+                    && subjectEntity.getFinalScore() != null) {
                 entity.setTotal(dto.getMidPoint() * subjectEntity.getMidtermScore()
                         + dto.getEndPoint() * subjectEntity.getFinalScore());
             }
