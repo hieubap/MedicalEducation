@@ -29,6 +29,4 @@ public class SubjectDTO extends BaseDTO {
   private Long finalScore;
 
   private Boolean isUsePoint;
-
-  private Boolean isPass;
 }

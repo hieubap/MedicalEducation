@@ -75,5 +75,4 @@ public class SubjectEntity extends BaseEntity {
 
     private Boolean isUsePoint;
 
-    private Boolean isPass;
 }

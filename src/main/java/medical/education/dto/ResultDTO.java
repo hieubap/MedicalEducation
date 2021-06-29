@@ -39,4 +39,7 @@ public class ResultDTO extends BaseDTO {
   private Double total;
 
   private String rank;
+
+  private Boolean isPass;
+
 }
