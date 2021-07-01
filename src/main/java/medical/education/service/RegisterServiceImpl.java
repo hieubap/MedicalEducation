@@ -180,8 +180,13 @@ public class RegisterServiceImpl extends
         super.delete(id);
     }
 
+    @Override
+    public void synchronizedData() {
+        scheduleEveryDay();
+    }
+
     // Cập nhật trạng thái và tính điểm trung bình
-    @Scheduled(fixedDelay = 30000)
+    @Scheduled(cron = "0 0 0 * * *")
     public void scheduleEveryDay() {
         List<RegisterEntity> allRegister = StreamSupport
                 .stream(getRepository().findAll().spliterator(), false)

@@ -68,6 +68,9 @@ public class CourseServiceImpl extends
     @Autowired
     private ProgramService programService;
 
+    @Autowired
+    private RegisterService registerService;
+
     @Override
     protected CourseRepository getRepository() {
         return repository;
@@ -250,6 +253,12 @@ public class CourseServiceImpl extends
             dto.setDate(new java.sql.Date(System.currentTimeMillis()).toString());
         }
         return super.search(dto, pageable);
+    }
+
+    @Override
+    public void synchronizedData() {
+        update();
+        registerService.synchronizedData();
     }
 
     @Scheduled(cron = "0 0 0 * * *")

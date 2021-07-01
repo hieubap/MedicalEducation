@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
 import medical.education.dao.model.CourseEntity;
 import medical.education.dao.model.RegisterEntity;
 import medical.education.dao.model.ScheduleEntity;
@@ -95,7 +96,8 @@ public class ScheduleServiceImpl extends
         if (dto.getKipHoc() == null) {
             throw new BaseException(400, Message.getMessage("data.null", new Object[]{"Kíp học"}));
         }
-        kiemTraLopHoc(dto.getTeacherId(), dto.getDates(), dto.getKipHoc());
+        if (dto.getReason() == null)
+            kiemTraLopHoc(dto.getTeacherId(), dto.getDates(), dto.getKipHoc());
     }
 
     private void kiemTraLopHoc(Long id, String dtoDate, Short kipHoc) {
@@ -147,8 +149,8 @@ public class ScheduleServiceImpl extends
                 dto.setNameCourse(course.getProgramEntity().getName());
                 dto.setCodeCourse(course.getProgramEntity().getCode());
                 if (course.getRegisterEntities() != null) {
-                    int count =0;
-                    for (RegisterEntity e:course.getRegisterEntities()
+                    int count = 0;
+                    for (RegisterEntity e : course.getRegisterEntities()
                     ) {
 //                        if()
                     }

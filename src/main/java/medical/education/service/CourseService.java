@@ -5,4 +5,6 @@ import medical.education.dto.CourseDTO;
 
 public interface CourseService extends BaseService<CourseDTO> {
 
+    void synchronizedData();
+
 }
