@@ -85,8 +85,8 @@ public class ResultEntity extends BaseEntity {
   /**
    * tổng kết môn
    */
-  private Double total;
+  private double total;
 
-  private Boolean isPass;
+  private boolean isPass;
 
 }

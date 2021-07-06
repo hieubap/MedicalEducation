@@ -24,4 +24,10 @@ public class DashboardController extends BaseResponseController {
     public ResponseEntity thongKeSoLuong(@RequestParam Integer namKhaoSat) {
         return response(service.thongKeSoLuongDangKy(namKhaoSat));
     }
+
+    @GetMapping("/thong-ke-diem-theo-khoa")
+    @Transactional
+    public ResponseEntity thongKeDoem(@RequestParam Long idKhoa) {
+        return response(service.thongKeDiemTheoKhoa(idKhoa));
+    }
 }

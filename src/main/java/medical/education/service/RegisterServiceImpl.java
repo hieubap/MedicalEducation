@@ -204,18 +204,16 @@ public class RegisterServiceImpl extends
                 boolean daNhapHetDiem = true;
 
                 for (ResultEntity resultEntity : e.getResults()) {
-                    if (resultEntity.getTotal() == null) {
-                        daNhapHetDiem = false;
-                    }
+
                 }
                 if (daNhapHetDiem) {
                     Double total = 0.0;
                     int count = 0;
                     for (ResultEntity r : e.getResults()) {
-                        if (r.getTotal() != null) {
-                            total += r.getTotal();
-                            count++;
-                        }
+
+                        total += r.getTotal();
+                        count++;
+
                     }
                     if (count > 0) {
                         total = total / count;
