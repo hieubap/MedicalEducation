@@ -68,7 +68,7 @@ public class DashboardThongKeSLDKServiceImpl implements DashboardThongKeSLDKServ
                     DiemMonHoc diemMonHoc = new DiemMonHoc();
                     diemMonHoc.setPass(listPass.get(i));
                     diemMonHoc.setSubject(listSubject.get(i));
-                    diemMonHoc.setTotal(listSubject.get(i));
+                    diemMonHoc.setTotal(listTotal.get(i));
                     diemMonHocList.add(diemMonHoc);
                 }
             }
