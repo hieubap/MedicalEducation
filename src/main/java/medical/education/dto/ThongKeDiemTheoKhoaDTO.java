@@ -24,5 +24,6 @@ public class ThongKeDiemTheoKhoaDTO {
         private String subject;
         private String pass;
         private String total;
+        private String id;
     }
 }

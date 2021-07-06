@@ -61,7 +61,7 @@ public class DashboardThongKeSLDKServiceImpl implements DashboardThongKeSLDKServ
 
             List<String> listPass = new ArrayList<>(Arrays.asList(e.getPass().split(",")));
             List<String> listTotal = new ArrayList<>(Arrays.asList(e.getTotal().split(",")));
-
+            List<String> listId = new ArrayList<>(Arrays.asList(e.getIds().split(",")));
             List<DiemMonHoc> diemMonHocList = new ArrayList<>();
             if(listSubject.size()==listPass.size()&&listPass.size()==listTotal.size()){
                 for(int i = 0; i < listSubject.size();i++){
@@ -69,6 +69,7 @@ public class DashboardThongKeSLDKServiceImpl implements DashboardThongKeSLDKServ
                     diemMonHoc.setPass(listPass.get(i));
                     diemMonHoc.setSubject(listSubject.get(i));
                     diemMonHoc.setTotal(listTotal.get(i));
+                    diemMonHoc.setId(listId.get(i));
                     diemMonHocList.add(diemMonHoc);
                 }
             }

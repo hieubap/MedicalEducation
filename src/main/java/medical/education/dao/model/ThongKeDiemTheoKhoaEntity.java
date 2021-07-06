@@ -38,4 +38,5 @@ public class ThongKeDiemTheoKhoaEntity {
     private String subject;
     private String pass;
     private String total;
+    private String ids;
 }

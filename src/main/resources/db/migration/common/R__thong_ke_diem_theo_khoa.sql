@@ -7,8 +7,10 @@ create
                 id      bigint,
                 name    text,
                 subject text,
+                ids     text,
                 pass    text,
                 total   text
+
             )
 
 as
@@ -19,6 +21,7 @@ begin
         select u.id                             as id,
                u.full_name::text                as name,
                string_agg(s.name, ',')          as subject,
+               string_agg(r.id::text, ',')      as ids,
                string_agg(r.is_pass::text, ',') as pass,
                string_agg(r.total::text, ',')   as total
         from results r
