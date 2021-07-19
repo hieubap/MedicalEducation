@@ -33,13 +33,7 @@ public class ProgramDTO extends BaseDTO {
 
   private Long price;
 
-  private Integer done;
-
-  private Integer fail;
-
   private Integer lesson;
-
-  private Object currentCourse;
 
   private Long totNghiep;
 

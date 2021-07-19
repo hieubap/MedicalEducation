@@ -1,6 +1,5 @@
 package medical.education.service;
 
-import com.google.common.base.Strings;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Date;
@@ -17,10 +16,7 @@ import medical.education.dao.repository.NotificationRepository;
 import medical.education.dao.repository.RegisterRepository;
 import medical.education.dao.repository.ScheduleRepository;
 import medical.education.dao.repository.SubjectRepository;
-import medical.education.dto.CourseDTO;
-import medical.education.dto.ScheduleDTO;
-import medical.education.dto.SubjectDTO;
-import medical.education.dto.UserDTO;
+import medical.education.dto.*;
 import medical.education.enums.CourseStatusEnum;
 import medical.education.enums.RegisterEnum;
 import medical.education.enums.RoleEnum;
@@ -85,12 +81,6 @@ public class CourseServiceImpl extends
         if (!currentUser.getRole().equals(RoleEnum.ADMIN)) {
             throw new BaseException(401, "Bạn không đủ quyền truy cập");
         }
-        if (Strings.isNullOrEmpty(entity.getCode())) {
-            Long i = entity.getId() == null ? getRepository().count() : entity.getId();
-            String newCode = "COURSE_" + String.format("%04d", i);
-            dto.setCode(newCode);
-            entity.setCode(newCode);
-        }
         if (getRepository().existsByProgramIdAndHealthFacilityId(dto.getProgramId(),
                 dto.getHealthFacilityId())) {
             if (!getRepository().choPhepMoKhoaMoi(dto.getProgramId(), dto.getHealthFacilityId())
@@ -148,6 +138,22 @@ public class CourseServiceImpl extends
 
     }
 
+    @Autowired
+    private ResultService resultService;
+
+    @Override
+    public PointsDTO listPointBySubject(Long courseId, Long subjectId) {
+        PointsDTO points = new PointsDTO();
+        List<RegisterDTO> registers = registerService.findAllByCourseId(courseId);
+        CourseDTO courseDTO = findById(courseId);
+
+        points.setCourseInfo(courseDTO);
+        points.setSubjectInfo(subjectService.findById(subjectId));
+        points.setListRegister(registers);
+        points.setListResult(resultService.findAllByCourseIdAndSubjectId(courseId, subjectId));
+        return points;
+    }
+
     @Override
     public void delete(Long id) {
         if (!getRepository().existsById(id)) {
@@ -161,8 +167,8 @@ public class CourseServiceImpl extends
             if (entity.getRegisterEntities() != null) {
                 for (RegisterEntity e : entity.getRegisterEntities()
                 ) {
-                    if (e.getStudent() != null) {
-                        listRegister.add(e.getStudent());
+                    if (e.getStudentInfo() != null) {
+                        listRegister.add(e.getStudentInfo());
                     }
                 }
             }
@@ -172,7 +178,7 @@ public class CourseServiceImpl extends
             for (UserEntity e : listRegister) {
                 NotificationEntity notification = new NotificationEntity();
                 notification.setContent(
-                        "Khóa học: " + entity.getName() + ", Kỳ học: " + entity.getSemester()
+                        "Khóa học: " + entity.getProgramInfo().getName() + ", Kỳ học: " + entity.getSemester()
                                 + " đã bị hủy. ");
                 notification.setOwnerId(e.getId());
                 notifications.add(notification);
@@ -195,9 +201,6 @@ public class CourseServiceImpl extends
     protected void specificMapToDTO(CourseEntity entity, CourseDTO dto) {
         super.specificMapToDTO(entity, dto);
         dto.setNumberRegister(registerRepository.countByCourseId(entity.getId()));
-        if (entity.getProgramEntity() != null) {
-            dto.setProgramInfo(programService.findById(entity.getProgramId()));
-        }
 
         if (entity.getSchedules() != null) {
             List<ScheduleDTO> scheduleDTOS = new ArrayList<>();
@@ -209,11 +212,11 @@ public class CourseServiceImpl extends
             }
             dto.setListSchedules(scheduleDTOS);
         }
-        if (entity.getProgramEntity() != null) {
-            if (entity.getProgramEntity().getSubjects() != null) {
-                List<SubjectDTO> subjects = new ArrayList<>();
+        dto.setProgramInfo(programService.findById(entity.getProgramId()));
+        if (dto.getProgramInfo() != null) {
+            if (dto.getProgramInfo().getListSubjects() != null) {
                 Integer countLesson = 0;
-                for (SubjectEntity e : entity.getProgramEntity().getSubjects()) {
+                for (SubjectDTO e : dto.getProgramInfo().getListSubjects()) {
                     if (e.getLesson() != null) {
                         countLesson += e.getLesson();
                     }
@@ -222,9 +225,7 @@ public class CourseServiceImpl extends
                             .existsByCourseIdAndSubjectId(entity.getId(), e.getId())) {
                         sj.setHasScheduled(true);
                     }
-                    subjects.add(sj);
                 }
-                dto.getProgramInfo().setListSubjects(subjects);
                 dto.setNumberLesson(countLesson);
             }
         }
@@ -233,12 +234,12 @@ public class CourseServiceImpl extends
     @Override
     @PreAuthorize("hasAnyRole('ADMIN','TEACHER','STUDENT')")
     public Page<CourseDTO> search(CourseDTO dto, Pageable pageable) {
-        if (dto.getName() != null) {
-            dto.setName("%" + dto.getName().trim()
+        if (dto.getProgramName() != null) {
+            dto.setProgramName("%" + dto.getProgramName().trim()
                     .replaceAll(" ", "%") + "%");
         }
-        if (dto.getCode() != null) {
-            dto.setCode("%" + dto.getCode().trim()
+        if (dto.getProgramCode() != null) {
+            dto.setProgramCode("%" + dto.getProgramCode().trim()
                     .replaceAll(" ", "%") + "%");
         }
         if (dto.getNameHealthFacility() != null) {
@@ -253,12 +254,6 @@ public class CourseServiceImpl extends
             dto.setDate(new java.sql.Date(System.currentTimeMillis()).toString());
         }
         return super.search(dto, pageable);
-    }
-
-    @Override
-    public void synchronizedData() {
-        update();
-        registerService.synchronizedData();
     }
 
     @Scheduled(cron = "0 0 0 * * *")
@@ -307,7 +302,7 @@ public class CourseServiceImpl extends
             str.append("\n")
                     .append(index++)
                     .append(". Chương trình đào tạo: ")
-                    .append(course.getProgramEntity().getName())
+                    .append(course.getProgramInfo().getName())
                     .append(", Khóa học: ")
                     .append(course.getSemester())
                     .append(", Ngày khai giảng: ")

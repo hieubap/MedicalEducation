@@ -20,8 +20,12 @@ import medical.education.dto.UserDTO;
 import medical.education.enums.CourseStatusEnum;
 import medical.education.enums.RegisterEnum;
 import medical.education.enums.RoleEnum;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.PropertyMap;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import spring.backend.library.exception.BaseException;
@@ -77,9 +81,6 @@ public class RegisterServiceImpl extends
 
         if (currentUser.getRole().equals(RoleEnum.ADMIN)) {
             // admin phê duyệt đỗ tốt nghiệp cho sinh viên nêu là admin
-            if (dto.getSemester() == null) {
-                throw new BaseException(410, "semester is null");
-            }
             if (dto.getCourseId() == null) {
                 throw new BaseException(410, "courseId is null");
             }
@@ -93,68 +94,55 @@ public class RegisterServiceImpl extends
             // sinh viên đăng ký khóa nếu role là sinh viên
             entity.setStudentId(userService.getCurrentUserId());
 
-            RegisterEntity e = registerRepository.findByCourseIdAndStudentId(
-                    currentUser.getCurrentCourseId(), userService.getCurrentUserId());
-            if (currentUser.getCurrentCourseId() != null) {
+            RegisterEntity currentRegister = registerRepository.findCurrent(userService.getCurrentUserId());
+            if (currentRegister != null) {
                 throw new BaseException(410,
                         Message.getMessage("Has.Register.Course",
-                                new Object[]{e.getCourse().getProgramEntity().getName()}));
+                                new Object[]{currentRegister.getCourseInfo().getProgramInfo().getName()}));
             } else {
-                CourseEntity entityCourse = courseRepository.findById(dto.getCourseId()).get();
-                if (entityCourse.getRegisterEntities() != null) {
-                    if (entityCourse.getRegisterEntities().size() >= entityCourse
+                CourseEntity courseRegister = courseRepository.findById(dto.getCourseId()).get();
+                if (courseRegister.getRegisterEntities() != null) {
+                    if (courseRegister.getRegisterEntities().size() >= courseRegister
                             .getLimitRegister()) {
                         throw new BaseException(430, "Khóa học đã quá giới hạn đăng ký");
                     }
                 }
-                if (entity.getStatus() == null && !entityCourse.getStatus()
-                        .equals(CourseStatusEnum.THOI_GIAN_DANG_KI.getValue())) {
+                if (!courseRegister.getStatus().equals(CourseStatusEnum.THOI_GIAN_DANG_KI.getValue())) {
                     throw new BaseException(431, "Chỉ có thể đăng ký khóa trong thời gian đăng ký");
                 }
-                entity.setSemester(entityCourse.getSemester());
-
-                courseRepository.save(entityCourse);
-
-                UserEntity userEntity = userRepository.findById(currentUser.getId()).get();
-                userEntity.setCurrentCourseId(dto.getCourseId());
-                userRepository.save(userEntity);
+                courseRepository.save(courseRegister);
             }
             entity.setStatus(RegisterEnum.REGISTER_DONED);
         }
     }
 
     @Override
-    public void changeSemester(Long courseId, Integer semester) {
-        List<RegisterEntity> listChange = registerRepository
-                .findRegistersToChangeSemester(courseId);
-        for (RegisterEntity e : listChange) {
-            e.setSemester(semester);
+    public List<RegisterDTO> findAllByCourseId(Long courseId) {
+        List<RegisterEntity> entities = getRepository().findAllByCourseId(courseId);
+        List<RegisterDTO> dtos = new ArrayList<>();
+        for (RegisterEntity e : entities){
+            dtos.add(mapToDTO(e));
         }
-        registerRepository.saveAll(listChange);
-    }
-
-    @Override
-    protected void afterSave(RegisterEntity entity, RegisterDTO dto) {
-        super.afterSave(entity, dto);
-        resultService
-                .generateResultsForStudent(entity.getCourseId(), entity.getStudentId(),
-                        entity.getId());
-        entity.setCourse(courseRepository.findById(entity.getCourseId()).get());
-        entity.setStudent(userRepository.findById(entity.getStudentId()).get());
+        return dtos;
     }
 
     @Override
     protected void specificMapToDTO(RegisterEntity entity, RegisterDTO dto) {
         super.specificMapToDTO(entity, dto);
-        dto.setStudentInfo(userService.findDetailById(entity.getStudentId()));
-        dto.setCourseInfo(courseService.findDetailById(entity.getCourseId()));
-        dto.setProgramInfo(programService.findDetailById(entity.getCourse().getProgramId()));
     }
 
     @Override
-    public List<Integer> getListSemester(Long courseId) {
-        return getRepository().getListSemester(courseId);
+    public Page<RegisterDTO> search(RegisterDTO dto, Pageable pageable) {
+        return super.search(dto, pageable);
     }
+
+    //    @Override
+//    protected void afterSave(RegisterEntity entity, RegisterDTO dto) {
+//        super.afterSave(entity, dto);
+//        resultService
+//                .generateResultsForStudent(entity.getCourseId(), entity.getStudentId(),
+//                        entity.getId());
+//    }
 
     // để hủy khóa học. dành cho sinh viên
     @Override
@@ -166,8 +154,8 @@ public class RegisterServiceImpl extends
         UserDTO currentUser = userService.getCurrentUser();
 
         ResultDTO searchDTO = new ResultDTO();
-        searchDTO.setStudentId(currentUser.getId());
-        searchDTO.setCourseId(entity.getCourseId());
+//        searchDTO.setStudentId(currentUser.getId());
+//        searchDTO.setCourseId(entity.getCourseId());
         List<ResultEntity> listResult = resultRepository
                 .search(searchDTO, PageRequest.of(0, Integer.MAX_VALUE)).toList();
 
@@ -180,11 +168,6 @@ public class RegisterServiceImpl extends
         super.delete(id);
     }
 
-    @Override
-    public void synchronizedData() {
-        scheduleEveryDay();
-    }
-
     // Cập nhật trạng thái và tính điểm trung bình
     @Scheduled(cron = "0 0 0 * * *")
     public void scheduleEveryDay() {
@@ -193,39 +176,35 @@ public class RegisterServiceImpl extends
                 .collect(Collectors.toList());
         List<RegisterEntity> listSave = new ArrayList<>();
         for (RegisterEntity e : allRegister) {
-            if (e.getCourse().getStatus().equals(CourseStatusEnum.DANG_HOC.getValue()) &&
+            if (e.getCourseInfo().getStatus().equals(CourseStatusEnum.DANG_HOC.getValue()) &&
                     e.getStatus().equals(RegisterEnum.REGISTER_DONED)) {
                 e.setStatus(RegisterEnum.STUDYING);
                 listSave.add(e);
-            } else if (e.getCourse().getStatus().equals(CourseStatusEnum.HOAN_THANH.getValue()) &&
+            } else if (e.getCourseInfo().getStatus().equals(CourseStatusEnum.HOAN_THANH.getValue()) &&
                     e.getStatus().equals(RegisterEnum.STUDYING)) {
                 e.setStatus(RegisterEnum.WAIT_TEACHER);
 
                 boolean daNhapHetDiem = true;
-
-                for (ResultEntity resultEntity : e.getResults()) {
-
-                }
-                if (daNhapHetDiem) {
-                    Double total = 0.0;
-                    int count = 0;
-                    for (ResultEntity r : e.getResults()) {
-
-                        total += r.getTotal();
-                        count++;
-
-                    }
-                    if (count > 0) {
-                        total = total / count;
-                        e.setTotal(total);
-                        e.setKind(applyKind(total));
-                    }
-                    if (total >= 4) {
-                        e.setStatus(RegisterEnum.DONED);
-                    } else {
-                        e.setStatus(RegisterEnum.FAIL);
-                    }
-                }
+//                if (daNhapHetDiem) {
+//                    Double total = 0.0;
+//                    int count = 0;
+//                    for (ResultEntity r : e.getResults()) {
+//
+//                        total += r.getTotal();
+//                        count++;
+//
+//                    }
+//                    if (count > 0) {
+//                        total = total / count;
+//                        e.setTotal(total);
+//                        e.setKind(applyKind(total));
+//                    }
+//                    if (total >= 4) {
+//                        e.setStatus(RegisterEnum.DONED);
+//                    } else {
+//                        e.setStatus(RegisterEnum.FAIL);
+//                    }
+//                }
                 listSave.add(e);
             }
 
@@ -249,30 +228,29 @@ public class RegisterServiceImpl extends
     }
 
     // Tạo bảng điểm để count ở màn danh sách sinh viên quyền giảng viên đăng ký khóa học trạng thái 2 liền tạo ra bảng điểm
-    @Scheduled(cron = "0 0 1 * * *")
-    public void createResult() {
-        Iterable<RegisterEntity> registerEntities = getRepository().findAll();
-        for (RegisterEntity e : registerEntities) {
-            if (e.getCourse() != null) {
-                if (e.getCourse().getStatus() == 2) {
-                    if (e.getCourse() != null) {
-                        List<SubjectEntity> subjectEntities = e.getCourse().getProgramEntity()
-                                .getSubjects();
-                        for (SubjectEntity subject : subjectEntities) {
-                            if (!resultRepository
-                                    .resultExistByCourseIdAndStudentIdAndSubjectId(e.getCourseId(),
-                                            e.getStudentId(), subject.getId())) {
-                                ResultEntity resultEntity = new ResultEntity();
-                                resultEntity.setRegisterId(e.getId());
-                                resultEntity.setCourseId(e.getCourseId());
-                                resultEntity.setStudentId(e.getStudentId());
-                                resultEntity.setSubjectId(subject.getId());
-                                resultRepository.save(resultEntity);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
+//    @Scheduled(cron = "0 0 1 * * *")
+//    public void createResult() {
+//        Iterable<RegisterEntity> registerEntities = getRepository().findAll();
+//        for (RegisterEntity e : registerEntities) {
+//            if (e.getCourseInfo() != null) {
+//                if (e.getCourseInfo().getStatus() == 2) {
+//                    if (e.getCourseInfo() != null) {
+//                        List<SubjectEntity> subjectEntities = e.getCourseInfo().getProgramInfo()
+//                                .getSubjects();
+//                        for (SubjectEntity subject : subjectEntities) {
+//                            if (!resultRepository
+//                                    .resultExistByCourseIdAndStudentIdAndSubjectId(e.getCourseId(),
+//                                            e.getStudentId(), subject.getId())) {
+//                                ResultEntity resultEntity = new ResultEntity();
+//                                resultEntity.setRegisterId(e.getId());
+//                                resultEntity.setStudentId(e.getStudentId());
+//                                resultEntity.setSubjectId(subject.getId());
+//                                resultRepository.save(resultEntity);
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    }
 }

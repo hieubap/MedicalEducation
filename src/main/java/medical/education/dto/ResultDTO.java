@@ -14,21 +14,15 @@ public class ResultDTO extends BaseDTO {
 
   private Long studentId;
 
-  private Object studentInfo;
-  /**
-   * lớp học
-   */
-  private Long courseId;
+  private UserDTO studentInfo;
 
   private Long registerId;
 
-  private Integer semester;
-
-  private Object courseInfo;
+  private RegisterDTO registerInfo;
 
   private Long subjectId;
 
-  private Object subjectInfo;
+  private SubjectDTO subjectInfo;
 
   private Integer muster;
 
@@ -40,6 +34,6 @@ public class ResultDTO extends BaseDTO {
 
   private String rank;
 
-  private Boolean isPass;
+  private Short isPass;
 
 }

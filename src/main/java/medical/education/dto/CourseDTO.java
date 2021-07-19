@@ -20,9 +20,9 @@ public class CourseDTO extends BaseDTO {
 
   private Long id;
 
-  private String name;
+  private String programName;
 
-  private String code;
+  private String programCode;
 
   private String nameHealthFacility;
 
@@ -48,11 +48,11 @@ public class CourseDTO extends BaseDTO {
 
   private Long healthFacilityId;
 
-  private Object healthFacility;
+  private HealthFacilityDTO healthFacility;
 
-  private String subjectIds;
+//  private String subjectIds;
 
-  private List<SubjectDTO> listSubject;
+//  private List<SubjectDTO> listSubject;
 
   private List<UserDTO> listRegisters;
 

@@ -69,9 +69,9 @@ public class SubjectEntity extends BaseEntity {
             inverseJoinColumns = @JoinColumn(name = "course_id", referencedColumnName = "id"))
     private List<CourseEntity> courseEntities;
 
-    private Long midtermScore;
+    private Double midtermScore;
 
-    private Long finalScore;
+    private Double finalScore;
 
     private Boolean isUsePoint;
 

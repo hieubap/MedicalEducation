@@ -146,8 +146,8 @@ public class ScheduleServiceImpl extends
         if (entity.getCourseId() != null) {
             CourseEntity course = courseRepository.findById(entity.getCourseId()).orElse(null);
             if (course != null) {
-                dto.setNameCourse(course.getProgramEntity().getName());
-                dto.setCodeCourse(course.getProgramEntity().getCode());
+                dto.setNameCourse(course.getProgramInfo().getName());
+                dto.setCodeCourse(course.getProgramInfo().getCode());
                 if (course.getRegisterEntities() != null) {
                     int count = 0;
                     for (RegisterEntity e : course.getRegisterEntities()

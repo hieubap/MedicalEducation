@@ -58,6 +58,6 @@ public class ProgramEntity extends BaseEntity {
       inverseJoinColumns = @JoinColumn(name = "subject_id", referencedColumnName = "id"))
   private List<SubjectEntity> subjects;
 
-  @OneToMany(mappedBy = "programEntity")
+  @OneToMany(mappedBy = "programInfo")
   private List<CourseEntity> courseEntities;
 }

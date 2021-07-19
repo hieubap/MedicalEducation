@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import medical.education.dao.model.UserEntity;
 import medical.education.enums.RegisterEnum;
 import spring.backend.library.dto.BaseDTO;
 
@@ -17,17 +18,13 @@ public class RegisterDTO extends BaseDTO {
 
   private Long courseId;
 
-  private Object studentInfo;
+  private UserDTO studentInfo;
 
-  private Object courseInfo;
+  private CourseDTO courseInfo;
 
   private RegisterEnum status;
 
   private Double total;
 
   private String kind;
-
-  private Integer semester;
-
-  private Object programInfo;
 }

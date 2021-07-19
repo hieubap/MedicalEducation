@@ -38,7 +38,7 @@ public class RegisterEntity extends BaseEntity {
 
   @OneToOne
   @JoinColumn(name = "student_id",insertable = false,updatable = false)
-  private UserEntity student;
+  private UserEntity studentInfo;
 
   /**
    * khóa đăng ký
@@ -48,13 +48,13 @@ public class RegisterEntity extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "course_id",insertable = false,updatable = false)
-    private CourseEntity course;
+    private CourseEntity courseInfo;
 
   /**
    * danh sách kết quả
    */
-  @OneToMany(mappedBy = "register")
-  private List<ResultEntity> results;
+//  @OneToMany(mappedBy = "registerInfo")
+//  private List<ResultEntity> results;
 
   /**
    * Trạng thái học tập
@@ -80,10 +80,4 @@ public class RegisterEntity extends BaseEntity {
    * chữ ký
    */
   private String signature;
-
-  /**
-   * Kỳ học:
-   * = năm khai giảng + tháng khai giảng
-   */
-  private Integer semester;
 }

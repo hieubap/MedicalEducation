@@ -36,10 +36,10 @@ public class CourseEntity extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
-
-    //  @Column(unique = true)
-    private String code;
+//    private String name;
+//
+//    //  @Column(unique = true)
+//    private String code;
 
     /**
      * 1: Thời gian đăng ký 2: đang học 3: hoàn thành
@@ -67,11 +67,6 @@ public class CourseEntity extends BaseEntity {
      * giá
      */
     private Long price;
-
-    /**
-     * số tiết học
-     */
-    private Integer numberLesson;
 
     /**
      * giới hạn đăng ký
@@ -111,10 +106,10 @@ public class CourseEntity extends BaseEntity {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "course")
     private List<ScheduleEntity> schedules;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "course")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "courseInfo")
     private List<RegisterEntity> registerEntities;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "programId", insertable = false, updatable = false)
-    private ProgramEntity programEntity;
+    private ProgramEntity programInfo;
 }

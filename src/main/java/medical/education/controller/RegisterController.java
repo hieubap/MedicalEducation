@@ -22,9 +22,4 @@ public class RegisterController extends BaseController<RegisterDTO, RegisterServ
   public RegisterService getService() {
     return courseRegisterService;
   }
-
-  @GetMapping("/get-list-semester")
-  public ResponseEntity getSemesters(Long courseId){
-    return response(getService().getListSemester(courseId));
-  }
 }

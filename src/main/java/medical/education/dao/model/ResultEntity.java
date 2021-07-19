@@ -29,22 +29,12 @@ public class ResultEntity extends BaseEntity {
   /**
    * sinh viên
    */
-  @Column(name = "student_id")
-  private Long studentId;
-
-  @ManyToOne
-  @JoinColumn(name = "student_id",updatable = false,insertable = false)
-  private UserEntity student;
-
-  /**
-   * khóa học
-   */
-  @Column(name = "course_id")
-  private Long courseId;
-
-  @OneToOne
-  @JoinColumn(name = "course_id",insertable = false,updatable = false)
-  private CourseEntity course;
+//  @Column(name = "student_id")
+//  private Long studentId;
+//
+//  @ManyToOne
+//  @JoinColumn(name = "student_id",updatable = false,insertable = false)
+//  private UserEntity studentInfo;
 
   /**
    * môn học
@@ -54,7 +44,7 @@ public class ResultEntity extends BaseEntity {
 
   @OneToOne
   @JoinColumn(name = "subject_id",updatable = false,insertable = false)
-  private SubjectEntity subject;
+  private SubjectEntity subjectInfo;
 
   /**
    * đăng ký
@@ -64,7 +54,7 @@ public class ResultEntity extends BaseEntity {
 
   @ManyToOne()
   @JoinColumn(name = "register_id",updatable = false,insertable = false)
-  private RegisterEntity register;
+  private RegisterEntity registerInfo;
 
   /**
    * điểm danh
@@ -82,11 +72,16 @@ public class ResultEntity extends BaseEntity {
    */
   private Double endPoint;
 
-  /**
-   * tổng kết môn
-   */
-  private double total;
+//  /**
+//   * tổng kết môn
+//   */
+//  private double total;
 
-  private boolean isPass;
+  /**
+   * 0 chưa đánh giá
+   * 1 pass
+   * 2 trượt
+   */
+  private Short isPass;
 
 }
