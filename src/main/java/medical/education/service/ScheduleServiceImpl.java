@@ -9,11 +9,7 @@ import java.util.List;
 import medical.education.dao.model.CourseEntity;
 import medical.education.dao.model.RegisterEntity;
 import medical.education.dao.model.ScheduleEntity;
-import medical.education.dao.repository.CourseRepository;
-import medical.education.dao.repository.PlaceRepository;
-import medical.education.dao.repository.ScheduleRepository;
-import medical.education.dao.repository.SubjectRepository;
-import medical.education.dao.repository.UserRepository;
+import medical.education.dao.repository.*;
 import medical.education.dto.ScheduleDTO;
 import medical.education.dto.UserDTO;
 import medical.education.enums.RoleEnum;
@@ -164,11 +160,15 @@ public class ScheduleServiceImpl extends
         dto.setTeacher(userService.findById(entity.getTeacherId()));
     }
 
+    @Autowired
+    private RegisterRepository registerRepository;
+
     @Override
     // sinh viên xem lịch
     public Page<ScheduleDTO> getSchedule() {
         ScheduleDTO scheduleSearch = new ScheduleDTO();
-        scheduleSearch.setCourseId(userService.getCurrentUser().getCurrentCourseId());
+        RegisterEntity registerEntity = registerRepository.findCurrent(userService.getCurrentUser().getId());
+        scheduleSearch.setCourseId(registerEntity.getCourseId());
         return search(scheduleSearch, PageRequest.of(0, Integer.MAX_VALUE));
     }
 
