@@ -89,11 +89,11 @@ public class ScheduleServiceImpl extends
             throw new BaseException(400,
                     Message.getMessage("data.null", new Object[]{"Giảng viên"}));
         }
-        if (dto.getKipHoc() == null) {
-            throw new BaseException(400, Message.getMessage("data.null", new Object[]{"Kíp học"}));
-        }
-        if (dto.getReason() == null)
-            kiemTraLopHoc(dto.getTeacherId(), dto.getDates(), dto.getKipHoc());
+//        if (dto.getKipHoc() == null) {
+//            throw new BaseException(400, Message.getMessage("data.null", new Object[]{"Kíp học"}));
+//        }
+//        if (dto.getReason() == null)
+//            kiemTraLopHoc(dto.getTeacherId(), dto.getDates(), dto.getKipHoc());
     }
 
     private void kiemTraLopHoc(Long id, String dtoDate, Short kipHoc) {
@@ -130,6 +130,13 @@ public class ScheduleServiceImpl extends
         entity.setTeacher(userRepository.findById(entity.getTeacherId()).get());
     }
 
+    @Autowired
+    private SessionScheduleService sessionScheduleService;
+
+    @Autowired
+    private SessionScheduleRepository sessionScheduleRepository;
+
+
     @Override
     protected void specificMapToDTO(ScheduleEntity entity, ScheduleDTO dto) {
         super.specificMapToDTO(entity, dto);
@@ -155,9 +162,16 @@ public class ScheduleServiceImpl extends
                 dto.setStatus((int) course.getStatus());
             }
         }
+        if(subjectRepository.existsById(entity.getSubjectId()))
         dto.setSubjectInfo(subjectService.findById(entity.getSubjectId()));
+        if(placeRepository.existsById(entity.getPlaceId()))
         dto.setPlaceInfo(placeService.findById(entity.getPlaceId()));
+        if(userRepository.existsById(entity.getTeacherId()))
         dto.setTeacher(userService.findById(entity.getTeacherId()));
+        if(sessionScheduleRepository.existsById(entity.getSessionId()))
+        dto.setSessionInfo(sessionScheduleService.findById(entity.getSessionId()));
+        else
+            dto.setSessionInfo(sessionScheduleService.findById(1L));
     }
 
     @Autowired

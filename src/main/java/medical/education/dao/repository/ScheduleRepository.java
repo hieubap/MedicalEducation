@@ -16,6 +16,7 @@ public interface ScheduleRepository extends BaseRepository<ScheduleEntity, Sched
   @Query("select e from ScheduleEntity e "
       + " where (e.id = :#{#dto.id} or :#{#dto.id} is null) "
       + " and (e.courseId = :#{#dto.courseId} or :#{#dto.courseId} is null) "
+      + " and (e.placeId = :#{#dto.placeId} or :#{#dto.placeId} is null) "
       + " and (e.status = 0) "
       + " and (e.teacherId = :#{#dto.teacherId} or :#{#dto.teacherId} is null) ")
   Page<ScheduleEntity> search(ScheduleDTO dto, Pageable pageable);

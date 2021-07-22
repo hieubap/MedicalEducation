@@ -25,7 +25,7 @@ public interface ResultRepository extends BaseRepository<ResultEntity, ResultDTO
 
     @Query(" select e from ResultEntity e where "
             + " (e.registerInfo.courseId = :#{#courseId}) "
-            + " and (e.subjectId = :#{#subjectId}) "
+            + " and (e.subjectId = :#{#subjectId} or :#{#subjectId} is null) "
     )
     List<ResultEntity> findAllByCourseIdAndSubjectId(Long courseId, Long subjectId);
 

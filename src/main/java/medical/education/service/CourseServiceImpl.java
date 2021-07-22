@@ -148,6 +148,7 @@ public class CourseServiceImpl extends
         CourseDTO courseDTO = findById(courseId);
 
         points.setCourseInfo(courseDTO);
+        if(subjectId != null)
         points.setSubjectInfo(subjectService.findById(subjectId));
         points.setListRegister(registers);
         points.setListResult(resultService.findAllByCourseIdAndSubjectId(courseId, subjectId));

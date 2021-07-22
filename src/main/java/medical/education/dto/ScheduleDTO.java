@@ -34,4 +34,6 @@ public class ScheduleDTO extends BaseDTO {
   private String reason;
   private Long deleteId;
   private Integer numberRegister;
+  private Long sessionId;
+  private Object sessionInfo;
 }

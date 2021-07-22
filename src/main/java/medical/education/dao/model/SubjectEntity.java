@@ -64,10 +64,10 @@ public class SubjectEntity extends BaseEntity {
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
-            name = "course_subject",
+            name = "program_subject",
             joinColumns = @JoinColumn(name = "subject_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "course_id", referencedColumnName = "id"))
-    private List<CourseEntity> courseEntities;
+            inverseJoinColumns = @JoinColumn(name = "program_id", referencedColumnName = "id"))
+    private List<ProgramEntity> programEntities;
 
     private Double midtermScore;
 

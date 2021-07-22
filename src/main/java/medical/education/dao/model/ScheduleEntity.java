@@ -18,6 +18,7 @@ import medical.education.enums.KipHocEnum;
 import org.checkerframework.checker.units.qual.C;
 import org.hibernate.annotations.Where;
 import spring.backend.library.dao.model.BaseEntity;
+import spring.backend.library.map.SessionScheduleEntity;
 
 @Getter
 @Setter
@@ -105,4 +106,12 @@ public class ScheduleEntity extends BaseEntity {
    * lý do hủy lịch
    */
   private String reason;
+
+  @Column(name = "session_id")
+  private Long sessionId;
+
+  @ManyToOne
+  @JoinColumn(name = "session_id",updatable = false,insertable = false)
+  private SessionScheduleEntity session;
+
 }
