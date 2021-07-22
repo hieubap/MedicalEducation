@@ -5,7 +5,7 @@ import medical.education.dto.SessionScheduleDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import spring.backend.library.exception.BaseException;
-import spring.backend.library.map.SessionScheduleEntity;
+import medical.education.dao.model.SessionScheduleEntity;
 import spring.backend.library.service.AbstractBaseService;
 
 @Service

@@ -3,7 +3,7 @@ package medical.education.dao.repository;
 import medical.education.dto.SessionScheduleDTO;
 import org.springframework.data.jpa.repository.Query;
 import spring.backend.library.dao.repository.BaseRepository;
-import spring.backend.library.map.SessionScheduleEntity;
+import medical.education.dao.model.SessionScheduleEntity;
 
 import java.sql.Time;
 

@@ -1,7 +1,5 @@
 package medical.education.dao.model;
 
-import java.time.LocalDateTime;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,11 +12,8 @@ import javax.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import medical.education.enums.KipHocEnum;
-import org.checkerframework.checker.units.qual.C;
 import org.hibernate.annotations.Where;
 import spring.backend.library.dao.model.BaseEntity;
-import spring.backend.library.map.SessionScheduleEntity;
 
 @Getter
 @Setter
