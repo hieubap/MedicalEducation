@@ -197,12 +197,26 @@ public class ResultServiceImpl extends
 
     @Override
     public ResultDTO enterPoint(ResultDTO resultDTO) {
+        if (resultRepository.existsByRegisterIdAndSubjectId(resultDTO.getRegisterId(), resultDTO.getSubjectId())) {
+            ResultDTO result = mapToDTO(resultRepository.findByRegisterIdAndSubjectId(resultDTO.getRegisterId(), resultDTO.getSubjectId()));
+            return save(result);
+        }
         return save(resultDTO);
     }
 
     @Override
     public List<ResultDTO> enterListPoint(List<ResultDTO> resultDTOs) {
-        return save(resultDTOs);
+        List<ResultDTO> list = new ArrayList<>();
+        for(ResultDTO dto : resultDTOs){
+            if (resultRepository.existsByRegisterIdAndSubjectId(dto.getRegisterId(), dto.getSubjectId())) {
+                ResultDTO result = mapToDTO(resultRepository.findByRegisterIdAndSubjectId(dto.getRegisterId(), dto.getSubjectId()));
+                list.add(result);
+            }else{
+                list.add(dto);
+            }
+        }
+
+        return save(list);
     }
 
     @Override

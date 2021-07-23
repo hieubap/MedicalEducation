@@ -287,6 +287,13 @@ public class CourseServiceImpl extends
 
             if (e.getStatus().equals(CourseStatusEnum.THOI_GIAN_DANG_KI.getValue()) &&
                     listSchedule.size() == 0) {
+//                boolean checkAll = false;
+//                for(SubjectEntity sj : e.getProgramInfo().getSubjects()){
+//                    for(ScheduleEntity sc : e.getSchedules()){
+//                        if(sc.getSubjectId() == sj.getId())
+//                    }
+//                }
+//                if(checkAll)
                 courseEntities.add(e);
             }
             if (e.getNgayKhaiGiang() != null && e.getNgayKhaiGiang().before(new Date())

@@ -21,15 +21,17 @@ public interface ResultRepository extends BaseRepository<ResultEntity, ResultDTO
     )
     Page<ResultEntity> search(ResultDTO dto, Pageable pageable);
 
-    ResultEntity findByRegisterIdAndSubjectId(Long registerId, Long subjectId);
-
     @Query(" select e from ResultEntity e where "
             + " (e.registerInfo.courseId = :#{#courseId}) "
             + " and (e.subjectId = :#{#subjectId} or :#{#subjectId} is null) "
     )
     List<ResultEntity> findAllByCourseIdAndSubjectId(Long courseId, Long subjectId);
 
-//    @Query(" select case when count(e.id) > 0 then true else false end from ResultEntity e"
+    boolean existsByRegisterIdAndSubjectId(Long registerId,Long subjectId);
+
+    ResultEntity findByRegisterIdAndSubjectId(Long registerId,Long subjectId);
+
+    //    @Query(" select case when count(e.id) > 0 then true else false end from ResultEntity e"
 //            + " where (1 = 1) "
 //            + " and (e.studentId = :studentId) "
 //            + " and (e.subjectId = :subjectId) ")
