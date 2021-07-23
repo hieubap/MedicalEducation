@@ -75,6 +75,14 @@ public class SubjectServiceImpl extends
     }
 
     @Override
+    protected void beforeDelete(Long id) {
+        if (repository.checkXoaSubject(id)) {
+            throw new BaseException("Không Thể Xóa Khóa Học");
+        }
+        super.beforeDelete(id);
+    }
+
+    @Override
     public List<String> getDistinctSubject() {
         return repository.getDistinctSubject();
     }

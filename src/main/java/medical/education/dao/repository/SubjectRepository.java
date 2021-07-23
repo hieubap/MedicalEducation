@@ -25,4 +25,13 @@ public interface SubjectRepository extends BaseRepository<SubjectEntity, Subject
 
   @Query(" select distinct e.name from SubjectEntity e where e.deleted = 0")
   List<String> getDistinctSubject();
+
+  @Query(value = "select case when count(*) > 0 then true else false end\n"
+      + "from subject s\n"
+      + "         left join program_subject ps on s.id = ps.subject_id\n"
+      + "         left join program p on ps.program_id = p.id\n"
+      + "          left join course c on p.id = c.program_id\n"
+      + "where s.id = ?1 \n"
+      + "and c.id is not null;", nativeQuery = true)
+  boolean checkXoaSubject(Long subjectId);
 }
