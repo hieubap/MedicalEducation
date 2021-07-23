@@ -58,9 +58,9 @@ public class ScheduleController extends BaseController<ScheduleDTO, ScheduleServ
     return response(scheduleService.findAllChange(page));
   }
 
-  @PostMapping("/change-schedule/{id}")
-  public ResponseEntity changeSchedule(@PathVariable(name = "id") Long id,@RequestBody ScheduleDTO dto){
-    return response(scheduleService.changeSchedule(id,dto));
-  }
+//  @PostMapping("/change-schedule/{id}")
+//  public ResponseEntity changeSchedule(@PathVariable(name = "id") Long id,@RequestBody ScheduleDTO dto){
+//    return response(scheduleService.changeSchedule(id,dto));
+//  }
 
 }

@@ -100,12 +100,9 @@ public class ProgramServiceImpl extends
   @Override
   protected void beforeDelete(Long id) {
     super.beforeDelete(id);
-    List<CourseEntity> courseEntities = courseRepository.findByProgramId(id).orElse(null);
-    if (courseEntities != null) {
-      courseEntities.forEach(e -> {
-        e.setProgramId(null);
-        courseRepository.save(e);
-      });
+    List<CourseEntity> courseEntities = courseRepository.findByProgramId(id);
+    if(courseEntities == null || courseEntities.size() > 0){
+      throw new BaseException(421,"Chương trình đào tạo đã tồn tại khóa học. Không thể xóa chương trình đào tạo");
     }
   }
 }

@@ -21,23 +21,28 @@ public interface ScheduleRepository extends BaseRepository<ScheduleEntity, Sched
       + " and (e.teacherId = :#{#dto.teacherId} or :#{#dto.teacherId} is null) ")
   Page<ScheduleEntity> search(ScheduleDTO dto, Pageable pageable);
 
+  List<ScheduleEntity> findByPlaceId(Long placeId);
+
+  List<ScheduleEntity> findByCourseId(Long courseId);
+
+  List<ScheduleEntity> findBySessionId(Long sessionId);
+
   @Query("select e from ScheduleEntity e"
       + " where 1 = 1"
-      + " and (e.changeScheduleId is not null or e.reason is not null)")
+      + " and (e.reason is not null)")
   Page<ScheduleEntity> findAllChange(Pageable page);
 
   @Query("select count(e) from ScheduleEntity e"
       + " where 1 = 1"
-      + " and (e.changeScheduleId is not null or e.reason is not null)")
+      + " and (e.reason is not null)")
   Integer countChange();
 
 
-  @Query("select case when count(e) > 0 then true else false end from ScheduleEntity e "
-      + "where 1=1 "
-      + "and (e.kipHoc = :kipHoc)"
-      + "and (e.id <> :id or :id is null) "
-      + "and (e.day = :day)")
-  Boolean checkExistByDayAndKipHoc(Short kipHoc, Short day, Long id);
+//  @Query("select case when count(e) > 0 then true else false end from ScheduleEntity e "
+//      + "where 1=1 "
+//      + "and (e.id <> :id or :id is null) "
+//      + "and (e.day = :day)")
+//  Boolean checkExistByDayAndKipHoc(Short kipHoc, Short day, Long id);
 
   //  @Query("select case when count(e) > 0 then true else false end from ScheduleEntity e "
 //      + "where 1=1 "

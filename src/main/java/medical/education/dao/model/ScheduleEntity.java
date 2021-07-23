@@ -32,8 +32,6 @@ public class ScheduleEntity extends BaseEntity {
    */
   private Short day;
 
-  private Short kipHoc;
-
   /**
    * địa điểm
    */
@@ -87,12 +85,12 @@ public class ScheduleEntity extends BaseEntity {
   /**
    * thay đổi lịch
    */
-  @Column(name = "change_schedule_id")
-  private Long changeScheduleId;
+//  @Column(name = "change_schedule_id")
+//  private Long changeScheduleId;
 
-  @OneToOne
-  @JoinColumn(name = "change_schedule_id",updatable = false,insertable = false)
-  private ScheduleEntity changeInformation;
+//  @OneToOne
+//  @JoinColumn(name = "change_schedule_id",updatable = false,insertable = false)
+//  private ScheduleEntity changeInformation;
 
 //  @OneToOne(mappedBy = "changeSchedule")
 //  private ScheduleEntity changeInformation;

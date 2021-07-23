@@ -2,8 +2,10 @@ package medical.education.service;
 
 import com.google.common.base.Strings;
 import medical.education.dao.model.PlaceEntity;
+import medical.education.dao.model.ScheduleEntity;
 import medical.education.dao.repository.HealthFacilityRepository;
 import medical.education.dao.repository.PlaceRepository;
+import medical.education.dao.repository.ScheduleRepository;
 import medical.education.dto.PlaceDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -12,6 +14,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import spring.backend.library.exception.BaseException;
 import spring.backend.library.service.AbstractBaseService;
+
+import java.util.List;
 
 @Service
 //@PreAuthorize("hasAnyRole('ADMIN')")
@@ -42,6 +46,16 @@ public class PlaceServiceImpl extends AbstractBaseService<PlaceEntity, PlaceDTO,
     if (getRepository().existsByAddress(dto.getAddress()) && dto.getId() == null) {
       throw new BaseException(400, "địa điểm đã tồn tại");
     }
+  }
+
+  @Autowired
+  private ScheduleRepository scheduleRepository;
+
+  @Override
+  protected void beforeDelete(Long id) {
+    super.beforeDelete(id);
+    List<ScheduleEntity> schedules = scheduleRepository.findByPlaceId(id);
+    scheduleRepository.deleteAll(schedules);
   }
 
   @Override

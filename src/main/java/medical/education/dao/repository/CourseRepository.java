@@ -26,9 +26,11 @@ public interface CourseRepository extends BaseRepository<CourseEntity, CourseDTO
 //            + " and (e.numberLesson = :#{#dto.numberLesson} or :#{#dto.numberLesson} is null) "
             + " and (e.limitRegister = :#{#dto.limitRegister} or :#{#dto.limitRegister} is null) "
             + " and (e.healthFacilityId = :#{#dto.healthFacilityId} or :#{#dto.healthFacilityId} is null) "
-            + " and (lower(e.healthFacility.name) like :#{#dto.nameHealthFacility} or :#{#dto.nameHealthFacility} is null) "
+//            + " and (lower(e.healthFacility.name) like :#{#dto.nameHealthFacility} or :#{#dto.nameHealthFacility} is null) "
             + " order by e.ngayKhaiGiang")
     Page<CourseEntity> search(CourseDTO dto, Pageable pageable);
+
+    List<CourseEntity> findByHealthFacilityId(Long id);
 
 //    @Query("select case when count (e) > 0 then true else false end from CourseEntity e"
 //            + " where 1 = 1"
@@ -52,7 +54,7 @@ public interface CourseRepository extends BaseRepository<CourseEntity, CourseDTO
 
     Integer countByProgramId(Long programId);
 
-    Optional<List<CourseEntity>> findByProgramId(Long id);
+    List<CourseEntity> findByProgramId(Long id);
 
     @Query(
             "select case when e.status = 1 then false else true end from CourseEntity e "

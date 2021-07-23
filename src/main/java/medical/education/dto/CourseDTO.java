@@ -36,6 +36,9 @@ public class CourseDTO extends BaseDTO {
   @JsonFormat(pattern = "yyyy-MM-dd")
   private Date ngayKetThuc;
 
+  @JsonFormat(pattern = "yyyy-MM-dd")
+  private Date hanDangKy;
+
   private Integer semester;
 
   private Long price;

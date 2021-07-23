@@ -21,5 +21,5 @@ public interface ScheduleService extends BaseService<ScheduleDTO> {
 
   public Page<ScheduleDTO> findAllChange(Pageable page);
 
-  public ScheduleDTO changeSchedule(Long id,ScheduleDTO dto);
+//  public ScheduleDTO changeSchedule(Long id,ScheduleDTO dto);
 }

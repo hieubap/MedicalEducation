@@ -44,12 +44,12 @@ public class ProgramEntity extends BaseEntity {
   /**
    * khóa học hiện tại
    */
-  @Column(name = "current_course_id")
-  private Long currentCourseId;
+//  @Column(name = "current_course_id")
+//  private Long currentCourseId;
 
-  @OneToOne(fetch = FetchType.EAGER)
-  @JoinColumn(name = "current_course_id", insertable = false, updatable = false)
-  private CourseEntity currentCourse;
+//  @OneToOne(fetch = FetchType.EAGER)
+//  @JoinColumn(name = "current_course_id", insertable = false, updatable = false)
+//  private CourseEntity currentCourse;
 
   @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   @JoinTable(

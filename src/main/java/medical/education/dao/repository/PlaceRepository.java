@@ -19,5 +19,5 @@ public interface PlaceRepository extends BaseRepository<PlaceEntity, PlaceDTO, L
 
   boolean existsByAddress(String address);
 
-  Optional<List<PlaceEntity>> findByHealthFacilityId(Long id);
+  List<PlaceEntity> findByHealthFacilityId(Long id);
 }

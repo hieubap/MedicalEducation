@@ -2,8 +2,11 @@ package medical.education.service;
 
 import com.google.common.base.Strings;
 import java.util.List;
+
+import medical.education.dao.model.CourseEntity;
 import medical.education.dao.model.HealthFacilityEntity;
 import medical.education.dao.model.PlaceEntity;
+import medical.education.dao.repository.CourseRepository;
 import medical.education.dao.repository.HealthFacilityRepository;
 import medical.education.dao.repository.PlaceRepository;
 import medical.education.dto.HealthFacilityDTO;
@@ -69,15 +72,21 @@ public class HealthFacilityServiceImpl extends
     return super.search(dto, pageable);
   }
 
+  @Autowired
+  private CourseRepository courseRepository;
+
   @Override
   protected void beforeDelete(Long id) {
     super.beforeDelete(id);
-    List<PlaceEntity> placeEntities = placeRepository.findByHealthFacilityId(id).orElse(null);
-    if (placeEntities != null) {
-      placeEntities.forEach(placeEntity -> {
-        placeEntity.setHealthFacilityId(null);
-        placeRepository.save(placeEntity);
-      });
+    List<PlaceEntity> placeEntities = placeRepository.findByHealthFacilityId(id);
+    List<CourseEntity> courses = courseRepository.findByHealthFacilityId(id);
+    for(PlaceEntity e : placeEntities){
+      e.setHealthFacilityId(null);
     }
+    for(CourseEntity e : courses){
+      e.setHealthFacilityId(null);
+    }
+    placeRepository.saveAll(placeEntities);
+    courseRepository.saveAll(courses);
   }
 }

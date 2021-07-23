@@ -21,6 +21,8 @@ public interface RegisterRepository extends
 
   RegisterEntity findByCourseIdAndStudentId(Long courseID,Long studentId);
 
+  List<RegisterEntity> findByCourseId(Long courseId);
+
   List<RegisterEntity> findAllByCourseId(Long courseId);
 
   @Query(" select e from RegisterEntity e "

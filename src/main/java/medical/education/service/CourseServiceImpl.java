@@ -4,6 +4,7 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
 import medical.education.dao.model.CourseEntity;
 import medical.education.dao.model.NotificationEntity;
 import medical.education.dao.model.RegisterEntity;
@@ -148,8 +149,8 @@ public class CourseServiceImpl extends
         CourseDTO courseDTO = findById(courseId);
 
         points.setCourseInfo(courseDTO);
-        if(subjectId != null)
-        points.setSubjectInfo(subjectService.findById(subjectId));
+        if (subjectId != null)
+            points.setSubjectInfo(subjectService.findById(subjectId));
         points.setListRegister(registers);
         points.setListResult(resultService.findAllByCourseIdAndSubjectId(courseId, subjectId));
         return points;
@@ -187,6 +188,7 @@ public class CourseServiceImpl extends
                 RegisterEntity register = registerRepository
                         .findByCourseIdAndStudentId(entity.getId(), e.getId());
                 if (register != null) {
+                    register.setCourseId(null);
                     register.setStatus(RegisterEnum.CANCEL);
                     registers.add(register);
                 }
@@ -257,6 +259,22 @@ public class CourseServiceImpl extends
         return super.search(dto, pageable);
     }
 
+//    @Scheduled(cron = "0,20,40 * * * * *")
+//    public void update2() {
+//        List<CourseEntity> allCourse = repository.search(new CourseDTO(),
+//                PageRequest.of(0, Integer.MAX_VALUE)).toList();
+//        List<CourseEntity> listSave = new ArrayList<>();
+//        for (CourseEntity e : allCourse) {
+//            List<RegisterDTO> registers = registerService.findAllByCourseId(e.getId());
+//            if(registers.size() == 0){
+//                e.setStatus(CourseStatusEnum.HUY_KHOA.getValue());
+//                listSave.add(e);
+//                continue;
+//            }
+//        }
+//        getRepository().saveAll(listSave);
+//    }
+
     @Scheduled(cron = "0 0 0 * * *")
     public void update() {
         List<CourseEntity> allCourse = repository.search(new CourseDTO(),
@@ -264,14 +282,16 @@ public class CourseServiceImpl extends
         List<CourseEntity> listSave = new ArrayList<>();
         List<CourseEntity> courseEntities = new ArrayList<>();
         for (CourseEntity e : allCourse) {
-            List<ScheduleEntity> listSchedule = e.getSchedules();
+            List<ScheduleEntity> listSchedule = scheduleRepository.findByCourseId(e.getId());
+            List<RegisterEntity> listRegister = registerRepository.findByCourseId(e.getId());
+
             if (e.getStatus().equals(CourseStatusEnum.THOI_GIAN_DANG_KI.getValue()) &&
                     listSchedule.size() == 0) {
                 courseEntities.add(e);
             }
             if (e.getNgayKhaiGiang() != null && e.getNgayKhaiGiang().before(new Date())
                     && e.getStatus().equals(CourseStatusEnum.THOI_GIAN_DANG_KI.getValue())) {
-                if (e.getRegisterEntities() == null || e.getRegisterEntities().size() < e.getMinRegister()) {
+                if (listRegister == null || listRegister.size() < e.getMinRegister()) {
                     e.setStatus(CourseStatusEnum.HUY_KHOA.getValue());
                     listSave.add(e);
                 } else {

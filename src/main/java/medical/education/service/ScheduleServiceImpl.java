@@ -96,31 +96,31 @@ public class ScheduleServiceImpl extends
 //            kiemTraLopHoc(dto.getTeacherId(), dto.getDates(), dto.getKipHoc());
     }
 
-    private void kiemTraLopHoc(Long id, String dtoDate, Short kipHoc) {
-        List<ScheduleEntity> scheduleEntityList = getRepository().findByTeacherId(id).orElse(null);
-        if (scheduleEntityList == null) {
-            return;
-        } else {
-
-            String[] dateCheck = dtoDate.replace("[", "").replace("]", "").replace("\"", "")
-                    .split(",");
-
-            for (ScheduleEntity s : scheduleEntityList) {
-                String date = s.getDates().replace("[", "").replace("]", "").replace("\"", "");
-                String[] datess = date.split(",");
-                int kip = s.getKipHoc();
-                for (int i = 0; i < dateCheck.length; i++) {
-                    for (int j = 0; j < datess.length; j++) {
-                        if (dateCheck[i].equals(datess[j]) && kip == kipHoc) {
-                            throw new BaseException("Trùng lịch");
-                        }
-                    }
-                }
-            }
-        }
-
-        return;
-    }
+//    private void kiemTraLopHoc(Long id, String dtoDate, Short kipHoc) {
+//        List<ScheduleEntity> scheduleEntityList = getRepository().findByTeacherId(id).orElse(null);
+//        if (scheduleEntityList == null) {
+//            return;
+//        } else {
+//
+//            String[] dateCheck = dtoDate.replace("[", "").replace("]", "").replace("\"", "")
+//                    .split(",");
+//
+//            for (ScheduleEntity s : scheduleEntityList) {
+//                String date = s.getDates().replace("[", "").replace("]", "").replace("\"", "");
+//                String[] datess = date.split(",");
+//                int kip = s.getKipHoc();
+//                for (int i = 0; i < dateCheck.length; i++) {
+//                    for (int j = 0; j < datess.length; j++) {
+//                        if (dateCheck[i].equals(datess[j]) && kip == kipHoc) {
+//                            throw new BaseException("Trùng lịch");
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//
+//        return;
+//    }
 
     @Override
     protected void afterSave(ScheduleEntity entity, ScheduleDTO dto) {
@@ -141,10 +141,10 @@ public class ScheduleServiceImpl extends
     protected void specificMapToDTO(ScheduleEntity entity, ScheduleDTO dto) {
         super.specificMapToDTO(entity, dto);
 
-        if (entity.getChangeInformation() != null) {
-            dto.setChangeInfo(
-                    scheduleService.findDetailById(entity.getChangeInformation().getId()));
-        }
+//        if (entity.getChangeInformation() != null) {
+//            dto.setChangeInfo(
+//                    scheduleService.findDetailById(entity.getChangeInformation().getId()));
+//        }
 //    dto.setCourseInfo(courseService.findById(entity.getCourseId()));
         if (entity.getCourseId() != null) {
             CourseEntity course = courseRepository.findById(entity.getCourseId()).orElse(null);
@@ -221,15 +221,15 @@ public class ScheduleServiceImpl extends
         return getRepository().findAllChange(page).map(this::mapToDTO);
     }
 
-    @Override
-    public ScheduleDTO changeSchedule(Long id, ScheduleDTO dto) {
-        ScheduleEntity entity = getRepository().findById(id).get();
-        dto.setId(null);
-        dto.setStatus(1);
-        dto.setChangeScheduleId(null);
-        ScheduleDTO changeDTO = save(dto);
-        entity.setChangeScheduleId(changeDTO.getId());
-        getRepository().save(entity);
-        return mapToDTO(entity);
-    }
+//    @Override
+//    public ScheduleDTO changeSchedule(Long id, ScheduleDTO dto) {
+//        ScheduleEntity entity = getRepository().findById(id).get();
+//        dto.setId(null);
+//        dto.setStatus(1);
+//        dto.setChangeScheduleId(null);
+//        ScheduleDTO changeDTO = save(dto);
+//        entity.setChangeScheduleId(changeDTO.getId());
+//        getRepository().save(entity);
+//        return mapToDTO(entity);
+//    }
 }
