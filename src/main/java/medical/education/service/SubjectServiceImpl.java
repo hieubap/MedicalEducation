@@ -32,7 +32,7 @@ public class SubjectServiceImpl extends
     protected void beforeSave(SubjectEntity entity, SubjectDTO dto) {
         super.beforeSave(entity, dto);
 
-        if(dto.getIsUsePoint()){
+        if(dto.getIsUsePoint() != null && dto.getIsUsePoint()){
             entity.setType("LT + BT");
         }
         else{
