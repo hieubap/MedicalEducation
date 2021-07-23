@@ -69,6 +69,12 @@ public class SubjectServiceImpl extends
     }
 
     @Override
+    protected void specificMapToDTO(SubjectEntity entity, SubjectDTO dto) {
+        super.specificMapToDTO(entity, dto);
+        dto.setIsActive(entity.getActive());
+    }
+
+    @Override
     public List<String> getDistinctSubject() {
         return repository.getDistinctSubject();
     }

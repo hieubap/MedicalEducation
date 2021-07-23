@@ -29,4 +29,6 @@ public class SubjectDTO extends BaseDTO {
   private Double finalScore;
 
   private Boolean isUsePoint;
+
+  private Boolean isActive;
 }

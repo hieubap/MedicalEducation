@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
+
 import medical.education.dao.model.CourseEntity;
 import medical.education.dao.model.RegisterEntity;
 import medical.education.dao.model.ResultEntity;
@@ -120,7 +121,7 @@ public class RegisterServiceImpl extends
     public List<RegisterDTO> findAllByCourseId(Long courseId) {
         List<RegisterEntity> entities = getRepository().findAllByCourseId(courseId);
         List<RegisterDTO> dtos = new ArrayList<>();
-        for (RegisterEntity e : entities){
+        for (RegisterEntity e : entities) {
             dtos.add(mapToDTO(e));
         }
         return dtos;
@@ -129,6 +130,18 @@ public class RegisterServiceImpl extends
     @Override
     protected void specificMapToDTO(RegisterEntity entity, RegisterDTO dto) {
         super.specificMapToDTO(entity, dto);
+        dto.setCourseInfo(courseService.findById(entity.getCourseId()));
+
+        int status = dto.getCourseInfo().getStatus();
+        if (status == 1) {
+            dto.setStatus(RegisterEnum.REGISTER_DONED);
+        } else if (status == 2) {
+            dto.setStatus(RegisterEnum.STUDYING);
+        } else if (status == 3) {
+            dto.setStatus(RegisterEnum.WAIT_TEACHER);
+        }
+
+
     }
 
     @Override
@@ -148,14 +161,17 @@ public class RegisterServiceImpl extends
     @Override
     public void delete(Long id) {
         RegisterEntity entity = getRepository().findById(id).get();
-        if (!entity.getStatus().equals(RegisterEnum.REGISTER_DONED)) {
-            throw new BaseException(411, Message.getMessage("Cant.cancel.course"));
+        if (entity.getCourseInfo().getStatus().equals(CourseStatusEnum.DANG_HOC.getValue())) {
+            throw new BaseException(411, "Khóa học đang trong thời gian học không thể hủy khóa");
         }
+        if (entity.getCourseInfo().getStatus().equals(CourseStatusEnum.HOAN_THANH.getValue())) {
+            throw new BaseException(411, "Khóa học đã hoàn thành không thể hủy khóa");
+        }
+
         UserDTO currentUser = userService.getCurrentUser();
 
         ResultDTO searchDTO = new ResultDTO();
-//        searchDTO.setStudentId(currentUser.getId());
-//        searchDTO.setCourseId(entity.getCourseId());
+        searchDTO.setRegisterId(id);
         List<ResultEntity> listResult = resultRepository
                 .search(searchDTO, PageRequest.of(0, Integer.MAX_VALUE)).toList();
 

@@ -75,4 +75,6 @@ public class SubjectEntity extends BaseEntity {
 
     private Boolean isUsePoint;
 
+    @Column(name = "active")
+    private Boolean active;
 }
