@@ -1,6 +1,7 @@
 package medical.education.service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -107,6 +108,9 @@ public class RegisterServiceImpl extends
                             .getLimitRegister()) {
                         throw new BaseException(430, "Khóa học đã quá giới hạn đăng ký");
                     }
+                }
+                if (!courseRegister.getHanDangKy().before(new Date())) {
+                    throw new BaseException(431, "Đã hết hạn đăng ký");
                 }
                 if (!courseRegister.getStatus().equals(CourseStatusEnum.THOI_GIAN_DANG_KI.getValue())) {
                     throw new BaseException(431, "Chỉ có thể đăng ký khóa trong thời gian đăng ký");
