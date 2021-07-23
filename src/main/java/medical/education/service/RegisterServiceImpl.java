@@ -109,7 +109,7 @@ public class RegisterServiceImpl extends
                         throw new BaseException(430, "Khóa học đã quá giới hạn đăng ký");
                     }
                 }
-                if (!courseRegister.getHanDangKy().before(new Date())) {
+                if (courseRegister.getHanDangKy().before(new Date())) {
                     throw new BaseException(431, "Đã hết hạn đăng ký");
                 }
                 if (!courseRegister.getStatus().equals(CourseStatusEnum.THOI_GIAN_DANG_KI.getValue())) {
